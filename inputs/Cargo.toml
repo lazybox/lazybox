@@ -1,0 +1,14 @@
+[package]
+workspace = ".."
+name = "lazybox_inputs"
+version = "0.1.0"
+authors = ["Thomas Koehler <basta.t.k+git@gmail.com>"]
+
+[dependencies]
+lazybox_events = { path = "../events" }
+glutin = "0.6"
+cgmath = "0.10"
+yaml-rust = "0.3"
+
+[dev_dependencies]
+lazybox_frameclock = { path = "../frameclock" }

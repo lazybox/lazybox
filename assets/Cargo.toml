@@ -1,0 +1,13 @@
+[package]
+workspace = ".."
+name = "lazybox_assets"
+version = "0.1.0"
+authors = ["Romain Vaillant <rph.vaillant@gmail.com>"]
+
+[dependencies]
+serde = { version = "0.7", optional = true }
+serde_macros = { version = "0.7", optional = true }
+crossbeam = "0.2"
+
+[features]
+eders = ["serde", "serde_macros"]

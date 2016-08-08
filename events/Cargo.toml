@@ -1,0 +1,9 @@
+[package]
+workspace = ".."
+name = "lazybox_events"
+version = "0.1.0"
+authors = ["Romain Vaillant <rph.vaillant@gmail.com>"]
+
+[dependencies]
+mopa = "0.2"
+crossbeam = "0.2"
