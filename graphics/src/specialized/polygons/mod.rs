@@ -57,7 +57,7 @@ impl Renderer {
 
         let vertices = graphics.factory
         	.create_buffer_dynamic(VERTEX_BUFFER_SIZE, gfx::BufferRole::Vertex, gfx::Bind::empty())
-            .expect("could not create polygon buffer");
+            .expect("could not create polygon vertex buffer");
 
         Renderer {
             pso: pso,
@@ -74,6 +74,10 @@ impl Renderer {
         self.data.color_target = color_target;
     }
 
+    pub fn color_target(&self) -> &RenderTargetView<ColorFormat> {
+        &self.data.color_target
+    }
+
     pub fn camera(&self) -> &GpuBuffer<camera::Locals> {
         &self.data.camera
     }
@@ -85,7 +89,8 @@ impl Renderer {
     pub fn render(&mut self, frame: &mut Frame) -> Render {
         Render {
             mapping: GpuBufferMapping::new(&self.data.vertices, &frame.graphics.factory),
-            offset: 0,
+            start: 0,
+            end: 0,
             renderer: self, 
         }
     }
@@ -94,54 +99,70 @@ impl Renderer {
 pub struct Render<'a> {
     renderer: &'a mut Renderer,
     mapping: GpuBufferMapping<'a, Vertex>,
-    offset: usize,
+    start: usize,
+    end: usize,
 }
 
 impl<'a> Render<'a> {
-    pub fn add(&mut self, color: Color, triangle: &Triangle, frame: &mut Frame) {
+    pub fn add<F>(&mut self,
+                  color: Color,
+                  triangle: &Triangle,
+                  flush: &mut F,
+                  frame: &mut Frame)
+        where F: FnMut(&mut Frame)
+    {
+        if self.end == VERTEX_BUFFER_SIZE {
+            self.before_flush(frame);
+            flush(frame);
+        }
+
         let color = PackedColor::from(color).0;
-
         for &p in triangle {
-            if self.offset == VERTEX_BUFFER_SIZE {
-                self.flush(frame);
-            }
-
-            self.mapping.set(self.offset, Vertex {
-                position: p,
-                color: color,
-            });
-            self.offset += 1;
+            let vertex = Vertex { position: p, color: color };
+            self.mapping.set(self.end, vertex);
+            self.end += 1;
         }
     }
 
-    pub fn add_slice(&mut self, color: Color, triangles: &[Triangle], frame: &mut Frame) {
+    pub fn add_slice<F>(&mut self,
+                        color: Color,
+                        triangles: &[Triangle],
+                        flush: &mut F,
+                        frame: &mut Frame)
+        where F: FnMut(&mut Frame)
+    {
         for t in triangles {
-            self.add(color, t, frame);
+            self.add(color, t, flush, frame);
         }
     }
 
-    pub fn ensure_flushed(&mut self, frame: &mut Frame) {
-        if self.offset > 0 {
-            self.flush(frame);
+    pub fn before_flush(&mut self, frame: &mut Frame) {
+        self.ensure_drawed(frame);
+        self.mapping.ensure_unmapped();
+        self.start = 0;
+        self.end = 0;
+    }
+
+    pub fn ensure_drawed(&mut self, frame: &mut Frame) {
+        if self.end > self.start {
+            self.draw(&mut frame.graphics.encoder);
+            frame.should_flush();
         }
     }
 
-    fn flush(&mut self, frame: &mut Frame) {
-        let &mut Graphics { ref mut encoder, ref mut device, .. } = frame.graphics;
-
+    fn draw(&mut self, encoder: &mut Encoder) {
         let slice = gfx::Slice {
-            start: 0,
-            end: self.offset as u32,
+            start: self.start as gfx::VertexCount,
+            end: self.end as gfx::VertexCount,
             buffer: gfx::IndexBuffer::Auto,
             base_vertex: 0,
             instances: None,
         };
 
-        self.mapping.ensure_unmapped();
-        encoder.draw(&slice, &self.renderer.pso, &self.renderer.data);
-        encoder.flush(device);
+        println!("polygon slice: {:?}", slice);
 
-        self.offset = 0;
+        encoder.draw(&slice, &self.renderer.pso, &self.renderer.data);
+        self.start = self.end;
     }
 
     pub fn scissor_mut(&mut self) -> &mut gfx_core::target::Rect {

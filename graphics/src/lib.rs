@@ -13,9 +13,8 @@ extern crate image;
 extern crate quickersort;
 extern crate rayon;
 
-pub mod complete;
-pub mod partial;
-pub mod primitive;
+pub mod combined;
+pub mod specialized;
 pub mod camera;
 pub mod layer;
 pub mod color;
@@ -146,7 +145,20 @@ impl<'a> Frame<'a> {
 
     pub fn clear(&mut self, color: NormalizedColor) {
         self.graphics.encoder.clear(&self.graphics.output_color, color.to_array());
+        self.should_flush();
+    }
+
+    pub fn should_flush(&mut self) {
         self.should_flush = true;
+    }
+
+    pub fn flush(&mut self) {
+        self.graphics.encoder.flush(&mut self.graphics.device);
+        self.should_flush = false;
+    }
+
+    pub fn ensure_flushed(&mut self) {
+        if self.should_flush { self.flush(); }
     }
 
     pub fn present(mut self, window: &'a Window) {
@@ -155,12 +167,5 @@ impl<'a> Frame<'a> {
         self.ensure_flushed();
         window.swap_buffers().unwrap();
         self.graphics.device.cleanup();
-    }
-
-    fn ensure_flushed(&mut self) {
-        if self.should_flush {
-            self.graphics.encoder.flush(&mut self.graphics.device);
-            self.should_flush = false;
-        }
     }
 }

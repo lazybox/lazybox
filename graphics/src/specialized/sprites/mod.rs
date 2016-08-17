@@ -9,7 +9,7 @@ use texture;
 use camera;
 use utils::*;
 use types::*;
-use primitive::dynamic_lights::OcclusionFormat;
+use specialized::dynamic_lights::OcclusionFormat;
 
 pub const SPRITE_BUFFER_SIZE: usize = 2048;
 
@@ -23,7 +23,7 @@ pub use self::defines::{SpriteInstance, LayerLocals, render_pipe};
 mod defines {
     pub use types::*;
     pub use utils::*;
-    pub use primitive::dynamic_lights::OcclusionFormat;
+    pub use specialized::dynamic_lights::OcclusionFormat;
     pub use camera;
 
     gfx_defines! {

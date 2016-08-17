@@ -4,10 +4,9 @@ use {Graphics, Frame, Camera};
 use camera;
 use layer::{LayerId, LayerOcclusion};
 use lights::*;
-use partial::sprites;
-use primitive::dynamic_lights as lights;
-use primitive::dynamic_lights::OcclusionFormat;
-use partial::conrod::{self, PrimitiveWalker, Primitives, ImageMap};
+use specialized::sprites;
+use specialized::dynamic_lights::{self as lights, OcclusionFormat};
+use specialized::conrod::{self, PrimitiveWalker, Primitives, ImageMap};
 use types::*;
 use utils::*;
 
@@ -81,7 +80,7 @@ impl Renderer {
                                            camera_locals,
                                            graphics);
 
-        let conrod = conrod::Renderer::new(conrod_target, window, graphics);
+        let conrod = conrod::Renderer::new(conrod_target, window.hidpi_factor(), graphics);
 
         let linear_sampler = graphics.factory.create_sampler_linear();
 
@@ -131,7 +130,7 @@ impl Renderer {
             
         self.sprites.resize(sprite_target, normal_target, occlusion_target);
         self.lights.resize(occlusion_view, normal_view, light_target);
-        self.conrod.resize(conrod_target, window, graphics);
+        self.conrod.resize(conrod_target, window.hidpi_factor(), graphics);
 
         self.forward_bundle.data.sprite_sampler.0 = sprite_view;
         self.forward_bundle.data.light_sampler.0 = light_view;
@@ -154,17 +153,15 @@ impl Renderer {
     pub fn submit(&mut self, 
                   camera: &Camera,
                   ambient: &AmbientLight,
-                  window: &Window,
                   frame: &mut Frame)
     {
-        self.submit_with_conrod::<Primitives>(None, camera, ambient, window, frame);
+        self.submit_with_conrod::<Primitives>(None, camera, ambient, frame);
     }
 
     pub fn submit_with_conrod<PW>(&mut self,
                                   conrod_data: Option<(PW, &ImageMap)>,
                                   camera: &Camera,
                                   ambient: &AmbientLight,
-                                  window: &Window,
                                   frame: &mut Frame)
         where PW: PrimitiveWalker
     {
@@ -181,7 +178,7 @@ impl Renderer {
         self.sprites.submit(frame);
         self.submit_lights(camera, ambient, frame);
         conrod_data.map(|(primitives, image_map)|
-            self.conrod.render(primitives, image_map, window, frame));
+            self.conrod.render(primitives, image_map, frame));
 
         self.forward_bundle.encode(&mut frame.graphics.encoder);
         frame.should_flush = true;

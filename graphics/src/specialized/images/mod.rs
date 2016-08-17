@@ -97,7 +97,8 @@ impl Renderer {
     pub fn render(&mut self, frame: &mut Frame) -> Render {
         Render {
             mapping: GpuBufferMapping::new(&self.instances, &frame.graphics.factory),
-            offset: 0,
+            start: 0,
+            end: 0,
             current_texture: None,
             renderer: self,
         }
@@ -107,23 +108,30 @@ impl Renderer {
 pub struct Render<'a> {
     renderer: &'a mut Renderer,
     mapping: GpuBufferMapping<'a, ImageInstance>,
-    offset: usize,
+    start: usize,
+    end: usize,
     current_texture: Option<TextureView<ColorFormat>>,
 }
 
 impl<'a> Render<'a> {
-    pub fn add(&mut self,
-               position_inf: [f32; 2],
-               position_sup: [f32; 2],
-               tex_coord_inf: [f32; 2],
-               tex_coord_sup: [f32; 2],
-               texture_view: TextureView<ColorFormat>,
-               color: Color,
-               frame: &mut Frame)
+    pub fn add<F>(&mut self,
+                  position_inf: [f32; 2],
+                  position_sup: [f32; 2],
+                  tex_coord_inf: [f32; 2],
+                  tex_coord_sup: [f32; 2],
+                  texture_view: TextureView<ColorFormat>,
+                  color: Color,
+                  flush: &mut F,
+                  frame: &mut Frame)
+        where F: FnMut(&mut Frame)
     {
-        if let Some(current) = self.current_texture.take() {
-            if self.offset == IMAGE_BUFFER_SIZE || current != texture_view {
-                self.flush(current, frame);
+        if self.end == IMAGE_BUFFER_SIZE {
+            self.before_flush(frame);
+            flush(frame);
+        } else if let Some(current) = self.current_texture.take() {
+            if current != texture_view {
+                self.draw(current, &mut frame.graphics.encoder);
+                frame.should_flush();
             }
         }
 
@@ -135,23 +143,29 @@ impl<'a> Render<'a> {
             color: PackedColor::from(color).0,
         };
 
-        self.mapping.set(self.offset, instance);
-        self.offset += 1;
+        self.mapping.set(self.end, instance);
+        self.end += 1;
         self.current_texture = Some(texture_view);
     }
 
-    pub fn ensure_flushed(&mut self, frame: &mut Frame) {
-        if let Some(current) = self.current_texture.take() {
-            self.flush(current, frame);
+    pub fn before_flush(&mut self, frame: &mut Frame) {
+        self.ensure_drawed(frame);
+        self.mapping.ensure_unmapped();
+        self.start = 0;
+        self.end = 0;
+    }
+
+    pub fn ensure_drawed(&mut self, frame: &mut Frame) {
+        if let Some(texture) = self.current_texture.take() {
+            self.draw(texture, &mut frame.graphics.encoder);
+            frame.should_flush();
         }
     }
 
-    fn flush(&mut self,
-             texture_view: TextureView<ColorFormat>,
-             frame: &mut Frame)
+    fn draw(&mut self,
+            texture_view: TextureView<ColorFormat>,
+            encoder: &mut Encoder)
     {
-        let &mut Graphics { ref mut encoder, ref mut device, .. } = frame.graphics;
-
         let data = render_pipe::Data {
             vertices: self.renderer.vertices.clone(),
             instances: self.renderer.instances.clone(),
@@ -161,13 +175,13 @@ impl<'a> Render<'a> {
             color_target: self.renderer.color_target.clone(),
         };
 
-        self.renderer.slice.instances = Some((self.offset as u32, 0));
+        let count = (self.end - self.start) as gfx::InstanceCount;
+        self.renderer.slice.instances = Some((count, self.start as gfx::VertexCount));
 
-        self.mapping.ensure_unmapped();
+        println!("image slice: {:?}", self.renderer.slice);
+
         encoder.draw(&self.renderer.slice, &self.renderer.pso, &data);
-        encoder.flush(device);
-
-        self.offset = 0;
+        self.start = self.end;
     }
     
     pub fn scissor_mut(&mut self) -> &mut gfx_core::target::Rect {

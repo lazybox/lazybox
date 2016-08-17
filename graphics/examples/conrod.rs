@@ -6,7 +6,7 @@ extern crate cgmath;
 extern crate rayon;
 
 use graphics::{Graphics, Camera};
-use graphics::complete::sprites::Renderer;
+use graphics::combined::sprites::Renderer;
 use graphics::lights::*;
 use graphics::types::ColorFormat;
 use glutin::{WindowBuilder, Event};
@@ -82,7 +82,7 @@ fn main() {
             use conrod::{Colorable, Positionable, Sizeable, Widget};
             
             conrod::Canvas::new().color(conrod::color::DARK_CHARCOAL).set(CANVAS, ui);
-
+/*
             let demo_text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                 Mauris aliquet porttitor tellus vel euismod. Integer lobortis volutpat bibendum. \
                 Nulla finibus odio nec elit condimentum, rhoncus fermentum purus lacinia. \
@@ -116,9 +116,10 @@ fn main() {
                 maybe_thickness: Some(20.),
                 maybe_cap: Some(conrod::LineCap::Round),
             };
-            
+
             conrod::Line::abs_styled([0., 0.], [120., 0.], style).set(LINE, ui);
 
+  */          
             let image = conrod::Image::new().w_h(64., 64.);
             image.clone()
                 .color(Some(conrod::color::RED))
@@ -136,7 +137,7 @@ fn main() {
         
         let mut frame = graphics.draw();
         let conrod_data = ui.draw_if_changed().map(|p| (p, &image_map));
-        renderer.submit_with_conrod(conrod_data, &camera, &ambient_light, &window, &mut frame);
+        renderer.submit_with_conrod(conrod_data, &camera, &ambient_light, &mut frame);
         frame.present(&window);
     }
 }
