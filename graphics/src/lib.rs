@@ -153,6 +153,8 @@ impl<'a> Frame<'a> {
     }
 
     pub fn flush(&mut self) {
+        println!("flush");
+        
         self.graphics.encoder.flush(&mut self.graphics.device);
         self.should_flush = false;
     }

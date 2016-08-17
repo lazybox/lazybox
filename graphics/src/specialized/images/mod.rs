@@ -149,6 +149,8 @@ impl<'a> Render<'a> {
     }
 
     pub fn before_flush(&mut self, frame: &mut Frame) {
+        println!("image before");
+        
         self.ensure_drawed(frame);
         self.mapping.ensure_unmapped();
         self.start = 0;

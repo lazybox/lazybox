@@ -30,8 +30,14 @@ impl<'a, T: 'static + Copy> GpuBufferMapping<'a, T> {
         use gfx::traits::*;
 
         self.mapping.take().unwrap_or_else(|| unsafe {
-            mem::transmute::<_, MappingWritable<'a, T>>(
+            mem::transmute::<MappingWritable<T>, MappingWritable<'a, T>>(
                 self.factory.map_buffer_writable(&self.buffer))
         })
+    }
+}
+
+impl<'a, T: 'static + Copy> Drop for GpuBufferMapping<'a, T> {
+    fn drop(&mut self) {
+        self.ensure_unmapped();
     }
 }

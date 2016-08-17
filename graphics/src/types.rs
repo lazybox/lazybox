@@ -28,3 +28,5 @@ pub type Slice = gfx::Slice<Resources>;
 
 pub type MappingWritable<'a, T> = gfx_core::mapping::Writable<'a, T, Resources, Factory>;
 pub type Bundle<T> = gfx::pso::bundle::Bundle<Resources, T>;
+
+pub type GfxRect = gfx_core::target::Rect;
