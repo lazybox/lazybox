@@ -99,14 +99,14 @@ impl Renderer {
             translate: [0., 0.],
             scale: [2. / w, 2. / h],
         };
-        graphics.encoder.update_constant_buffer(conrod_camera_locals, &conrod_locals);
+        graphics.encoder.update_constant_buffer(conrod_camera_locals, &conrod_locals).unwrap();
 
         // rusttype (origin top-left, pixel unit, y downwards) to gl.
         let rusttype_locals = camera::Locals {
             translate: [-w / 2., -h / 2.],
             scale: [2. / w, -2. / h],
         };
-        graphics.encoder.update_constant_buffer(rusttype_camera_locals, &rusttype_locals);
+        graphics.encoder.update_constant_buffer(rusttype_camera_locals, &rusttype_locals).unwrap();
     }
 
     pub fn render<PW>(&mut self,
@@ -121,9 +121,9 @@ impl Renderer {
 
         let mut render = Render {
             currently: Rendering::Nothing,
-            polygons: &mut self.polygons.render(frame),
+            polygons: self.polygons.render(frame),
             glyphs: &mut self.glyphs,
-            images: &mut self.images.render(frame),
+            images: self.images.render(frame),
             frame: frame,
             dpi_factor: self.dpi_factor,
         };
@@ -139,26 +139,21 @@ impl Renderer {
             use conrod::render::PrimitiveKind::*;
             match kind {
                 Rectangle { color } => {
-                    println!("rectangle");
                     render.add_rectangle(color, rect, scissor);
                 }
                 Polygon { color, points } => {
-                    println!("polygon");
                     render.add_polygon(color, points, scissor);
                 }
                 Lines { color, cap, thickness, points } => {
-                    println!("line");
                     render.add_lines(color, cap, thickness, points, scissor);
                 }
                 Image { color, source_rect } => {
                     if let Some(texture) = image_map.get(index) {
-                        println!("image");
                         render.add_image(color, source_rect, texture.clone(), rect, scissor);
                     }
                 }
                 Text { color, text, font_id } => {
-                    println!("text");
-                    //render.add_text(color, text, font_id, scissor);
+                    render.add_text(color, text, font_id, scissor);
                 }
                 Other(_) => {
                     // TODO?
@@ -170,22 +165,27 @@ impl Renderer {
     }
 }
 
-struct Render<'a> {
+struct Render<'a, 'b: 'a, 'c, 'd: 'c> {
     currently: Rendering,
-    polygons: &'a mut polygons::Render<'a>,
+    polygons: polygons::Render<'b>,
     glyphs: &'a mut glyphs::Renderer,
-    images: &'a mut images::Render<'a>,
-    frame: &'a mut Frame<'a>,
+    images: images::Render<'b>,
+    frame: &'c mut Frame<'d>,
     dpi_factor: f32,
 }
 
-impl<'a> Render<'a> {
-    fn switch(&mut self, target: Rendering, scissor: gfx_core::target::Rect) {
+impl<'a, 'b: 'a, 'c, 'd: 'c> Render<'a, 'b, 'c, 'd> {
+    fn switch(&mut self, target: Rendering, scissor: GfxRect) {
         if self.currently != target {
             match self.currently {
                 Rendering::Nothing => (),
                 Rendering::Polygons => self.polygons.ensure_drawed(self.frame),
-                Rendering::Glyphs => unimplemented!(), // TODO
+                Rendering::Glyphs => {
+                    self.polygons.before_flush(self.frame);
+                    self.images.before_flush(self.frame);
+                    self.glyphs.before_flush(self.frame);
+                    self.frame.ensure_flushed();
+                }
                 Rendering::Images => self.images.ensure_drawed(self.frame),
             }
 
@@ -206,10 +206,14 @@ impl<'a> Render<'a> {
                      scissor: GfxRect)
     {
         self.switch(Rendering::Polygons, scissor);
-        let flush = &mut |frame: &mut Frame| {
-            self.images.before_flush(frame);
-            // TODO: glyphs
-            frame.flush();
+        let &mut Render { ref mut polygons,
+                          ref mut glyphs,
+                          ref mut images,
+                          ref mut frame, .. } = self;
+
+        let before_flush = &mut |frame: &mut Frame| {
+            images.before_flush(frame);
+            glyphs.before_flush(frame);
         };
 
         let color = Self::conv_color(color);
@@ -219,7 +223,7 @@ impl<'a> Render<'a> {
                         rect.bottom_left()]
                             .iter()
                             .map(|&[x, y]| [x as f32, y as f32]),
-                        |triangles| self.polygons.add_slice(color, triangles, flush, self.frame));
+                        |triangles| polygons.add_slice(color, triangles, before_flush, frame));
     }
 
     fn add_polygon(&mut self,
@@ -228,15 +232,19 @@ impl<'a> Render<'a> {
                    scissor: GfxRect)
     {
         self.switch(Rendering::Polygons, scissor);
-        let flush = &mut |frame: &mut Frame| {
-            self.images.before_flush(frame);
-            // TODO: glyphs
-            frame.flush();
+        let &mut Render { ref mut polygons,
+                          ref mut glyphs,
+                          ref mut images,
+                          ref mut frame, .. } = self;
+
+        let before_flush = &mut |frame: &mut Frame| {
+            images.before_flush(frame);
+            glyphs.before_flush(frame);
         };
 
         let color = Self::conv_color(color);
         stream_polygon(points.iter().map(|&[x, y]| [x as f32, y as f32]),
-                       |triangles| self.polygons.add_slice(color, triangles, flush, self.frame));
+                       |triangles| polygons.add_slice(color, triangles, before_flush, frame));
     }
 
     fn add_lines(&mut self,
@@ -249,10 +257,14 @@ impl<'a> Render<'a> {
         use cgmath::Point2;
 
         self.switch(Rendering::Polygons, scissor);
-        let flush = &mut |frame: &mut Frame| {
-            self.images.before_flush(frame);
-            // TODO: glyphs
-            frame.flush();
+        let &mut Render { ref mut polygons,
+                          ref mut glyphs,
+                          ref mut images,
+                          ref mut frame, .. } = self;
+
+        let before_flush = &mut |frame: &mut Frame| {
+            images.before_flush(frame);
+            glyphs.before_flush(frame);
         };
 
         let color = Self::conv_color(color);        
@@ -271,7 +283,7 @@ impl<'a> Render<'a> {
 
                 stream_round_borders_line(
                     previous, current, resolution, thickness as f32 / 2.0,
-                    |triangles| self.polygons.add_slice(color, triangles, flush, self.frame));
+                    |triangles| polygons.add_slice(color, triangles, before_flush, frame));
 
                 previous = current;
             }
@@ -286,10 +298,14 @@ impl<'a> Render<'a> {
                  scissor: GfxRect)
     {
         self.switch(Rendering::Images, scissor);
-        let flush = &mut |frame: &mut Frame| {
-            self.polygons.before_flush(frame);
-            // TODO: glyphs
-            frame.flush();
+        let &mut Render { ref mut polygons,
+                          ref mut glyphs,
+                          ref mut images,
+                          ref mut frame, .. } = self;
+
+        let before_flush = &mut |frame: &mut Frame| {
+            polygons.before_flush(frame);
+            glyphs.before_flush(frame);
         };
 
         let color = color.map(Self::conv_color).unwrap_or(Color::white());
@@ -302,14 +318,14 @@ impl<'a> Render<'a> {
             .unwrap_or(([0.0; 2],
                         [1.0; 2]));
 
-        self.images.add(position_inf,
+        images.add(position_inf,
                         position_sup,
                         tex_coord_inf,
                         tex_coord_sup,
                         texture,
                         color,
-                        flush,
-                        self.frame); 
+                        before_flush,
+                        frame); 
     }
 
     fn add_text(&mut self,
@@ -319,23 +335,28 @@ impl<'a> Render<'a> {
                 scissor: GfxRect)
     {
         self.switch(Rendering::Glyphs, scissor);
-        let flush = &mut |frame: &mut Frame| {
-            self.polygons.before_flush(frame);
-            self.images.before_flush(frame);
-            frame.flush();
+        let &mut Render { ref mut polygons,
+                          ref mut glyphs,
+                          ref mut images,
+                          ref mut frame,
+                          dpi_factor, .. } = self;
+
+        let before_flush = &mut |frame: &mut Frame| {
+            polygons.before_flush(frame);
+            images.before_flush(frame);
         };
 
         let color = Self::conv_color(color);
         let font_id = font_id.index();
-        for glyph in text.positioned_glyphs(self.dpi_factor) {
-            self.glyphs.render(font_id, color, glyph.clone(), flush, self.frame);
+        for glyph in text.positioned_glyphs(dpi_factor) {
+            glyphs.render(font_id, color, glyph.clone(), before_flush, frame);
         }
     }
 
     fn finish(mut self) {
         self.polygons.before_flush(self.frame);
-        // TODO: glyphs
         self.images.before_flush(self.frame);
+        self.glyphs.before_flush(self.frame);
     }
 
     fn conv_color(c: conrod::Color) -> Color {

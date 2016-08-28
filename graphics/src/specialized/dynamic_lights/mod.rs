@@ -76,6 +76,7 @@ mod defines {
 pub struct Renderer {
     shadow_map_bundle: Bundle<shadow_map_pipe::Data<Resources>>,
     render_bundle: Bundle<render_pipe::Data<Resources>>,
+    mapping: MappingWritable<LightInstance>,
 }
 
 impl Renderer {
@@ -122,6 +123,7 @@ impl Renderer {
         };
 
         let lights = graphics.factory.create_constant_buffer(LIGHT_BUFFER_SIZE);
+        let mapping = graphics.factory.map_buffer_writable(&lights).unwrap();
         
         let linear_sampler = graphics.factory.create_sampler_linear();
 
@@ -159,6 +161,7 @@ impl Renderer {
         Renderer {
             shadow_map_bundle: shadow_map_bundle,
             render_bundle: render_bundle,
+            mapping: mapping,
         }
     }
 
@@ -181,10 +184,8 @@ impl Renderer {
                   layer_count: u8,
                   frame: &mut Frame) -> Render {
         Render {
-            mapping: GpuBufferMapping::new(&self.render_bundle.data.lights,
-                                           &frame.graphics.factory),
-            offset: 0,
             renderer: self,
+            offset: 0,
             shadow_map_pos: -1.,
             radius_factor: radius_factor,
             layer_count: layer_count as f32,
@@ -194,7 +195,6 @@ impl Renderer {
 
 pub struct Render<'a> {
     renderer: &'a mut Renderer,
-    mapping: GpuBufferMapping<'a, LightInstance>,
     offset: usize,
     shadow_map_pos: f32,
     radius_factor: f32,
@@ -210,7 +210,7 @@ impl<'a> Render<'a> {
             self.flush(frame);
         }
 
-        self.mapping.set(self.offset, LightInstance {
+        self.renderer.mapping.write().set(self.offset, LightInstance {
             color_intensity: [
                 light.color.r,
                 light.color.g,
@@ -242,7 +242,6 @@ impl<'a> Render<'a> {
         self.renderer.shadow_map_bundle.slice.instances = instances;
         self.renderer.render_bundle.slice.instances = instances;
 
-        self.mapping.ensure_unmapped();
         self.renderer.shadow_map_bundle.encode(encoder);
         self.renderer.render_bundle.encode(encoder);
         encoder.flush(device);

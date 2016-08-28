@@ -181,7 +181,7 @@ impl Renderer {
             self.conrod.render(primitives, image_map, frame));
 
         self.forward_bundle.encode(&mut frame.graphics.encoder);
-        frame.should_flush = true;
+        frame.should_flush();
     }
 
     fn submit_lights(&mut self,
@@ -214,6 +214,6 @@ impl Renderer {
             translate: camera.translate.into(),
             scale: camera.scale.into(),
         };
-        graphics.encoder.update_constant_buffer(&self.sprites.camera(), &locals);
+        graphics.encoder.update_constant_buffer(&self.sprites.camera(), &locals).unwrap();
     }
 }

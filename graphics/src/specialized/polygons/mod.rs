@@ -6,7 +6,6 @@ use gfx_core;
 use {Graphics, Frame, Color};
 use camera;
 use color::PackedColor;
-use utils::GpuBufferMapping;
 use types::*;
 
 pub type Triangle = [[f32; 2]; 3];
@@ -42,6 +41,7 @@ mod defines {
 pub struct Renderer {
     pso: PipelineState<pipe::Meta>,
     data: pipe::Data<Resources>,
+    mapping: MappingWritable<Vertex>,
 }
 
 impl Renderer {
@@ -55,9 +55,10 @@ impl Renderer {
             .create_pipeline_simple(RENDER_GLSLV_150, RENDER_GLSLF_150, pipe::new())
             .expect("could not create polygon render pipeline");
 
-        let vertices = graphics.factory
-        	.create_buffer_dynamic(VERTEX_BUFFER_SIZE, gfx::BufferRole::Vertex, gfx::Bind::empty())
-            .expect("could not create polygon vertex buffer");
+        let (vertices, mapping) = graphics.factory
+            .create_buffer_persistent_writable(VERTEX_BUFFER_SIZE,
+                                               gfx::BufferRole::Vertex,
+                                               gfx::Bind::empty());
 
         Renderer {
             pso: pso,
@@ -67,6 +68,7 @@ impl Renderer {
                 scissor: scissor,
                 color_target: color_target,
             },
+            mapping: mapping,
         }
     }
 
@@ -88,17 +90,15 @@ impl Renderer {
 
     pub fn render(&mut self, frame: &mut Frame) -> Render {
         Render {
-            mapping: GpuBufferMapping::new(&self.data.vertices, &frame.graphics.factory),
+            renderer: self, 
             start: 0,
             end: 0,
-            renderer: self, 
         }
     }
 }
 
 pub struct Render<'a> {
     renderer: &'a mut Renderer,
-    mapping: GpuBufferMapping<'a, Vertex>,
     start: usize,
     end: usize,
 }
@@ -107,19 +107,20 @@ impl<'a> Render<'a> {
     pub fn add<F>(&mut self,
                   color: Color,
                   triangle: &Triangle,
-                  flush: &mut F,
+                  before_flush: &mut F,
                   frame: &mut Frame)
         where F: FnMut(&mut Frame)
     {
         if self.end == VERTEX_BUFFER_SIZE {
+            before_flush(frame);
             self.before_flush(frame);
-            flush(frame);
+            frame.flush();
         }
 
         let color = PackedColor::from(color).0;
         for &p in triangle {
             let vertex = Vertex { position: p, color: color };
-            self.mapping.set(self.end, vertex);
+            self.renderer.mapping.write().set(self.end, vertex);
             self.end += 1;
         }
     }
@@ -127,20 +128,17 @@ impl<'a> Render<'a> {
     pub fn add_slice<F>(&mut self,
                         color: Color,
                         triangles: &[Triangle],
-                        flush: &mut F,
+                        before_flush: &mut F,
                         frame: &mut Frame)
         where F: FnMut(&mut Frame)
     {
         for t in triangles {
-            self.add(color, t, flush, frame);
+            self.add(color, t, before_flush, frame);
         }
     }
 
     pub fn before_flush(&mut self, frame: &mut Frame) {
-        println!("polygon before");
-
         self.ensure_drawed(frame);
-        self.mapping.ensure_unmapped();
         self.start = 0;
         self.end = 0;
     }
@@ -160,8 +158,6 @@ impl<'a> Render<'a> {
             base_vertex: 0,
             instances: None,
         };
-
-        println!("polygon slice: {:?}", slice);
 
         encoder.draw(&slice, &self.renderer.pso, &self.renderer.data);
         self.start = self.end;

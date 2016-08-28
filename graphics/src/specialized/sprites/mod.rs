@@ -62,6 +62,7 @@ mod defines {
 
 pub struct Renderer {
     bundle: SpriteBundle,
+    mapping: MappingWritable<SpriteInstance>,
     layers: Layers<LayerEntities, LayerData>,
 }
 
@@ -151,9 +152,10 @@ impl Renderer {
         let (vertices, slice) = graphics.factory
             .create_vertex_buffer_with_slice(&HALF_QUAD_VERTICES, &HALF_QUAD_INDICES[..]);
 
-        let instances = graphics.factory
-            .create_buffer_dynamic(SPRITE_BUFFER_SIZE, gfx::BufferRole::Vertex, gfx::Bind::empty())
-            .unwrap();
+        let (instances, mapping) = graphics.factory
+            .create_buffer_persistent_writable(SPRITE_BUFFER_SIZE,
+                                               gfx::BufferRole::Vertex,
+                                               gfx::Bind::empty());
         
         let bundle = SpriteBundle {
             pso: pso,
@@ -170,6 +172,7 @@ impl Renderer {
 
         Renderer {
             bundle: bundle,
+            mapping: mapping,
             layers: Layers::new(),
         }
     }
@@ -216,7 +219,6 @@ impl Renderer {
     pub fn submit(&mut self, frame: &mut Frame) {
         let &mut Graphics { ref mut encoder,
                             ref mut device,
-                            ref factory,
                             ref texture_binds,
                             .. } = frame.graphics;
 
@@ -234,9 +236,8 @@ impl Renderer {
             let layer_locals = LayerLocals {
                 occlusion: data.occlusion / layer_count,
             };
-            encoder.update_constant_buffer(&self.bundle.layer_locals, &layer_locals);
+            encoder.update_constant_buffer(&self.bundle.layer_locals, &layer_locals).unwrap();
 
-            let mut instances_mapping = GpuBufferMapping::new(&self.bundle.instances, &factory);
             let bundle = &mut self.bundle;
             let mut flush = |texture_id, instance_count| {
                 let texture = texture_binds.get(texture_id);
@@ -251,19 +252,17 @@ impl Renderer {
 
                 if let Some(current) = current_texture {
                     if i == SPRITE_BUFFER_SIZE || current != texture {
-                        instances_mapping.ensure_unmapped();
                         flush(current, i as u32);
                         i = 0;
                     }
                 }
 
-                instances_mapping.set(i, buffers[buffer_index].sprites[index].1);
+                self.mapping.write().set(i, buffers[buffer_index].sprites[index].1);
                 current_texture = Some(texture);
                 i += 1;
             }
 
             if let Some(current) = current_texture {
-                instances_mapping.ensure_unmapped();
                 flush(current, i as u32);
             }
 

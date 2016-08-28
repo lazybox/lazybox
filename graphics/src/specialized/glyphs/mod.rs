@@ -48,6 +48,7 @@ mod defines {
 
 pub struct Renderer {
     bundle: Bundle<pipe::Data<Resources>>,
+    mapping: MappingWritable<GlyphInstance>,
     cache: GlyphCache,
     queue: Vec<(usize, PackedColor, PositionedGlyph<'static>)>,
 }
@@ -67,9 +68,10 @@ impl Renderer {
         let (vertices, slice) = graphics.factory
             .create_vertex_buffer_with_slice(&QUAD_VERTICES, &QUAD_INDICES[..]);
         
-        let instances = graphics.factory
-            .create_buffer_dynamic(GLYPH_BUFFER_SIZE, gfx::BufferRole::Vertex, gfx::Bind::empty())
-            .unwrap();
+        let (instances, mapping) = graphics.factory
+            .create_buffer_persistent_writable(GLYPH_BUFFER_SIZE,
+                                               gfx::BufferRole::Vertex,
+                                               gfx::Bind::empty());
 
         let linear_sampler = graphics.factory.create_sampler_linear();
 
@@ -87,6 +89,7 @@ impl Renderer {
 
         Renderer {
             bundle: Bundle::new(slice, pso, data),
+            mapping: mapping,
             cache: cache,
             queue: Vec::with_capacity(GLYPH_BUFFER_SIZE),
         }
@@ -108,40 +111,35 @@ impl Renderer {
                      font_id: usize,
                      color: Color,
                      glyph: PositionedGlyph<'static>,
-                     flush: &mut F,
+                     before_flush: &mut F,
                      frame: &mut Frame)
         where F: FnMut(&mut Frame)
     {
         if self.queue.len() == GLYPH_BUFFER_SIZE {
+            before_flush(frame);
             self.draw(frame);
-            flush(frame);
+            frame.flush();
         }
 
         self.cache.queue_glyph(font_id, glyph.clone());
         self.queue.push((font_id, PackedColor::from(color), glyph));
     }
 
-    pub fn ensure_flushed<F>(&mut self,
-                             flush: &mut F,
-                             frame: &mut Frame)
-        where F: FnMut(&mut Frame)
-    {
+    pub fn before_flush(&mut self, frame: &mut Frame) {
         if self.queue.len() > 0 {
             self.draw(frame);
-            flush(frame);
+            frame.should_flush();
         }
     }
 
     fn draw(&mut self, frame: &mut Frame) {
-        use gfx::traits::*;
-
-        let &mut Graphics { ref mut encoder, ref mut factory, .. } = frame.graphics;
+        let &mut Graphics { ref mut encoder, .. } = frame.graphics;
 
         self.cache.cache_queued(encoder).unwrap();
 
         let conv_point = |p: Point<i32>| [p.x as f32, p.y as f32];
 
-        let mut instances_mapping = factory.map_buffer_writable(&self.bundle.data.instances);
+        let mut writer = self.mapping.write();
         let mut i = 0;
         for (font_id, color, glyph) in self.queue.drain(..) {
             if let Ok(Some((uv, screen))) = self.cache.rect_for(font_id, &glyph) {
@@ -153,15 +151,12 @@ impl Renderer {
                     color: color.0,
                 };
 
-                instances_mapping.set(i, instance);
+                writer.set(i, instance);
                 i += 1;                
             }
         }
 
         self.bundle.slice.instances = Some((i as u32, 0));
-
-        println!("text slice: {:?}", self.bundle.slice);
-
         self.bundle.encode(encoder);
     }
 }

@@ -5,10 +5,10 @@ version = "0.1.0"
 authors = ["Thomas Koehler <basta.t.k+git@gmail.com>"]
 
 [dependencies]
-gfx = "0.12"
-gfx_core = "0.4"
-gfx_device_gl = "0.11"
-gfx_window_glutin = "0.12"
+gfx = { git = "https://github.com/Bastacyclop/gfx", branch = "persistent" }
+gfx_core = { git = "https://github.com/Bastacyclop/gfx", path="src/core", branch = "persistent" }
+gfx_device_gl = { git = "https://github.com/Bastacyclop/gfx", path="src/backend/gl", branch = "persistent" }
+gfx_window_glutin = { git = "https://github.com/Bastacyclop/gfx", path="src/window/glutin", branch = "persistent" }
 glutin = "0.6"
 rusttype = "0.2"
 conrod = { version = "0.39", features = ["glutin"] }

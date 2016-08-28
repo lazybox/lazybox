@@ -109,7 +109,7 @@ impl Graphics {
 
         let aa_mode = gfx::tex::AaMode::Single;
         let kind = gfx::tex::Kind::D2(w, h, aa_mode);
-        let (_, view) = self.factory.create_texture_const_u8::<F>(kind, &[data]).unwrap();
+        let (_, view) = self.factory.create_texture_immutable_u8::<F>(kind, &[data]).unwrap();
         view
     }
 
@@ -153,8 +153,6 @@ impl<'a> Frame<'a> {
     }
 
     pub fn flush(&mut self) {
-        println!("flush");
-        
         self.graphics.encoder.flush(&mut self.graphics.device);
         self.should_flush = false;
     }
