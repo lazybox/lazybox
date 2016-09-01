@@ -6,13 +6,16 @@ use camera;
 use utils::*;
 use types::*;
 
-pub const LIGHT_BUFFER_SIZE: usize = 128;
-pub const SHADOW_MAP_SIZE: u16 = 1024; // FIXME: need something bigger than that
-pub const SHADOW_MAP_PORTION: f32 = 512.0 / SHADOW_MAP_SIZE as f32;
-pub const SHADOW_MAP_TEXEL: f32 = 1.0 / SHADOW_MAP_SIZE as f32;
+pub const LIGHT_BUFFER_SIZE: usize = 256;
+pub const SMALL_SHADOW_MAP_SIZE: u16 = 64;
+pub const SMALL_SHADOW_MAP_COUNT: u16 = 256;
+pub const BIG_SHADOW_MAP_SIZE: u16 = 256;
+pub const BIG_SHADOW_MAP_COUNT: u16 = 32;
 
 #[doc(hidden)]
 pub const SHADOW_MAP_GLSLV_150: &'static [u8] = include_bytes!("shadow_map_150.glslv");
+#[doc(hidden)]
+pub const SHADOW_MAP_GLSLG_150: &'static [u8] = include_bytes!("shadow_map_150.glslg");
 #[doc(hidden)]
 pub const SHADOW_MAP_GLSLF_150: &'static [u8] = include_bytes!("shadow_map_150.glslf");
 #[doc(hidden)]
@@ -48,9 +51,8 @@ mod defines {
             radius: f32 = "radius",
             source_radius: f32 = "source_radius",
             occlusion_threshold: f32 = "occlusion_threshold",
-            shadow_map_pos: f32 = "shadow_map_pos",
-            shadow_map_size: f32 = "shadow_map_size",
-            padding: f32 = "padding",
+            shadow_map_index: u32 = "shadow_map_index",
+            padding: [f32; 2] = "padding",
         }
 
         pipeline shadow_map_pipe {
@@ -74,6 +76,10 @@ mod defines {
 }
 
 pub struct Renderer {
+    small_shadow_maps_view: ShaderResourceView<f32>,
+    small_shadow_maps_target: RenderTargetView<f32>,
+    big_shadow_maps_view: ShaderResourceView<f32>,
+    big_shadow_maps_target: RenderTargetView<f32>,
     shadow_map_bundle: Bundle<shadow_map_pipe::Data<Resources>>,
     render_bundle: Bundle<render_pipe::Data<Resources>>,
     mapping: MappingWritable<LightInstance>,
@@ -87,15 +93,22 @@ impl Renderer {
                graphics: &mut Graphics) -> Self {
         use gfx::traits::*;
 
-        let shadow_map_program = graphics.factory
-            .link_program(SHADOW_MAP_GLSLV_150, SHADOW_MAP_GLSLF_150)
-            .expect("could not link shadow map program");
-        let shadow_map_pso = graphics.factory
-            .create_pipeline_from_program(&shadow_map_program,
-                                          gfx::Primitive::LineList,
-                                          gfx::state::Rasterizer::new_fill(),
-                                          shadow_map_pipe::new())
-            .expect("could not create shadow map pipeline");
+        let shadow_map_pso = {
+            let vertex = graphics.factory.create_shader_vertex(SHADOW_MAP_GLSLV_150)
+                .unwrap_or_else(|e| panic!("could not create vertex shader: {}", e));
+            let geometry = graphics.factory.create_shader_geometry(SHADOW_MAP_GLSLG_150)
+                .unwrap_or_else(|e| panic!("could not create geometry shader: {}", e));
+            let pixel = graphics.factory.create_shader_pixel(SHADOW_MAP_GLSLF_150)
+                .unwrap_or_else(|e| panic!("could not create pixel shader: {}", e));
+            let program = graphics.factory
+                .create_program(&gfx::ShaderSet::Geometry(vertex, geometry, pixel))
+                .expect("could not link shadow map program");
+            graphics.factory.create_pipeline_from_program(&program,
+                                                          gfx::Primitive::LineList,
+                                                          gfx::state::Rasterizer::new_fill(),
+                                                          shadow_map_pipe::new())
+                .expect("could not create shadow map pipeline")
+        };
 
         let render_pso = graphics.factory
             .create_pipeline_simple(RENDER_GLSLV_150,
@@ -103,24 +116,11 @@ impl Renderer {
                                     render_pipe::new())
             .expect("could not create light render pipeline");
 
-        let (_, shadow_map_view, shadow_map_target) = {
-            let kind = gfx::texture::Kind::D2(SHADOW_MAP_SIZE, 1, gfx::texture::AaMode::Single);
-            let bind = gfx::SHADER_RESOURCE | gfx::RENDER_TARGET;
-            let usage = gfx::memory::Usage::GpuOnly;
-            let channel = gfx::format::ChannelType::Float;
-            let texture = graphics.factory
-                .create_texture(kind, 1, bind, usage, Some(channel))
-                .unwrap();
-            let swizzle = gfx::format::Swizzle::new();
-            let view = graphics.factory
-                .view_texture_as_shader_resource::<f32>(&texture, (0, 0), swizzle)
-                .unwrap();
-            let target = graphics.factory
-                .view_texture_as_render_target(&texture, 0, None)
-                .unwrap();
+        let (_, small_shadow_maps_view, small_shadow_maps_target) =
+            Self::create_shadow_maps(SMALL_SHADOW_MAP_SIZE, SMALL_SHADOW_MAP_COUNT, &mut graphics.factory);
 
-            (texture, view, target)
-        };
+        let (_, big_shadow_maps_view, big_shadow_maps_target) =
+            Self::create_shadow_maps(BIG_SHADOW_MAP_SIZE, BIG_SHADOW_MAP_COUNT, &mut graphics.factory);
 
         let (lights, mapping) = graphics.factory
             .create_buffer_persistent_writable(LIGHT_BUFFER_SIZE,
@@ -138,7 +138,7 @@ impl Renderer {
                 camera: camera_locals.clone(),
                 lights: lights.clone(),
                 occlusion_sampler: (occlusion_view, linear_sampler.clone()),
-                shadow_target: shadow_map_target,
+                shadow_target: small_shadow_maps_target.clone(),
             };
 
             Bundle::new(slice, shadow_map_pso, data)
@@ -152,7 +152,7 @@ impl Renderer {
                 vertices: vertices,
                 camera: camera_locals,
                 lights: lights,
-                shadow_map_sampler: (shadow_map_view, linear_sampler.clone()),
+                shadow_map_sampler: (small_shadow_maps_view.clone(), linear_sampler.clone()),
                 normal_sampler: (normal_view, linear_sampler),
                 light_target: light_target,
             };
@@ -161,10 +161,30 @@ impl Renderer {
         };
 
         Renderer {
+            small_shadow_maps_view: small_shadow_maps_view,
+            small_shadow_maps_target: small_shadow_maps_target,
+            big_shadow_maps_view: big_shadow_maps_view,
+            big_shadow_maps_target: big_shadow_maps_target,
             shadow_map_bundle: shadow_map_bundle,
             render_bundle: render_bundle,
             mapping: mapping,
         }
+    }
+
+    fn create_shadow_maps(size: u16, count: u16, factory: &mut Factory)
+                          -> (Texture<gfx::format::R32>, TextureView<f32>, RenderTargetView<f32>) {
+        use gfx::traits::*;
+        use gfx::{texture, memory, format};
+
+        let kind = texture::Kind::D2Array(size, 1, count, texture::AaMode::Single);
+        let bind = gfx::SHADER_RESOURCE | gfx::RENDER_TARGET;
+        let usage = memory::Usage::GpuOnly;
+        let channel = format::ChannelType::Float;
+        let texture = factory.create_texture(kind, 1, bind, usage, Some(channel)).unwrap();
+        let swizzle = format::Swizzle::new();
+        let view = factory.view_texture_as_shader_resource::<f32>(&texture, (0, 0), swizzle).unwrap();
+        let target = factory.view_texture_as_render_target(&texture, 0, None).unwrap();
+        (texture, view, target)
     }
 
     pub fn resize(&mut self,
@@ -188,7 +208,7 @@ impl Renderer {
         Render {
             renderer: self,
             offset: 0,
-            shadow_map_pos: -1.,
+            shadow_map_index: 0,
             radius_factor: radius_factor,
             layer_count: layer_count as f32,
         }
@@ -198,17 +218,15 @@ impl Renderer {
 pub struct Render<'a> {
     renderer: &'a mut Renderer,
     offset: usize,
-    shadow_map_pos: f32,
+    shadow_map_index: u32,
     radius_factor: f32,
     layer_count: f32,
 }
 
 impl<'a> Render<'a> {
     pub fn add(&mut self, light: Light, frame: &mut Frame) {
-        let size = 2. * SHADOW_MAP_PORTION * light.radius * self.radius_factor;
-        let step = size + 2. * SHADOW_MAP_TEXEL;
-
-        if self.offset == LIGHT_BUFFER_SIZE || (self.shadow_map_pos + step) > 1. {
+        // TODO: lights category
+        if self.offset == LIGHT_BUFFER_SIZE {
             self.flush(frame);
         }
 
@@ -224,12 +242,11 @@ impl<'a> Render<'a> {
             radius: light.radius,
             source_radius: light.source_radius,
             occlusion_threshold: ((light.source_layer.0) as f32 + 0.5) / self.layer_count,
-            shadow_map_pos: self.shadow_map_pos,
-            shadow_map_size: size,
-            padding: 0.0,
+            shadow_map_index: self.shadow_map_index,
+            padding: [0.; 2],
         });
         self.offset += 1;
-        self.shadow_map_pos += step;
+        self.shadow_map_index += 1;
     }
 
     pub fn ensure_flushed(&mut self, frame: &mut Frame) {
@@ -250,7 +267,7 @@ impl<'a> Render<'a> {
         encoder.flush(device);
 
         self.offset = 0;
-        self.shadow_map_pos = -1.;
+        self.shadow_map_index = 0;
     }
 }
 

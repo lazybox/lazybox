@@ -5,19 +5,17 @@ in vec2 v_TexCoord;
 in vec2 v_LightCoord;
 in vec3 v_LightColor;
 in float v_LightSourceRadius;
-in float v_ShadowMapCoord;
-in float v_ShadowMapSize;
+in float v_MapLevel;
 
 out vec4 o_Light;
 
-uniform sampler2D s_ShadowMap;
+uniform sampler2DArray s_ShadowMap;
 uniform sampler2D s_Normal;
 
 const float PI = 3.14159265358979323846264338327950288;
 
 float sample(float ratio) {
-    float tex_coord = v_ShadowMapCoord + v_ShadowMapSize * ratio;
-    return texture(s_ShadowMap, vec2(tex_coord, 0.0)).x;
+    return texture(s_ShadowMap, vec3(ratio, 0.0, v_MapLevel)).x;
 }
 
 void main() {

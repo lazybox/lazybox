@@ -2,11 +2,14 @@
 
 in float a_Ratio;
 
-out vec2 v_Center;
-out vec2 v_Radius;
-out float v_Angle;
-out float v_Step;
-out float v_OcclusionThreshold;
+out vs_out {
+  vec2 center;
+  vec2 radius;
+  float angle;
+  float step;
+  float occlusion_threshold;
+  uint map_index;
+} vs;
 
 layout(std140)
 uniform Camera {
@@ -20,12 +23,11 @@ struct Light {
     float radius;
     float source_radius;
     float occlusion_threshold;
-    float shadow_map_pos;
-    float shadow_map_size;
-    float padding;
+    uint shadow_map_index;
+    vec2 padding;
 };
 
-const uint LIGHT_BUFFER_SIZE = 128u;
+const uint LIGHT_BUFFER_SIZE = 256u;
 
 layout(std140)
 uniform Lights {
@@ -40,12 +42,12 @@ void main() {
     vec2 center = (l.center + u_Translate) * u_Scale;
     vec2 radius = vec2(l.radius) * u_Scale;
 
-    float coord = l.shadow_map_pos + l.shadow_map_size * a_Ratio;
-    gl_Position = vec4(coord, 0.0, 0.0, 1.0);
+    gl_Position = vec4(a_Ratio, 0.0, 0.0, 1.0);
 
-    v_Center = (center + vec2(1.0)) / 2.0;
-    v_Radius = radius / 2.0;
-    v_Angle = ((a_Ratio * 2.0) - 1.0) * PI;
-    v_Step = GL_STEP / max(radius.x, radius.y);
-    v_OcclusionThreshold = l.occlusion_threshold;
+    vs.center = (center + vec2(1.0)) / 2.0;
+    vs.radius = radius / 2.0;
+    vs.angle = ((a_Ratio * 2.0) - 1.0) * PI;
+    vs.step = GL_STEP / max(radius.x, radius.y);
+    vs.occlusion_threshold = l.occlusion_threshold;
+    vs.map_index = l.shadow_map_index;
 }
