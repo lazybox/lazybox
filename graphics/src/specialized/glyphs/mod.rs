@@ -70,7 +70,7 @@ impl Renderer {
         
         let (instances, mapping) = graphics.factory
             .create_buffer_persistent_writable(GLYPH_BUFFER_SIZE,
-                                               gfx::BufferRole::Vertex,
+                                               gfx::buffer::Role::Vertex,
                                                gfx::Bind::empty());
 
         let linear_sampler = graphics.factory.create_sampler_linear();

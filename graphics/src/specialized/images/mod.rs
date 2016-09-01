@@ -71,9 +71,9 @@ impl Renderer {
 
         let (instances, mapping) = graphics.factory
         	.create_buffer_persistent_writable(IMAGE_BUFFER_SIZE,
-                                               gfx::BufferRole::Vertex,
+                                               gfx::buffer::Role::Vertex,
                                                gfx::Bind::empty());
-        
+
         let linear_sampler = graphics.factory.create_sampler_linear();
 
         Renderer {
@@ -97,7 +97,7 @@ impl Renderer {
         &mut self.scissor
     }
 
-    pub fn render(&mut self, frame: &mut Frame) -> Render {
+    pub fn render(&mut self, _: &mut Frame) -> Render {
         Render {
             renderer: self,
             start: 0,
@@ -145,6 +145,7 @@ impl<'a> Render<'a> {
             color: PackedColor::from(color).0,
         };
 
+        // TODO: call `write()` less often :/
         self.renderer.mapping.write().set(self.end, instance);
         self.end += 1;
         self.current_texture = Some(texture_view);
@@ -182,7 +183,7 @@ impl<'a> Render<'a> {
         encoder.draw(&self.renderer.slice, &self.renderer.pso, &data);
         self.start = self.end;
     }
-    
+
     pub fn scissor_mut(&mut self) -> &mut gfx_core::target::Rect {
         self.renderer.scissor_mut()
     }

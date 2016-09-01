@@ -62,12 +62,12 @@ impl Graphics {
 
     pub fn resize(&mut self, window: &Window) {
         use gfx_core::format::Formatted;
-        use gfx_core::factory::Typed;
+        use gfx_core::memory::Typed;
 
         let (w, h) = window.get_inner_size_pixels().unwrap();
         let aa = window.get_pixel_format().multisampling
-            .unwrap_or(0) as gfx::tex::NumSamples;
-        let dim = (w as gfx::tex::Size, h as gfx::tex::Size, 1, aa.into());
+            .unwrap_or(0) as gfx::texture::NumSamples;
+        let dim = (w as gfx::texture::Size, h as gfx::texture::Size, 1, aa.into());
 
         let (color, depth) = gfx_device_gl::create_main_targets_raw(
             dim,
@@ -107,8 +107,8 @@ impl Graphics {
     {
         use gfx::traits::*;
 
-        let aa_mode = gfx::tex::AaMode::Single;
-        let kind = gfx::tex::Kind::D2(w, h, aa_mode);
+        let aa_mode = gfx::texture::AaMode::Single;
+        let kind = gfx::texture::Kind::D2(w, h, aa_mode);
         let (_, view) = self.factory.create_texture_immutable_u8::<F>(kind, &[data]).unwrap();
         view
     }

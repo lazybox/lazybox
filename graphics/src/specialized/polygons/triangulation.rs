@@ -61,7 +61,7 @@ pub fn stream_round_borders_line<S>(start: Point2<f32>,
 
     let diff = end - start;
     let half_pi = f32::consts::PI/2.0;
-    let start_angle = Rad::atan2(diff.y, diff.x).s + half_pi;
+    let start_angle = Rad::atan2(diff.y, diff.x).0 + half_pi;
 
     let mut i = 0;
     

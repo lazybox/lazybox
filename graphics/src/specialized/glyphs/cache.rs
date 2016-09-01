@@ -26,9 +26,9 @@ impl GlyphCache {
         let cache = Cache::new(width, height, SCALE_TOLERANCE, POSITION_TOLERANCE);
 
         let (texture, texture_view) = {
-            let kind = gfx::tex::Kind::D2(width as u16, height as u16, gfx::tex::AaMode::Single);
+            let kind = gfx::texture::Kind::D2(width as u16, height as u16, gfx::texture::AaMode::Single);
             let bind = gfx::SHADER_RESOURCE;
-            let usage = gfx::Usage::Dynamic;
+            let usage = gfx::memory::Usage::Dynamic;
             let channel = gfx::format::ChannelType::Unorm;
             let texture = graphics.factory
                 .create_texture(kind, 1, bind, usage, Some(channel))
@@ -57,7 +57,7 @@ impl GlyphCache {
         let &mut GlyphCache { ref mut cache, ref texture } = self;
 
         cache.cache_queued(|rect, data| {
-            let info = gfx::tex::ImageInfoCommon {
+            let info = gfx::texture::ImageInfoCommon {
                 xoffset: rect.min.x as u16,
                 yoffset: rect.min.y as u16,
                 zoffset: 0,
@@ -72,8 +72,8 @@ impl GlyphCache {
         })
     }
 
-    pub fn rect_for(&self, font_id: usize, glyph: &PositionedGlyph
-                    ) -> Result<Option<(Rect<f32>, Rect<i32>)>, CacheReadErr> {
+    pub fn rect_for(&self, font_id: usize, glyph: &PositionedGlyph)
+                    -> Result<Option<(Rect<f32>, Rect<i32>)>, CacheReadErr> {
         self.cache.rect_for(font_id, glyph)
     }
 }

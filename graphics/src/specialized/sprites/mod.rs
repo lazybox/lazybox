@@ -55,7 +55,7 @@ mod defines {
                     gfx::state::Equation::Max,
                     gfx::state::Factor::One,
                     gfx::state::Factor::One,
-                )), 
+                )),
         }
     }
 }
@@ -80,9 +80,12 @@ struct SpriteBundle {
 }
 
 impl SpriteBundle {
-    fn encode(&mut self, encoder: &mut Encoder,
-                         texture: &texture::Bind,
-                         instance_count: u32) {
+    fn encode(&mut self,
+              encoder: &mut Encoder,
+              texture: &texture::Bind,
+              instance_count: u32,
+              buffer_offset: u32)
+    {
         let data = render_pipe::Data {
             vertices: self.vertices.clone(),
             instances: self.instances.clone(),
@@ -95,7 +98,7 @@ impl SpriteBundle {
             occlusion_target: self.occlusion_target.clone(),
         };
 
-        self.slice.instances = Some((instance_count, 0));
+        self.slice.instances = Some((instance_count, buffer_offset));
         encoder.draw(&self.slice, &self.pso, &data);
     }
 }
@@ -141,12 +144,12 @@ impl Renderer {
         let pso = graphics.factory
             .create_pipeline_simple(RENDER_GLSLV_150, RENDER_GLSLF_150, render_pipe::new())
             .expect("could not create sprite render pipeline");
-            
+
         let layer_locals = graphics.factory.create_constant_buffer(1);
-        
-        let texture_sampler = graphics.factory.create_sampler(gfx::tex::SamplerInfo::new(
-            gfx::tex::FilterMethod::Mipmap,
-            gfx::tex::WrapMode::Tile,
+
+        let texture_sampler = graphics.factory.create_sampler(gfx::texture::SamplerInfo::new(
+            gfx::texture::FilterMethod::Mipmap,
+            gfx::texture::WrapMode::Tile,
         ));
 
         let (vertices, slice) = graphics.factory
@@ -154,9 +157,9 @@ impl Renderer {
 
         let (instances, mapping) = graphics.factory
             .create_buffer_persistent_writable(SPRITE_BUFFER_SIZE,
-                                               gfx::BufferRole::Vertex,
+                                               gfx::buffer::Role::Vertex,
                                                gfx::Bind::empty());
-        
+
         let bundle = SpriteBundle {
             pso: pso,
             vertices: vertices,
@@ -212,10 +215,10 @@ impl Renderer {
         self.layers.count()
     }
 
-    pub fn queue(&self, id: LayerId) -> Queue {
-        Queue { buffer: self.layers.get(id) }
+    pub fn access(&self) -> Access {
+        Access { layers: &self.layers }
     }
-    
+
     pub fn submit(&mut self, frame: &mut Frame) {
         let &mut Graphics { ref mut encoder,
                             ref mut device,
@@ -236,34 +239,45 @@ impl Renderer {
             let layer_locals = LayerLocals {
                 occlusion: data.occlusion / layer_count,
             };
-            encoder.update_constant_buffer(&self.bundle.layer_locals, &layer_locals).unwrap();
+            encoder.update_constant_buffer(&self.bundle.layer_locals, &layer_locals);
 
             let bundle = &mut self.bundle;
-            let mut flush = |texture_id, instance_count| {
+            let mut draw = |texture_id, start, end, encoder: &mut Encoder| {
                 let texture = texture_binds.get(texture_id);
-                bundle.encode(encoder, texture, instance_count);
-                encoder.flush(device);
+                let count = (end - start) as u32;
+                bundle.encode(encoder, texture, count, start as u32);
             };
 
             let mut current_texture = None;
-            let mut i = 0;
+            let mut start = 0;
+            let mut end = 0;
             for key in &data.sort_keys {
                 let (texture, buffer_index, index) = key.into();
 
-                if let Some(current) = current_texture {
-                    if i == SPRITE_BUFFER_SIZE || current != texture {
-                        flush(current, i as u32);
-                        i = 0;
+                if end == SPRITE_BUFFER_SIZE {
+                    draw(current_texture.unwrap(), start, end, encoder);
+                    encoder.flush(device);
+                    frame.should_flush = false;
+                    start = 0;
+                    end = 0;
+                } else if let Some(current) = current_texture {
+                    if current != texture {
+                        draw(current, start, end, encoder);
+                        frame.should_flush = true;
+                        start = end;
                     }
                 }
 
-                self.mapping.write().set(i, buffers[buffer_index].sprites[index].1);
+                // TODO: call `write()` less often :/
+                self.mapping.write().set(end, buffers[buffer_index].sprites[index].1);
                 current_texture = Some(texture);
-                i += 1;
+                end += 1;
             }
 
             if let Some(current) = current_texture {
-                flush(current, i as u32);
+                draw(current, start, end, encoder);
+                encoder.flush(device);
+                frame.should_flush = false;
             }
 
             for entities in buffers.iter_mut() {
@@ -289,6 +303,17 @@ impl Renderer {
 
 type SpriteData = (TextureBind, SpriteInstance, LayerOrder);
 
+#[derive(Clone, Copy)]
+pub struct Access<'a> {
+    layers: &'a Layers<LayerEntities, LayerData>,
+}
+
+impl<'a> Access<'a> {
+    pub fn queue(&self, id: LayerId) -> Queue {
+        Queue { buffer: self.layers.get(id) }
+    }
+}
+
 pub struct Queue<'a> {
     buffer: Guard<'a, LayerEntities>,
 }
@@ -298,7 +323,7 @@ impl<'a> Queue<'a> {
         let instance = SpriteInstance {
             translate: sprite.position.into(),
             scale: sprite.size.into(),
-            rotate: sprite.rotation.s,
+            rotate: sprite.rotation.0,
             color: PackedColor::from(sprite.color).0,
             tex_coord_inf: sprite.texture.coord_inf,
             tex_coord_sup: sprite.texture.coord_sup,

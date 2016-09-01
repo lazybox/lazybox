@@ -7,7 +7,7 @@ authors = ["Thomas Koehler <basta.t.k+git@gmail.com>"]
 [dependencies]
 lazybox_events = { path = "../events" }
 glutin = "0.6"
-cgmath = "0.10"
+cgmath = "0.11"
 yaml-rust = "0.3"
 
 [dev_dependencies]

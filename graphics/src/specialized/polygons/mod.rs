@@ -57,7 +57,7 @@ impl Renderer {
 
         let (vertices, mapping) = graphics.factory
             .create_buffer_persistent_writable(VERTEX_BUFFER_SIZE,
-                                               gfx::BufferRole::Vertex,
+                                               gfx::buffer::Role::Vertex,
                                                gfx::Bind::empty());
 
         Renderer {
@@ -88,7 +88,7 @@ impl Renderer {
         &mut self.data.scissor
     }
 
-    pub fn render(&mut self, frame: &mut Frame) -> Render {
+    pub fn render(&mut self, _: &mut Frame) -> Render {
         Render {
             renderer: self, 
             start: 0,
@@ -118,9 +118,11 @@ impl<'a> Render<'a> {
         }
 
         let color = PackedColor::from(color).0;
+        // TODO: call `write()` less often :/
+        let mut writer = self.renderer.mapping.write();
         for &p in triangle {
             let vertex = Vertex { position: p, color: color };
-            self.renderer.mapping.write().set(self.end, vertex);
+            writer.set(self.end, vertex);
             self.end += 1;
         }
     }

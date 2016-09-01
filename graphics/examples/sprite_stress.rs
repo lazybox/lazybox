@@ -8,7 +8,7 @@ extern crate rand;
 use graphics::{Graphics, Camera, Color, NormalizedColor};
 use graphics::layer::{LayerOcclusion, LayerOrder};
 use graphics::sprites::{Sprite, SpriteTexture};
-use graphics::complete::sprites::Renderer;
+use graphics::combined::sprites::Renderer;
 use graphics::lights::*;
 use graphics::types::ColorFormat;
 use glutin::{WindowBuilder, Event};
@@ -24,7 +24,7 @@ fn main() {
         .with_gl(glutin::GlRequest::Specific(glutin::Api::OpenGl, (3, 2)));
 
     let (window, mut graphics) = Graphics::new(builder);
-    let mut renderer = Renderer::new(&window, &mut graphics);
+    let mut renderer = Renderer::new(&mut graphics);
     let ground_layer = renderer.push_layer(LayerOcclusion::Ignore);
     let smiley_layer = renderer.push_layer(LayerOcclusion::Ignore);
     let sky_layer = renderer.push_layer(LayerOcclusion::Ignore);
@@ -36,14 +36,14 @@ fn main() {
         color: LightColor::from_srgb([1.0, 0.8, 0.8]),
         intensity: 0.9,
     };
-    
+
     let flat_normal = graphics.load_flat_normal();
     let texture = |graphics: &mut Graphics, color| SpriteTexture {
         bind: graphics.bind_textures(color, flat_normal.clone()),
         coord_inf: [0.; 2],
         coord_sup: [1.; 2],
     };
-    
+
     let ground_color = graphics.load_texture_from_image::<ColorFormat>("resources/slate_color.png");
     let ground_texture = texture(&mut graphics, ground_color);
     let ground_blend_color = Color::white();
@@ -51,7 +51,7 @@ fn main() {
     let happy_color = graphics.load_texture_from_image::<ColorFormat>("resources/happy.png");
     let happy_texture = texture(&mut graphics, happy_color);
     let happy_blend_color = Color::from_srgb([185, 125, 25, 255]);
-    
+
     let unhappy_color = graphics.load_texture_from_image::<ColorFormat>("resources/unhappy.png");
     let unhappy_texture = texture(&mut graphics, unhappy_color);
     let unhappy_blend_color = Color::from_srgb([235, 25, 65, 255]);
@@ -64,7 +64,7 @@ fn main() {
     let random_position = |rng: &mut rand::ThreadRng|
         Point2::new(rng.gen_range(0., 20.), rng.gen_range(0., 20.));
     let random_rotation = |rng: &mut rand::ThreadRng|
-        Rad::new(rng.gen_range(0., 2. * ::std::f32::consts::PI));
+        Rad(rng.gen_range(0., 2. * ::std::f32::consts::PI));
     let random_size = |rng: &mut rand::ThreadRng| {
         let s = rng.gen_range(0.1, 1.0);
         Vector2::new(s, s)
@@ -77,7 +77,7 @@ fn main() {
             grounds.push(Sprite {
                 position: p,
                 size: Vector2::new(2., 2.),
-                rotation: Rad::new(0.),
+                rotation: Rad(0.),
                 texture: ground_texture.clone(),
                 color: ground_blend_color
             });
@@ -108,7 +108,7 @@ fn main() {
         .map(|_| Sprite {
             position: random_position(rng),
             size: random_size(rng) * 2.,
-            rotation: Rad::new(0.),
+            rotation: Rad(0.),
             texture: cloud_texture.clone(),
             color: cloud_blend_color
         })
@@ -120,10 +120,10 @@ fn main() {
         (smiley_layer, LayerOrder(0), unhappies),
         (sky_layer, LayerOrder(0), clouds),
     ];
-    
+
     let mut frameclock = FrameClock::start(1.);
     let mut fps_counter = FpsCounter::new(1.);
-    
+
     'main: loop {
         let delta_time = frameclock.reset();
         if let Some(fps) = fps_counter.update(delta_time) {
@@ -138,17 +138,20 @@ fn main() {
             }
         }
 
-        sprites.par_iter()
-           .weight_max()
-           .for_each(|&(layer, order, ref sprites)| {
-                sprites.par_iter()
-                    .weight(5.0)
-                    .for_each(|sprite| renderer.queue(layer).submit(sprite, order));
-            });
+        {
+            let access = renderer.access();
+            sprites.par_iter()
+                .weight_max()
+                .for_each(|&(layer, order, ref sprites)| {
+                    sprites.par_iter()
+                        .weight(5.0)
+                        .for_each(|sprite| access.queue(layer).submit(sprite, order));
+                });
+        }
 
         let mut frame = graphics.draw();
         frame.clear(clear_color);
-        renderer.submit(&camera, &ambient_light, &window, &mut frame);
+        renderer.submit(&camera, &ambient_light, &mut frame);
         frame.present(&window);
     }
 }

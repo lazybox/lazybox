@@ -9,7 +9,7 @@ use types::*;
 pub const LIGHT_BUFFER_SIZE: usize = 128;
 pub const SHADOW_MAP_SIZE: u16 = 1024; // FIXME: need something bigger than that
 pub const SHADOW_MAP_PORTION: f32 = 512.0 / SHADOW_MAP_SIZE as f32;
-pub const SHADOW_MAP_TEXEL: f32 = 1.0 / SHADOW_MAP_SIZE as f32; 
+pub const SHADOW_MAP_TEXEL: f32 = 1.0 / SHADOW_MAP_SIZE as f32;
 
 #[doc(hidden)]
 pub const SHADOW_MAP_GLSLV_150: &'static [u8] = include_bytes!("shadow_map_150.glslv");
@@ -96,17 +96,17 @@ impl Renderer {
                                           gfx::state::Rasterizer::new_fill(),
                                           shadow_map_pipe::new())
             .expect("could not create shadow map pipeline");
-            
+
         let render_pso = graphics.factory
             .create_pipeline_simple(RENDER_GLSLV_150,
                                     RENDER_GLSLF_150,
                                     render_pipe::new())
             .expect("could not create light render pipeline");
-        
+
         let (_, shadow_map_view, shadow_map_target) = {
-            let kind = gfx::tex::Kind::D2(SHADOW_MAP_SIZE, 1, gfx::tex::AaMode::Single);
+            let kind = gfx::texture::Kind::D2(SHADOW_MAP_SIZE, 1, gfx::texture::AaMode::Single);
             let bind = gfx::SHADER_RESOURCE | gfx::RENDER_TARGET;
-            let usage = gfx::Usage::GpuOnly;
+            let usage = gfx::memory::Usage::GpuOnly;
             let channel = gfx::format::ChannelType::Float;
             let texture = graphics.factory
                 .create_texture(kind, 1, bind, usage, Some(channel))
@@ -122,9 +122,11 @@ impl Renderer {
             (texture, view, target)
         };
 
-        let lights = graphics.factory.create_constant_buffer(LIGHT_BUFFER_SIZE);
-        let mapping = graphics.factory.map_buffer_writable(&lights).unwrap();
-        
+        let (lights, mapping) = graphics.factory
+            .create_buffer_persistent_writable(LIGHT_BUFFER_SIZE,
+                                               gfx::buffer::Role::Constant,
+                                               gfx::Bind::empty());
+
         let linear_sampler = graphics.factory.create_sampler_linear();
 
         let shadow_map_bundle = {
@@ -141,7 +143,7 @@ impl Renderer {
 
             Bundle::new(slice, shadow_map_pso, data)
         };
-        
+
         let render_bundle = {
             let (vertices, slice) = graphics.factory
                 .create_vertex_buffer_with_slice(&QUAD_VERTICES, &QUAD_INDICES[..]);
@@ -182,7 +184,7 @@ impl Renderer {
     pub fn render(&mut self,
                   radius_factor: f32,
                   layer_count: u8,
-                  frame: &mut Frame) -> Render {
+                  _: &mut Frame) -> Render {
         Render {
             renderer: self,
             offset: 0,
@@ -210,6 +212,7 @@ impl<'a> Render<'a> {
             self.flush(frame);
         }
 
+        // TODO: call `write()` less often :/
         self.renderer.mapping.write().set(self.offset, LightInstance {
             color_intensity: [
                 light.color.r,

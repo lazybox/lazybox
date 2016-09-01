@@ -1,12 +1,9 @@
-use glutin::Window;
-
 use {Graphics, Frame, Camera};
 use camera;
 use layer::{LayerId, LayerOcclusion};
 use lights::*;
 use specialized::sprites;
 use specialized::dynamic_lights::{self as lights, OcclusionFormat};
-use specialized::conrod::{self, PrimitiveWalker, Primitives, ImageMap};
 use types::*;
 use utils::*;
 
@@ -24,9 +21,8 @@ mod defines {
     gfx_defines! {
         pipeline forward_pipe {
             vertices: gfx::VertexBuffer<Position> = (),
-            sprite_sampler: gfx::TextureSampler<[f32; 4]> = "s_SpriteColor",
+            color_sampler: gfx::TextureSampler<[f32; 4]> = "s_Color",
             light_sampler: gfx::TextureSampler<[f32; 4]> = "s_Light",
-            conrod_sampler: gfx::TextureSampler<[f32; 4]> = "s_ConrodColor",
             color_target: gfx::BlendTarget<ColorFormat> =
                 ("o_Color", gfx::state::MASK_ALL, gfx::preset::blend::ALPHA),
         }
@@ -36,13 +32,12 @@ mod defines {
 pub struct Renderer {
     sprites: sprites::Renderer,
     lights: lights::Renderer,
-    conrod: conrod::Renderer,
     forward_bundle: Bundle<forward_pipe::Data<Resources>>,
     light_queues: Pool<Vec<Light>>,
 }
 
 impl Renderer {
-    pub fn new(window: &Window, graphics: &mut Graphics) -> Self {
+    pub fn new(graphics: &mut Graphics) -> Self {
         use gfx::traits::*;
 
         let forward_pso = graphics.factory
@@ -51,7 +46,7 @@ impl Renderer {
 
         let (w, h, _, _) = graphics.output_color.get_dimensions();
 
-        let (_, sprite_view, sprite_target) =
+        let (_, color_view, color_target) =
             graphics.factory.create_render_target::<ColorFormat>(w, h).unwrap();
 
         let (_, normal_view, normal_target) =
@@ -59,28 +54,23 @@ impl Renderer {
 
         let (_, occlusion_view, occlusion_target) =
             graphics.factory.create_render_target::<OcclusionFormat>(w, h).unwrap();
-        
+
         let (_, light_view, light_target) =
             graphics.factory.create_render_target::<lights::LightFormat>(w, h).unwrap();
-            
-        let (_, conrod_view, conrod_target) =
-            graphics.factory.create_render_target::<ColorFormat>(w, h).unwrap();
 
         let camera_locals = graphics.factory.create_constant_buffer(1);
 
-        let sprites = sprites::Renderer::new(sprite_target,
+        let sprites = sprites::Renderer::new(color_target,
                                              normal_target,
                                              occlusion_target,
                                              camera_locals.clone(),
                                              graphics);
-        
+
         let lights = lights::Renderer::new(occlusion_view,
                                            normal_view,
                                            light_target,
                                            camera_locals,
                                            graphics);
-
-        let conrod = conrod::Renderer::new(conrod_target, window.hidpi_factor(), graphics);
 
         let linear_sampler = graphics.factory.create_sampler_linear();
 
@@ -90,9 +80,8 @@ impl Renderer {
 
             let data = forward_pipe::Data {
                 vertices: vertices,
-                sprite_sampler: (sprite_view, linear_sampler.clone()),
+                color_sampler: (color_view, linear_sampler.clone()),
                 light_sampler: (light_view, linear_sampler.clone()),
-                conrod_sampler: (conrod_view, linear_sampler),
                 color_target: graphics.output_color.clone(),
             };
 
@@ -102,18 +91,17 @@ impl Renderer {
         Renderer {
             sprites: sprites,
             lights: lights,
-            conrod: conrod,
             forward_bundle: forward_bundle,
             light_queues: Pool::new(),
         }
     }
 
-    pub fn resize(&mut self, window: &Window, graphics: &mut Graphics) {
+    pub fn resize(&mut self, graphics: &mut Graphics) {
         use gfx::traits::*;
 
         let (w, h, _, _) = graphics.output_color.get_dimensions();
 
-        let (_, sprite_view, sprite_target) =
+        let (_, color_view, color_target) =
             graphics.factory.create_render_target::<ColorFormat>(w, h).unwrap();
 
         let (_, normal_view, normal_target) =
@@ -121,20 +109,15 @@ impl Renderer {
 
         let (_, occlusion_view, occlusion_target) =
             graphics.factory.create_render_target::<OcclusionFormat>(w, h).unwrap();
-            
+
         let (_, light_view, light_target) =
             graphics.factory.create_render_target::<lights::LightFormat>(w, h).unwrap();
 
-        let (_, conrod_view, conrod_target) =
-            graphics.factory.create_render_target::<ColorFormat>(w, h).unwrap();
-            
-        self.sprites.resize(sprite_target, normal_target, occlusion_target);
+        self.sprites.resize(color_target, normal_target, occlusion_target);
         self.lights.resize(occlusion_view, normal_view, light_target);
-        self.conrod.resize(conrod_target, window.hidpi_factor(), graphics);
 
-        self.forward_bundle.data.sprite_sampler.0 = sprite_view;
+        self.forward_bundle.data.color_sampler.0 = color_view;
         self.forward_bundle.data.light_sampler.0 = light_view;
-        self.forward_bundle.data.conrod_sampler.0 = conrod_view;
         self.forward_bundle.data.color_target = graphics.output_color.clone();
     }
 
@@ -142,29 +125,14 @@ impl Renderer {
        self.sprites.push_layer(occlusion)
     }
 
-    pub fn queue(&self, id: LayerId) -> sprites::Queue {
-        self.sprites.queue(id)
+    pub fn access(&self) -> Access {
+        Access {
+            sprites: self.sprites.access(),
+            lights: &self.light_queues,
+        }
     }
 
-    pub fn light_queue(&self) -> lights::Queue {
-        lights::Queue { buffer: self.light_queues.get() }
-    }
-
-    pub fn submit(&mut self, 
-                  camera: &Camera,
-                  ambient: &AmbientLight,
-                  frame: &mut Frame)
-    {
-        self.submit_with_conrod::<Primitives>(None, camera, ambient, frame);
-    }
-
-    pub fn submit_with_conrod<PW>(&mut self,
-                                  conrod_data: Option<(PW, &ImageMap)>,
-                                  camera: &Camera,
-                                  ambient: &AmbientLight,
-                                  frame: &mut Frame)
-        where PW: PrimitiveWalker
-    {
+    pub fn submit(&mut self, camera: &Camera, ambient: &AmbientLight, frame: &mut Frame) {
         self.update_camera(camera, &mut frame.graphics);
 
         {
@@ -177,18 +145,12 @@ impl Renderer {
 
         self.sprites.submit(frame);
         self.submit_lights(camera, ambient, frame);
-        conrod_data.map(|(primitives, image_map)|
-            self.conrod.render(primitives, image_map, frame));
 
         self.forward_bundle.encode(&mut frame.graphics.encoder);
         frame.should_flush();
     }
 
-    fn submit_lights(&mut self,
-                     camera: &Camera,
-                     ambient: &AmbientLight,
-                     frame: &mut Frame)
-    {
+    fn submit_lights(&mut self, camera: &Camera, ambient: &AmbientLight, frame: &mut Frame) {
         let layer_count = self.sprites.layer_count();
         frame.graphics.encoder.clear(&self.lights.light_target(), [
             ambient.color.r * ambient.intensity,
@@ -206,6 +168,7 @@ impl Renderer {
             }
         }
 
+        // TODO: ensure_drawed
         render.ensure_flushed(frame);
     }
 
@@ -214,6 +177,22 @@ impl Renderer {
             translate: camera.translate.into(),
             scale: camera.scale.into(),
         };
-        graphics.encoder.update_constant_buffer(&self.sprites.camera(), &locals).unwrap();
+        graphics.encoder.update_constant_buffer(&self.sprites.camera(), &locals);
+    }
+}
+
+#[derive(Clone, Copy)]
+pub struct Access<'a> {
+    sprites: sprites::Access<'a>,
+    lights: &'a Pool<Vec<Light>>,
+}
+
+impl<'a> Access<'a> {
+    pub fn queue(&self, id: LayerId) -> sprites::Queue {
+        self.sprites.queue(id)
+    }
+
+    pub fn light_queue(&self) -> lights::Queue {
+        lights::Queue { buffer: self.lights.get() }
     }
 }
