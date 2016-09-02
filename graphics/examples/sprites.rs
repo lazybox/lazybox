@@ -143,8 +143,8 @@ fn main() {
     let rng = &mut rand::thread_rng();
     let mut create_light = |c| Light {
         center: c,
-        radius: rng.gen_range(2., 4.),
-        source_radius: rng.gen_range(0.1, 0.5),
+        radius: rng.gen_range(0.5, 4.),
+        source_radius: rng.gen_range(0.1, 0.2),
         source_layer: second_layer,
         color: LightColor {
             r: rng.gen_range(0., 1.),
@@ -164,6 +164,7 @@ fn main() {
         let delta_time = frameclock.reset();
         if let Some(fps) = fps_counter.update(delta_time) {
             println!("{:.4} ms/frame, {} frame/s", 1000. / fps, fps as usize);
+            println!("- {} lights", user_lights.len());
         }
 
         for event in window.poll_events() {

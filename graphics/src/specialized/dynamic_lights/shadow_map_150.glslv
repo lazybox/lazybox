@@ -1,6 +1,6 @@
 #version 150 core
 
-in float a_Ratio;
+in float a_MapPosition;
 
 out vs_out {
   vec2 center;
@@ -8,7 +8,7 @@ out vs_out {
   float angle;
   float step;
   float occlusion_threshold;
-  uint map_index;
+  int map_index;
 } vs;
 
 layout(std140)
@@ -23,8 +23,8 @@ struct Light {
     float radius;
     float source_radius;
     float occlusion_threshold;
-    uint shadow_map_index;
-    vec2 padding;
+    float padding_1;
+    vec2 padding_2;
 };
 
 const uint LIGHT_BUFFER_SIZE = 256u;
@@ -42,12 +42,12 @@ void main() {
     vec2 center = (l.center + u_Translate) * u_Scale;
     vec2 radius = vec2(l.radius) * u_Scale;
 
-    gl_Position = vec4(a_Ratio, 0.0, 0.0, 1.0);
+    gl_Position = vec4(a_MapPosition, 0.0, 0.0, 1.0);
 
     vs.center = (center + vec2(1.0)) / 2.0;
     vs.radius = radius / 2.0;
-    vs.angle = ((a_Ratio * 2.0) - 1.0) * PI;
+    vs.angle = a_MapPosition * PI;
     vs.step = GL_STEP / max(radius.x, radius.y);
     vs.occlusion_threshold = l.occlusion_threshold;
-    vs.map_index = l.shadow_map_index;
+    vs.map_index = gl_InstanceID;
 }

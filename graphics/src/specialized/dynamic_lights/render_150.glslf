@@ -9,13 +9,13 @@ in float v_MapLevel;
 
 out vec4 o_Light;
 
-uniform sampler2DArray s_ShadowMap;
+uniform sampler1DArray s_ShadowMap;
 uniform sampler2D s_Normal;
 
 const float PI = 3.14159265358979323846264338327950288;
 
 float sample(float ratio) {
-    return texture(s_ShadowMap, vec3(ratio, 0.0, v_MapLevel)).x;
+    return texture(s_ShadowMap, vec2(ratio, v_MapLevel)).x;
 }
 
 void main() {

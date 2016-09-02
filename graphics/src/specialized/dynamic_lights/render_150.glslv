@@ -21,8 +21,8 @@ struct Light {
     float radius;
     float source_radius;
     float occlusion_threshold;
-    uint shadow_map_index;
-    vec2 padding;
+    float padding_1;
+    vec2 padding_2;
 };
 
 const uint LIGHT_BUFFER_SIZE = 256u;
@@ -45,5 +45,5 @@ void main() {
     v_LightCoord = (light_position + 1.0) / 2.0;
     v_LightColor = l.color_intensity.rgb * l.color_intensity.a;
     v_LightSourceRadius = l.source_radius / l.radius;
-    v_MapLevel = float(l.shadow_map_index);
+    v_MapLevel = float(gl_InstanceID);
 }

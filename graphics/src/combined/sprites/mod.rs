@@ -161,15 +161,18 @@ impl Renderer {
 
         let max_scale = camera.scale.x.max(camera.scale.y);
 
-        let mut render = self.lights.render(max_scale, layer_count, frame);
+        let mut render = self.lights.render(layer_count, frame);
         for buffer in self.light_queues.availables().iter_mut() {
             for light in buffer.drain(..) {
-                render.add(light, frame);
+                if light.radius * max_scale > 0.3 {
+                    render.add_big(light, frame);
+                } else {
+                    render.add_small(light, frame);
+                }
             }
         }
 
-        // TODO: ensure_drawed
-        render.ensure_flushed(frame);
+        render.before_flush(frame);
     }
 
     fn update_camera(&mut self, camera: &Camera, graphics: &mut Graphics) {

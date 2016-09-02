@@ -6,11 +6,9 @@ use camera;
 use utils::*;
 use types::*;
 
-pub const LIGHT_BUFFER_SIZE: usize = 256;
-pub const SMALL_SHADOW_MAP_SIZE: u16 = 64;
-pub const SMALL_SHADOW_MAP_COUNT: u16 = 256;
-pub const BIG_SHADOW_MAP_SIZE: u16 = 256;
-pub const BIG_SHADOW_MAP_COUNT: u16 = 32;
+pub const CATEGORY_COUNT: usize = 2;
+pub const SHADOW_MAP_SIZES: [u16; CATEGORY_COUNT] = [64, 256];
+pub const SHADOW_MAP_COUNTS: [u16; CATEGORY_COUNT] = [256, 32];
 
 #[doc(hidden)]
 pub const SHADOW_MAP_GLSLV_150: &'static [u8] = include_bytes!("shadow_map_150.glslv");
@@ -24,16 +22,16 @@ pub const RENDER_GLSLV_150: &'static [u8] = include_bytes!("render_150.glslv");
 pub const RENDER_GLSLF_150: &'static [u8] = include_bytes!("render_150.glslf");
 
 #[doc(hidden)]
-pub const RATIO_VERTICES: [Ratio; 2] = [
-    Ratio { ratio: 0. },
-    Ratio { ratio: 1. },
+pub const MAP_POSITION_VERTICES: [MapPosition; 2] = [
+    MapPosition { pos: -1. },
+    MapPosition { pos:  1. },
 ];
 
 pub type OcclusionFormat = (gfx::format::R16, gfx::format::Unorm);
 pub type LightFormat = (gfx::format::R16_G16_B16_A16, gfx::format::Float);
 
 #[doc(hidden)]
-pub use self::defines::{Ratio, LightInstance, shadow_map_pipe, render_pipe};
+pub use self::defines::{MapPosition, LightInstance, shadow_map_pipe, render_pipe};
 mod defines {
     pub use super::*;
     pub use types::*;
@@ -41,8 +39,8 @@ mod defines {
     pub use camera;
 
     gfx_defines! {
-        vertex Ratio {
-            ratio: f32 = "a_Ratio",
+        vertex MapPosition {
+            pos: f32 = "a_MapPosition",
         }
 
         constant LightInstance {
@@ -51,12 +49,12 @@ mod defines {
             radius: f32 = "radius",
             source_radius: f32 = "source_radius",
             occlusion_threshold: f32 = "occlusion_threshold",
-            shadow_map_index: u32 = "shadow_map_index",
-            padding: [f32; 2] = "padding",
+            padding_1: f32 = "padding_1",
+            padding_2: [f32; 2] = "padding_2",
         }
 
         pipeline shadow_map_pipe {
-            vertices: gfx::VertexBuffer<Ratio> = (),
+            vertices: gfx::VertexBuffer<MapPosition> = (),
             camera: gfx::ConstantBuffer<camera::Locals> = "Camera",
             lights: gfx::ConstantBuffer<LightInstance> = "Lights",
             occlusion_sampler: gfx::TextureSampler<f32> = "s_Occlusion",
@@ -76,13 +74,12 @@ mod defines {
 }
 
 pub struct Renderer {
-    small_shadow_maps_view: ShaderResourceView<f32>,
-    small_shadow_maps_target: RenderTargetView<f32>,
-    big_shadow_maps_view: ShaderResourceView<f32>,
-    big_shadow_maps_target: RenderTargetView<f32>,
+    lights: [GpuBuffer<LightInstance>; CATEGORY_COUNT],
+    mappings: [MappingWritable<LightInstance>; CATEGORY_COUNT],
+    shadow_maps_views: [ShaderResourceView<f32>; CATEGORY_COUNT],
+    shadow_maps_targets: [RenderTargetView<f32>; CATEGORY_COUNT],
     shadow_map_bundle: Bundle<shadow_map_pipe::Data<Resources>>,
     render_bundle: Bundle<render_pipe::Data<Resources>>,
-    mapping: MappingWritable<LightInstance>,
 }
 
 impl Renderer {
@@ -116,27 +113,32 @@ impl Renderer {
                                     render_pipe::new())
             .expect("could not create light render pipeline");
 
-        let (_, small_shadow_maps_view, small_shadow_maps_target) =
-            Self::create_shadow_maps(SMALL_SHADOW_MAP_SIZE, SMALL_SHADOW_MAP_COUNT, &mut graphics.factory);
-
-        let (_, big_shadow_maps_view, big_shadow_maps_target) =
-            Self::create_shadow_maps(BIG_SHADOW_MAP_SIZE, BIG_SHADOW_MAP_COUNT, &mut graphics.factory);
-
-        let (lights, mapping) = graphics.factory
-            .create_buffer_persistent_writable(LIGHT_BUFFER_SIZE,
+        let (small_lights, small_mapping) = graphics.factory
+            .create_buffer_persistent_writable(SHADOW_MAP_COUNTS[0] as usize,
                                                gfx::buffer::Role::Constant,
                                                gfx::Bind::empty());
 
-        let linear_sampler = graphics.factory.create_sampler_linear();
+        let (_, small_shadow_maps_view, small_shadow_maps_target) =
+            Self::create_shadow_maps(SHADOW_MAP_SIZES[0], SHADOW_MAP_COUNTS[0], &mut graphics.factory);
+
+        let (big_lights, big_mapping) = graphics.factory
+            .create_buffer_persistent_writable(SHADOW_MAP_COUNTS[1] as usize,
+                                               gfx::buffer::Role::Constant,
+                                               gfx::Bind::empty());
+
+        let (_, big_shadow_maps_view, big_shadow_maps_target) =
+            Self::create_shadow_maps(SHADOW_MAP_SIZES[1], SHADOW_MAP_COUNTS[1], &mut graphics.factory);
+
+            let linear_sampler = graphics.factory.create_sampler_linear();
 
         let shadow_map_bundle = {
             let (vertices, slice) = graphics.factory
-                .create_vertex_buffer_with_slice(&RATIO_VERTICES, gfx::IndexBuffer::Auto);
+                .create_vertex_buffer_with_slice(&MAP_POSITION_VERTICES, gfx::IndexBuffer::Auto);
 
             let data = shadow_map_pipe::Data {
                 vertices: vertices,
                 camera: camera_locals.clone(),
-                lights: lights.clone(),
+                lights: small_lights.clone(),
                 occlusion_sampler: (occlusion_view, linear_sampler.clone()),
                 shadow_target: small_shadow_maps_target.clone(),
             };
@@ -151,7 +153,7 @@ impl Renderer {
             let data = render_pipe::Data {
                 vertices: vertices,
                 camera: camera_locals,
-                lights: lights,
+                lights: small_lights.clone(),
                 shadow_map_sampler: (small_shadow_maps_view.clone(), linear_sampler.clone()),
                 normal_sampler: (normal_view, linear_sampler),
                 light_target: light_target,
@@ -161,13 +163,12 @@ impl Renderer {
         };
 
         Renderer {
-            small_shadow_maps_view: small_shadow_maps_view,
-            small_shadow_maps_target: small_shadow_maps_target,
-            big_shadow_maps_view: big_shadow_maps_view,
-            big_shadow_maps_target: big_shadow_maps_target,
+            lights: [small_lights, big_lights],
+            mappings: [small_mapping, big_mapping],
+            shadow_maps_views: [small_shadow_maps_view, big_shadow_maps_view],
+            shadow_maps_targets: [small_shadow_maps_target, big_shadow_maps_target],
             shadow_map_bundle: shadow_map_bundle,
             render_bundle: render_bundle,
-            mapping: mapping,
         }
     }
 
@@ -176,7 +177,7 @@ impl Renderer {
         use gfx::traits::*;
         use gfx::{texture, memory, format};
 
-        let kind = texture::Kind::D2Array(size, 1, count, texture::AaMode::Single);
+        let kind = texture::Kind::D1Array(size, count);
         let bind = gfx::SHADER_RESOURCE | gfx::RENDER_TARGET;
         let usage = memory::Usage::GpuOnly;
         let channel = format::ChannelType::Float;
@@ -201,15 +202,10 @@ impl Renderer {
         &self.render_bundle.data.light_target
     }
 
-    pub fn render(&mut self,
-                  radius_factor: f32,
-                  layer_count: u8,
-                  _: &mut Frame) -> Render {
+    pub fn render(&mut self, layer_count: u8, _: &mut Frame) -> Render {
         Render {
             renderer: self,
-            offset: 0,
-            shadow_map_index: 0,
-            radius_factor: radius_factor,
+            offsets: [0; CATEGORY_COUNT],
             layer_count: layer_count as f32,
         }
     }
@@ -217,21 +213,29 @@ impl Renderer {
 
 pub struct Render<'a> {
     renderer: &'a mut Renderer,
-    offset: usize,
-    shadow_map_index: u32,
-    radius_factor: f32,
+    offsets: [usize; CATEGORY_COUNT],
     layer_count: f32,
 }
 
 impl<'a> Render<'a> {
-    pub fn add(&mut self, light: Light, frame: &mut Frame) {
-        // TODO: lights category
-        if self.offset == LIGHT_BUFFER_SIZE {
-            self.flush(frame);
+    pub fn add_small(&mut self, light: Light, frame: &mut Frame) {
+        self.add(0, light, frame);
+    }
+
+    pub fn add_big(&mut self, light: Light, frame: &mut Frame) {
+        self.add(1, light, frame);
+    }
+
+    pub fn add(&mut self, category: usize, light: Light, frame: &mut Frame) {
+        let c = category;
+
+        if self.offsets[c] == SHADOW_MAP_COUNTS[c] as usize {
+            self.before_category_flush(c, frame);
+            frame.flush();
         }
 
         // TODO: call `write()` less often :/
-        self.renderer.mapping.write().set(self.offset, LightInstance {
+        self.renderer.mappings[c].write().set(self.offsets[c], LightInstance {
             color_intensity: [
                 light.color.r,
                 light.color.g,
@@ -242,32 +246,35 @@ impl<'a> Render<'a> {
             radius: light.radius,
             source_radius: light.source_radius,
             occlusion_threshold: ((light.source_layer.0) as f32 + 0.5) / self.layer_count,
-            shadow_map_index: self.shadow_map_index,
-            padding: [0.; 2],
+            padding_1: 0.,
+            padding_2: [0.; 2],
         });
-        self.offset += 1;
-        self.shadow_map_index += 1;
+        self.offsets[c] += 1;
     }
 
-    pub fn ensure_flushed(&mut self, frame: &mut Frame) {
-        if self.offset > 0 {
-            self.flush(frame);
+    pub fn before_flush(&mut self, frame: &mut Frame) {
+        for c in 0..CATEGORY_COUNT {
+            if self.offsets[c] > 0 {
+                self.before_category_flush(c, frame);
+            }
         }
     }
 
-    fn flush(&mut self, frame: &mut Frame) {
-        let &mut Graphics { ref mut encoder, ref mut device, .. } = frame.graphics;
+    fn before_category_flush(&mut self, category: usize, frame: &mut Frame) {
+        let c = category;
+        let &mut Graphics { ref mut encoder, .. } = frame.graphics;
 
-        let instances = Some((self.offset as u32, 0));
+        let instances = Some((self.offsets[c] as u32, 0));
         self.renderer.shadow_map_bundle.slice.instances = instances;
+        self.renderer.shadow_map_bundle.data.lights = self.renderer.lights[c].clone();
+        self.renderer.shadow_map_bundle.data.shadow_target = self.renderer.shadow_maps_targets[c].clone();
         self.renderer.render_bundle.slice.instances = instances;
+        self.renderer.render_bundle.data.lights = self.renderer.lights[c].clone();
+        self.renderer.render_bundle.data.shadow_map_sampler.0 = self.renderer.shadow_maps_views[c].clone();
 
         self.renderer.shadow_map_bundle.encode(encoder);
         self.renderer.render_bundle.encode(encoder);
-        encoder.flush(device);
-
-        self.offset = 0;
-        self.shadow_map_index = 0;
+        self.offsets[c] = 0;
     }
 }
 
