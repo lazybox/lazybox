@@ -182,7 +182,7 @@ impl Renderer {
             dpi_factor: self.dpi_factor,
         };
 
-        while let Some(Primitive { index, kind, scizzor, rect }) = primitives.next_primitive() {
+        while let Some(Primitive { id, kind, scizzor, rect }) = primitives.next_primitive() {
             // FIXME: the scissor is meant for the current primitive,
             // but it will be applied to the whole batch 
             let scissor = gfx_core::target::Rect {
@@ -204,7 +204,7 @@ impl Renderer {
                     render.add_lines(color, cap, thickness, points, scissor);
                 }
                 Image { color, source_rect } => {
-                    if let Some(texture) = image_map.get(index) {
+                    if let Some(texture) = image_map.get(&id) {
                         render.add_image(color, source_rect, texture.clone(), rect, scissor);
                     }
                 }
@@ -328,7 +328,7 @@ impl<'a, 'b: 'a, 'c, 'd: 'c> Render<'a, 'b, 'c, 'd> {
             glyphs.before_flush(frame);
         };
 
-        let color = Self::conv_color(color);        
+        let color = Self::conv_color(color);
         let resolution = match cap {
             LineCap::Flat => 2,
             LineCap::Round => cmp::max(thickness as u32, 2),

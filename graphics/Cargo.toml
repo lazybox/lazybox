@@ -9,14 +9,14 @@ gfx = { git = "https://github.com/Bastacyclop/gfx", branch = "viewport" }
 gfx_core = { git = "https://github.com/Bastacyclop/gfx", branch = "viewport" }
 gfx_device_gl = { git = "https://github.com/Bastacyclop/gfx", branch = "viewport" }
 gfx_window_glutin = { git = "https://github.com/Bastacyclop/gfx", branch = "viewport" }
-glutin = "0.6"
-rusttype = "0.2"
-conrod = { version = "0.41", default-features = false, features = ["glutin"] }
-cgmath = "0.11"
-image = "0.10"
-quickersort = "2.0"
-rayon = "0.4"
+glutin = "^0.6"
+rusttype = "^0.2"
+conrod = { version = "^0.43", default-features = false, features = ["glutin"] }
+cgmath = "^0.11"
+image = "^0.10"
+quickersort = "^2.0"
+rayon = "^0.4"
 
 [dev_dependencies]
-rand = "0.3"
+rand = "^0.3"
 lazybox_frameclock = { path = "../frameclock" }
