@@ -13,9 +13,8 @@ extern crate image;
 extern crate quickersort;
 extern crate rayon;
 
-pub mod complete;
-pub mod partial;
-pub mod primitive;
+pub mod combined;
+pub mod specialized;
 pub mod camera;
 pub mod layer;
 pub mod color;
@@ -63,12 +62,12 @@ impl Graphics {
 
     pub fn resize(&mut self, window: &Window) {
         use gfx_core::format::Formatted;
-        use gfx_core::factory::Typed;
+        use gfx_core::memory::Typed;
 
         let (w, h) = window.get_inner_size_pixels().unwrap();
         let aa = window.get_pixel_format().multisampling
-            .unwrap_or(0) as gfx::tex::NumSamples;
-        let dim = (w as gfx::tex::Size, h as gfx::tex::Size, 1, aa.into());
+            .unwrap_or(0) as gfx::texture::NumSamples;
+        let dim = (w as gfx::texture::Size, h as gfx::texture::Size, 1, aa.into());
 
         let (color, depth) = gfx_device_gl::create_main_targets_raw(
             dim,
@@ -108,9 +107,9 @@ impl Graphics {
     {
         use gfx::traits::*;
 
-        let aa_mode = gfx::tex::AaMode::Single;
-        let kind = gfx::tex::Kind::D2(w, h, aa_mode);
-        let (_, view) = self.factory.create_texture_const_u8::<F>(kind, &[data]).unwrap();
+        let aa_mode = gfx::texture::AaMode::Single;
+        let kind = gfx::texture::Kind::D2(w, h, aa_mode);
+        let (_, view) = self.factory.create_texture_immutable_u8::<F>(kind, &[data]).unwrap();
         view
     }
 
@@ -146,7 +145,20 @@ impl<'a> Frame<'a> {
 
     pub fn clear(&mut self, color: NormalizedColor) {
         self.graphics.encoder.clear(&self.graphics.output_color, color.to_array());
+        self.should_flush();
+    }
+
+    pub fn should_flush(&mut self) {
         self.should_flush = true;
+    }
+
+    pub fn flush(&mut self) {
+        self.graphics.encoder.flush(&mut self.graphics.device);
+        self.should_flush = false;
+    }
+
+    pub fn ensure_flushed(&mut self) {
+        if self.should_flush { self.flush(); }
     }
 
     pub fn present(mut self, window: &'a Window) {
@@ -155,12 +167,5 @@ impl<'a> Frame<'a> {
         self.ensure_flushed();
         window.swap_buffers().unwrap();
         self.graphics.device.cleanup();
-    }
-
-    fn ensure_flushed(&mut self) {
-        if self.should_flush {
-            self.graphics.encoder.flush(&mut self.graphics.device);
-            self.should_flush = false;
-        }
     }
 }

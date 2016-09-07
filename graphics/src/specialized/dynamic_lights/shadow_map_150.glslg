@@ -1,0 +1,35 @@
+#version 150 core
+
+layout(lines) in;
+layout(line_strip, max_vertices = 2) out;
+
+in vs_out {
+  vec2 center;
+  vec2 radius;
+  float angle;
+  float step;
+  float occlusion_threshold;
+  int map_index;
+} vs[2];
+
+out vec2 f_Center;
+out vec2 f_Radius;
+out float f_Angle;
+out float f_Step;
+out float f_OcclusionThreshold;
+
+void main() {
+     f_Center = vs[0].center;
+     f_Radius = vs[0].radius;
+     f_Step = vs[0].step;
+     f_OcclusionThreshold = vs[0].occlusion_threshold;
+     gl_Layer = vs[0].map_index;
+     
+     gl_Position = gl_in[0].gl_Position;
+     f_Angle = vs[0].angle;
+     EmitVertex();
+     gl_Position = gl_in[1].gl_Position;
+     f_Angle = vs[1].angle;
+     EmitVertex();
+     EndPrimitive();
+}
