@@ -26,5 +26,7 @@ pub type TextureView<F: TextureFormat> = ShaderResourceView<F::View>;
 pub type RenderTargetView<T> = gfx::handle::RenderTargetView<Resources, T>;
 pub type Slice = gfx::Slice<Resources>;
 
-pub type MappingWritable<'a, T> = gfx_core::mapping::Writable<'a, T, Resources, Factory>;
+pub type MappingWritable<T> = gfx::mapping::Writable<Resources, T>;
 pub type Bundle<T> = gfx::pso::bundle::Bundle<Resources, T>;
+
+pub type GfxRect = gfx_core::target::Rect;

@@ -7,8 +7,7 @@ out vec2 v_TexCoord;
 out vec2 v_LightCoord;
 out vec3 v_LightColor;
 out float v_LightSourceRadius;
-out float v_ShadowMapCoord;
-out float v_ShadowMapSize;
+out float v_MapLevel;
 
 layout(std140)
 uniform Camera {
@@ -22,12 +21,11 @@ struct Light {
     float radius;
     float source_radius;
     float occlusion_threshold;
-    float shadow_map_pos;
-    float shadow_map_size;
-    float padding;
+    float padding_1;
+    vec2 padding_2;
 };
 
-const uint LIGHT_BUFFER_SIZE = 128u;
+const uint LIGHT_BUFFER_SIZE = 256u;
 
 layout(std140)
 uniform Lights {
@@ -46,7 +44,6 @@ void main() {
     v_TexCoord = (position + 1.0) / 2.0;
     v_LightCoord = (light_position + 1.0) / 2.0;
     v_LightColor = l.color_intensity.rgb * l.color_intensity.a;
-	v_LightSourceRadius = l.source_radius / l.radius;
-    v_ShadowMapCoord = (l.shadow_map_pos + 1.0) / 2.0;
-    v_ShadowMapSize = l.shadow_map_size / 2.0;
+    v_LightSourceRadius = l.source_radius / l.radius;
+    v_MapLevel = float(gl_InstanceID);
 }

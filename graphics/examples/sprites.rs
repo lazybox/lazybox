@@ -8,7 +8,7 @@ extern crate rayon;
 extern crate rand;
 
 use graphics::{Graphics, Camera, Color, NormalizedColor};
-use graphics::complete::sprites::Renderer;
+use graphics::combined::sprites::Renderer;
 use graphics::layer::{LayerOrder, LayerOcclusion};
 use graphics::sprites::{Sprite, SpriteTexture};
 use graphics::lights::*;
@@ -26,7 +26,7 @@ fn main() {
         .with_gl(glutin::GlRequest::Specific(glutin::Api::OpenGl, (3, 2)));
 
     let (window, mut graphics) = Graphics::new(builder);
-    let mut renderer = Renderer::new(&window, &mut graphics);
+    let mut renderer = Renderer::new(&mut graphics);
     let ground_layer = renderer.push_layer(LayerOcclusion::Ignore);
     let first_layer = renderer.push_layer(LayerOcclusion::Stack);
     let platform_layer = renderer.push_layer(LayerOcclusion::Ignore);
@@ -66,7 +66,7 @@ fn main() {
     let ground_sprites = [Sprite {
         position: Point2::new(10., 10.),
         size: Vector2::new(20., 20.),
-        rotation: Rad::new(0.),
+        rotation: Rad(0.),
         texture: ground_texture,
         color: ground_blend_color,
     }];
@@ -85,24 +85,24 @@ fn main() {
         [ 4., 12.], [ 16., 12.],
         [ 4., 16.], [ 16., 16.],
     ].iter()
-     .map(|&[x, y]| object_sprite(Point2::new(x, y), 1.0, Rad::new(0.75)))
+     .map(|&[x, y]| object_sprite(Point2::new(x, y), 1.0, Rad(0.75)))
      .collect();
 
     let platform_sprites = [Sprite {
         position: Point2::new(10., 10.),
         size: Vector2::new(14., 14.),
-        rotation: Rad::new(0.),
+        rotation: Rad(0.),
         texture: no_texture.clone(),
         color: platform_blend_color,
     }];
-    
+
     let second_sprites: Vec<_> = [
         [  6., 6.], [  6., 14.],
         [  8., 6.], [  8., 14.],
         [ 12., 6.], [ 12., 14.],
         [ 14., 6.], [ 14., 14.],
     ].iter()
-     .map(|&[x, y]| object_sprite(Point2::new(x, y), 0.5, Rad::new(0.)))
+     .map(|&[x, y]| object_sprite(Point2::new(x, y), 0.5, Rad(0.)))
      .collect();
 
     let sprites = [
@@ -139,12 +139,12 @@ fn main() {
          intensity: 2.5,
      })
      .collect();
-     
+
     let rng = &mut rand::thread_rng();
     let mut create_light = |c| Light {
         center: c,
-        radius: rng.gen_range(2., 4.),
-        source_radius: rng.gen_range(0.1, 0.5),
+        radius: rng.gen_range(0.5, 4.),
+        source_radius: rng.gen_range(0.1, 0.2),
         source_layer: second_layer,
         color: LightColor {
             r: rng.gen_range(0., 1.),
@@ -153,10 +153,10 @@ fn main() {
         },
         intensity: 2.,
     };
-    
+
     let mut user_lights = Vec::new();
     let mut world_position = Point2::new(10., 10.);
-    
+
     let mut frameclock = FrameClock::start(1.);
     let mut fps_counter = FpsCounter::new(1.);
 
@@ -164,6 +164,7 @@ fn main() {
         let delta_time = frameclock.reset();
         if let Some(fps) = fps_counter.update(delta_time) {
             println!("{:.4} ms/frame, {} frame/s", 1000. / fps, fps as usize);
+            println!("- {} lights", user_lights.len());
         }
 
         for event in window.poll_events() {
@@ -172,7 +173,7 @@ fn main() {
                 Event::Closed => break 'main,
                 Event::Resized(..) => {
                     graphics.resize(&window);
-                    renderer.resize(&window, &mut graphics);
+                    renderer.resize(&mut graphics);
                     camera.update_transform(&window);
                 },
                 Event::MouseInput(glutin::ElementState::Pressed, _) => {
@@ -188,39 +189,42 @@ fn main() {
             }
         }
 
-        rayon::join(
-            || {
-                sprites.par_iter().for_each(|&(layer, sprites)| {
-                    let mut queue = renderer.queue(layer);
-                    for sprite in sprites {
-                        queue.submit(sprite, LayerOrder(0));
-                    }
-                });
-            },
-            || {
-                rayon::join(
-                    || {
-                        let mut queue = renderer.light_queue();
-                        for light in &mut first_lights {
-                            queue.submit(light.clone());
+        {
+            let access = renderer.access();
+            rayon::join(
+                || {
+                    sprites.par_iter().for_each(|&(layer, sprites)| {
+                        let mut queue = access.queue(layer);
+                        for sprite in sprites {
+                            queue.submit(sprite, LayerOrder(0));
                         }
-                        for light in &mut second_lights {
-                            queue.submit(light.clone());
-                        }
-                    },
-                    || {
-                        let mut queue = renderer.light_queue();
-                        for light in &user_lights {
-                            queue.submit(light.clone());
-                        }
-                    },
-                );
-            },
-        );
+                    });
+                },
+                || {
+                    rayon::join(
+                        || {
+                            let mut queue = access.light_queue();
+                            for light in &mut first_lights {
+                                queue.submit(light.clone());
+                            }
+                            for light in &mut second_lights {
+                                queue.submit(light.clone());
+                            }
+                        },
+                        || {
+                            let mut queue = access.light_queue();
+                            for light in &user_lights {
+                                queue.submit(light.clone());
+                            }
+                        },
+                    );
+                },
+            );
+        }
 
         let mut frame = graphics.draw();
         frame.clear(clear_color);
-        renderer.submit(&camera, &ambient_light, &window, &mut frame);
+        renderer.submit(&camera, &ambient_light, &mut frame);
         frame.present(&window);
     }
 }
