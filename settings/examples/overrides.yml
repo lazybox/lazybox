@@ -1,3 +1,7 @@
 graphics:
+  fps_cap: 60
   accelerate: true
   effects: ["bloom", "fxaa"]
+
+audio:
+  time_limit: null

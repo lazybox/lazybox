@@ -2,9 +2,10 @@ game:
   time_step: 0.0333333
 
 graphics:
-  fps_cap: 60
+  fps_cap: null
   accelerate: false
   effects: []
 
 audio:
   high_quality: false
+  time_limit: 120

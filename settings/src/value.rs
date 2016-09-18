@@ -12,6 +12,7 @@ pub enum Value {
     Array(ValueArray),
     Map(ValueMap),
     None,
+    NotFound,
 }
 
 pub struct ValueArray(Vec<Value>);
@@ -65,6 +66,14 @@ impl Value {
             None
         }
     }
+
+    pub fn is_valid(&self) -> bool {
+        if let &Value::NotFound = self {
+            false
+        } else {
+            true
+        }
+    }
 }
 
 impl fmt::Debug for Value {
@@ -77,6 +86,7 @@ impl fmt::Debug for Value {
             &Value::Array(ref a) => a.fmt(f),
             &Value::Map(ref m) => m.fmt(f),
             &Value::None => write!(f, "None"),
+            &Value::NotFound => write!(f, "NotFound"),
         }
     }
 }
@@ -93,14 +103,14 @@ impl fmt::Debug for ValueMap {
     }
 }
 
-pub static NONE: &'static Value = &Value::None;
+pub static NOT_FOUND: &'static Value = &Value::NotFound;
 
 impl<'a> ops::Index<&'a str> for Value {
     type Output = Value;
     fn index(&self, i: &'a str) -> &Value {
         self.as_map()
             .map(|m| &m[i])
-            .unwrap_or(NONE)
+            .unwrap_or(NOT_FOUND)
     }
 }
 
@@ -109,21 +119,21 @@ impl ops::Index<usize> for Value {
     fn index(&self, i: usize) -> &Value {
         self.as_array()
             .map(|a| &a[i])
-            .unwrap_or(NONE)
+            .unwrap_or(NOT_FOUND)
     }
 }
 
 impl ops::Index<usize> for ValueArray {
     type Output = Value;
     fn index(&self, i: usize) -> &Value {
-        self.0.get(i).unwrap_or(NONE)
+        self.0.get(i).unwrap_or(NOT_FOUND)
     }
 }
 
 impl<'a> ops::Index<&'a str> for ValueMap {
     type Output = Value;
     fn index(&self, i: &'a str) -> &Value {
-        self.0.get(i).unwrap_or(NONE)
+        self.0.get(i).unwrap_or(NOT_FOUND)
     }
 }
 
@@ -138,36 +148,22 @@ impl Value {
             Yaml::Hash(h) => Value::Map(try!(ValueMap::from(h))),
             Yaml::Alias(_) => panic!("yaml aliases are not supported"),
             Yaml::Null => Value::None,
-            Yaml::BadValue => Value::None,
+            Yaml::BadValue => Value::NotFound,
         })
     }
 
     pub(crate) fn override_with(&mut self, v: Yaml) -> Result<(), Error> {
-        macro_rules! expect {
-            ($p:pat = $v:expr => $e:expr) => {
-                match $v {
-                    $p => $e,
-                    _ => return Err(Error::OverrideMismatch),
+        let v = match self {
+            &mut Value::Map(ref mut m) => {
+                match v {
+                    Yaml::Hash(h) => return m.override_with(h),
+                    _ => v,
                 }
             }
-        }
+            _ => v,
+        };
 
-        match self {
-            &mut Value::Real(ref mut p) =>
-                expect!(Yaml::Real(r) = v => *p = parse_float(r)),
-            &mut Value::Integer(ref mut p) =>
-                expect!(Yaml::Integer(i) = v => *p = i),
-            &mut Value::String(ref mut p) =>
-                expect!(Yaml::String(s) = v => *p = s),
-            &mut Value::Boolean(ref mut p) =>
-                expect!(Yaml::Boolean(b) = v => *p = b),
-            &mut Value::Array(ref mut p) =>
-                expect!(Yaml::Array(a) = v => try!(p.override_with(a))),
-            &mut Value::Map(ref mut p) =>
-                expect!(Yaml::Hash(h) = v => try!(p.override_with(h))),
-            &mut Value::None => return Err(Error::NoneOverride),
-        }
-
+        *self = try!(Self::from(v));
         Ok(())
     }
 }
@@ -187,15 +183,6 @@ impl ValueArray {
         }
 
         Ok(ValueArray(array))
-    }
-
-    pub(crate) fn override_with(&mut self, a: yaml::Array) -> Result<(), Error>{
-        self.0.clear();
-        for v in a {
-            self.0.push(try!(Value::from(v)));
-        }
-
-        Ok(())
     }
 }
 
@@ -223,7 +210,7 @@ impl ValueMap {
                     if let Some(current) = self.0.get_mut(s) {
                        try!(current.override_with(v));
                     } else {
-                        return Err(Error::NoneOverride);
+                        return Err(Error::InvalidOverride);
                     },
                 _ => return Err(Error::InvalidKey),
             }

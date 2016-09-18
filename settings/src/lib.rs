@@ -5,7 +5,7 @@ extern crate yaml_rust;
 mod value;
 pub use self::value::*;
 
-use std::fmt;
+use std::{ops, fmt};
 use yaml_rust::Yaml;
 
 pub struct Settings {
@@ -61,6 +61,11 @@ impl fmt::Debug for Settings {
     }
 }
 
+impl ops::Deref for Settings {
+    type Target = ValueMap;
+    fn deref(&self) -> &ValueMap { &self.values }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Error {
     /// The root must be an hash or null
@@ -68,7 +73,5 @@ pub enum Error {
     /// Keys must be strings
     InvalidKey,
     /// Trying to override a non-existent value
-    NoneOverride,
-    /// Trying to override a value with a different type
-    OverrideMismatch,
+    InvalidOverride,
 }
