@@ -1,0 +1,10 @@
+game:
+  time_step: 0.0333333
+
+graphics:
+  fps_cap: 60
+  accelerate: false
+  effects: []
+
+audio:
+  high_quality: false

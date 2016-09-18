@@ -1,0 +1,3 @@
+graphics:
+  accelerate: true
+  effects: ["bloom", "fxaa"]
