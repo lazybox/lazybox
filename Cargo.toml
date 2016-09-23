@@ -7,7 +7,7 @@ authors = ["Thomas Koehler <basta.t.k+git@gmail.com>",
            "Romain Vaillant <rph.vaillant@gmail.com>"]
 
 [dependencies]
-#lazybox_ecs = { path = "ecs" }
+lazybox_ecs = { path = "ecs" }
 lazybox_graphics = { path = "graphics" }
 lazybox_settings = { path = "settings" }
 lazybox_inputs = { path = "inputs" }

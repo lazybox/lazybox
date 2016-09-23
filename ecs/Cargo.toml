@@ -1,0 +1,15 @@
+[package]
+name = "lazybox_ecs"
+version = "0.1.0"
+authors = ["Romain Vaillant <rph.vaillant@gmail.com>"]
+
+[dependencies]
+
+parking_lot = "0.3"
+crossbeam = "0.2"
+
+
+[features]
+unstable = []
+default = ["u16_handle"]
+u16_handle = []
