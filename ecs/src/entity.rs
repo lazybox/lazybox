@@ -116,7 +116,7 @@ impl Pool {
 }
 
 
-pub struct Entities {
+pub(crate) struct Entities {
     pool: Pool,
     versions: VecMap<Version>
 }
@@ -224,6 +224,8 @@ impl<'a> Iterator for Iter<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use super::Entities;
+
     use policy::{self, Id};
 
     #[test]
