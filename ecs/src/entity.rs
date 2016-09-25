@@ -30,6 +30,10 @@ impl Entity {
     pub unsafe fn accessor(&self) -> Accessor {
         Accessor::new_unchecked(self.0)
     }
+
+    fn next_version(self) -> Self {
+        Entity(self.0, self.1.wrapping_add(1))
+    }
 }
 
 
@@ -90,7 +94,7 @@ impl Pool {
 
     pub fn acquire(&self) -> Entity {
         match self.availables.try_pop() {
-            Some(entity) => entity,
+            Some(entity) => entity.next_version(),
             None => {
                 assert!(self.counter.load(Ordering::Relaxed) != policy::max_entity_count(),
                         "max entity count reached");
@@ -306,6 +310,32 @@ mod tests {
 
         assert_eq!(Some(entity_ref.0), iter.next());
         assert_eq!(None, iter.next());
+    }
+
+    #[test]
+    fn test_recycling() {
+        let mut entities = Entities::new();
+
+        let removed = remove_later_one_entity(&mut entities);
+        entities.push_removes();
+
+        let recycled_entity = entities.create();
+        assert_eq!(recycled_entity.0, removed.0.id());
+
+        let expected_version = removed.0.version() + 1;
+        assert_eq!(recycled_entity.1, expected_version);
+    }
+
+    #[test]
+    fn test_remove_later_not_now() {
+        // It test that a remove_later on a entity does not put
+        // it in the available entities for recycling.
+        let mut entities = Entities::new();
+
+        let removed = remove_later_one_entity(&mut entities);
+
+        let new_entity = entities.create();
+        assert!(EntityRef(new_entity) != removed);
     }
 
     fn remove_later_one_entity(entities: &mut Entities) -> EntityRef {
