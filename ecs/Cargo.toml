@@ -7,7 +7,7 @@ authors = ["Romain Vaillant <rph.vaillant@gmail.com>"]
 
 parking_lot = "0.3"
 crossbeam = "0.2"
-
+vec_map = "0.6"
 
 [features]
 unstable = []
