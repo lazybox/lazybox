@@ -110,11 +110,12 @@ impl Pool {
     }
 
     pub fn push_freed<F>(&self, mut hook: F)
-        where F: FnMut(Entity)
+        where F: FnMut(Entity) -> bool
     {
         while let Some(entity) = self.to_be_recycled.try_pop() {
-            self.availables.push(entity);
-            hook(entity);
+            if hook(entity) {
+                self.availables.push(entity);
+            }
         }
     }
 }
@@ -200,6 +201,9 @@ impl Entities {
         pool.push_freed(|entity| {
             if versions.remove(entity.index()).is_some() {
                 removed.push(entity);
+                true
+            } else {
+                false
             }
         });
 
@@ -310,6 +314,11 @@ mod tests {
 
         assert_eq!(Some(entity_ref.0), iter.next());
         assert_eq!(None, iter.next());
+
+        // This check that we are not recycling the entity twice
+        let recycled_entity = entities.create();
+        let new_entity = entities.create();
+        assert!(recycled_entity != new_entity);
     }
 
     #[test]
