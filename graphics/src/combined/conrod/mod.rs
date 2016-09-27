@@ -175,6 +175,7 @@ impl Renderer {
         frame.graphics.encoder.clear(self.color_target(), [0.0; 4]);
         let mut render = Render {
             currently: Rendering::Nothing,
+            scissor: None,
             polygons: self.polygons.render(frame),
             glyphs: &mut self.glyphs,
             images: self.images.render(frame),
@@ -183,8 +184,6 @@ impl Renderer {
         };
 
         while let Some(Primitive { id, kind, scizzor, rect }) = primitives.next_primitive() {
-            // FIXME: the scissor is meant for the current primitive,
-            // but it will be applied to the whole batch 
             let scissor = gfx_core::target::Rect {
                 x: (scizzor.left() + (pixel_w / 2.) as f64) as u16,
                 y: (scizzor.bottom() + (pixel_h / 2.) as f64) as u16,
@@ -228,6 +227,7 @@ impl Renderer {
 
 struct Render<'a, 'b: 'a, 'c, 'd: 'c> {
     currently: Rendering,
+    scissor: Option<GfxRect>,
     polygons: polygons::Render<'b>,
     glyphs: &'a mut glyphs::Renderer,
     images: images::Render<'b>,
@@ -237,7 +237,8 @@ struct Render<'a, 'b: 'a, 'c, 'd: 'c> {
 
 impl<'a, 'b: 'a, 'c, 'd: 'c> Render<'a, 'b, 'c, 'd> {
     fn switch(&mut self, target: Rendering, scissor: GfxRect) {
-        if self.currently != target {
+        if self.currently != target ||
+           self.scissor.map(|s| s != scissor).unwrap_or(false) {
             match self.currently {
                 Rendering::Nothing => (),
                 Rendering::Polygons => self.polygons.ensure_drawed(self.frame),
@@ -259,6 +260,7 @@ impl<'a, 'b: 'a, 'c, 'd: 'c> Render<'a, 'b, 'c, 'd> {
             Rendering::Glyphs => *self.glyphs.scissor_mut() = scissor,
             Rendering::Images => *self.images.scissor_mut() = scissor,
         }
+        self.scissor = Some(scissor);
     }
 
     fn add_rectangle(&mut self,
