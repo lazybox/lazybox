@@ -25,21 +25,25 @@ fn main() {
     ui.fonts.insert_from_file("resources/fonts/NotoSans/NotoSans-Regular.ttf").unwrap();
 
     widget_ids!{
-        CANVAS,
-        BUTTON,
-        DEMO_TEXT,
-        FPS_TEXT,
-        LINE,
-        IMAGE_RED,
-        IMAGE_GREEN,
-        IMAGE_BLUE,
+        struct Ids {
+            canvas,
+            button,
+            text,
+            fps,
+            line,
+            image_red,
+            image_green,
+            image_blue,
+        }
     }
+
+    let ids = Ids::new(ui.widget_id_generator());
 
     let texture = graphics.load_texture_from_image::<ColorFormat>("resources/cloud.png");
     let image_map = image_map! {
-        (IMAGE_RED, texture.clone()),
-        (IMAGE_GREEN, texture.clone()),
-        (IMAGE_BLUE, texture),
+        (ids.image_red, texture.clone()),
+        (ids.image_green, texture.clone()),
+        (ids.image_blue, texture),
     };
 
     let mut frameclock = FrameClock::start(1.);
@@ -74,7 +78,7 @@ fn main() {
             let mut ui = &mut ui.set_widgets();
             use conrod::{Colorable, Positionable, Sizeable, Widget};
 
-            widget::Canvas::new().color(conrod::color::DARK_CHARCOAL).set(CANVAS, ui);
+            widget::Canvas::new().color(conrod::color::DARK_CHARCOAL).set(ids.canvas, ui);
 
             let demo_text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                 Mauris aliquet porttitor tellus vel euismod. Integer lobortis volutpat bibendum. \
@@ -86,22 +90,22 @@ fn main() {
                 Nam magna est, efficitur suscipit dolor eu, consectetur consectetur urna.";
 
             widget::Text::new(demo_text)
-                .middle_of(CANVAS)
-                .w_of(CANVAS)
+                .middle_of(ids.canvas)
+                .w_of(ids.canvas)
                 .font_size(20)
                 .color(conrod::color::BLACK)
                 .align_text_middle()
-                .set(DEMO_TEXT, ui);
+                .set(ids.text, ui);
 
             let fps_text = &format!("{:.2} ms/frame - {} fps", mspf, fps);
 
             widget::Text::new(fps_text)
-                .top_left_with_margin_on(CANVAS, 6.)
-                .wh_of(CANVAS)
+                .top_left_with_margin_on(ids.canvas, 6.)
+                .wh_of(ids.canvas)
                 .font_size(14)
                 .color(conrod::color::PURPLE)
                 .align_text_left()
-                .set(FPS_TEXT, ui);
+                .set(ids.fps, ui);
 
             let style = widget::line::Style {
                 maybe_pattern: None,
@@ -110,21 +114,21 @@ fn main() {
                 maybe_cap: Some(widget::line::Cap::Round),
             };
 
-            widget::Line::abs_styled([0., 0.], [120., 0.], style).set(LINE, ui);
+            widget::Line::abs_styled([0., 0.], [120., 0.], style).set(ids.line, ui);
 
             let image = widget::Image::new().w_h(64., 64.);
             image.clone()
                 .color(Some(conrod::color::RED))
-                .bottom_left_with_margin_on(CANVAS, 12.)
-                .set(IMAGE_RED, ui);
+                .bottom_left_with_margin_on(ids.canvas, 12.)
+                .set(ids.image_red, ui);
             image.clone()
                 .color(Some(conrod::color::GREEN))
-                .right_from(IMAGE_RED, 12.)
-                .set(IMAGE_GREEN, ui);
+                .right_from(ids.image_red, 12.)
+                .set(ids.image_green, ui);
             image.clone()
                 .color(Some(conrod::color::BLUE))
-                .right_from(IMAGE_GREEN, 12.)
-                .set(IMAGE_BLUE, ui);
+                .right_from(ids.image_green, 12.)
+                .set(ids.image_blue, ui);
         }
 
         let mut frame = graphics.draw();
