@@ -12,6 +12,9 @@ use rayon;
 pub trait Model {
     fn from_state(state: State) -> Self;
     fn merge_with(self, state: State) -> State;
+
+    fn writes() -> &'static [ComponentType];
+    fn reads() -> &'static [ComponentType];
 }
 
 pub trait Processor: Send + Any {
@@ -21,8 +24,8 @@ pub trait Processor: Send + Any {
         TypeId::of::<Self>()
     }
 
-    fn writes(&self) -> &'static [ComponentType];
-    fn reads(&self) -> &'static [ComponentType];
+    fn writes(&self) -> &'static [ComponentType] { Self::Model::writes() }
+    fn reads(&self) -> &'static [ComponentType] { Self::Model::reads() }
 }
 
 pub trait AnyProcessor: Processor {}
