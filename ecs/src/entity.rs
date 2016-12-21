@@ -121,9 +121,9 @@ impl Pool {
 }
 
 
-pub(crate) struct Entities {
+pub struct Entities {
     pool: Pool,
-    versions: VecMap<Version>
+    versions: VecMap<Version>,
 }
 
 impl Entities {
@@ -174,7 +174,8 @@ impl Entities {
     ///
     /// Returns None if the `Entity` has been killed
     pub fn upgrade(&self, entity_ref: EntityRef) -> Option<Accessor> {
-        let version = self.versions.get(entity_ref.0.index())
+        let version = self.versions
+            .get(entity_ref.0.index())
             .unwrap_or_else(|| panic!("invalid entity index, this is a bug"));
 
         if &entity_ref.0.version() == version {
