@@ -1,36 +1,34 @@
 use state::State;
 use module::component::ComponentType;
-use entity::Entities;
-use std::any::{Any, TypeId};
+use std::any::Any;
 use std::collections::HashMap;
-use daggy::{self, petgraph, Dag, Walker};
+use daggy::{self, Dag, Walker};
 use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::Arc;
 use parking_lot::Mutex;
 use rayon;
+use std::marker::PhantomData;
 
-pub trait Model {
-    fn from_state(state: &State) -> Self;
-    fn merge_with(self, state: &State) -> State;
+pub trait Model<Cx: Sync + Send> {
+    fn from_state(state: &State<Cx>) -> Self;
 
     fn writes() -> &'static [ComponentType];
     fn reads() -> &'static [ComponentType];
 }
 
-pub trait Processor: Send + Any {
-    type Model: Model;
+pub trait Processor<Cx: Sync + Send>: Send + Any {
+    type Model: Model<Cx>;
 
-    fn get_type_id(&self) -> TypeId {
-        TypeId::of::<Self>()
+    fn writes(&self) -> &'static [ComponentType] {
+        Self::Model::writes()
     }
-
-    fn writes(&self) -> &'static [ComponentType] { Self::Model::writes() }
-    fn reads(&self) -> &'static [ComponentType] { Self::Model::reads() }
+    fn reads(&self) -> &'static [ComponentType] {
+        Self::Model::reads()
+    }
 }
 
-pub trait AnyProcessor: Processor {}
+pub trait AnyProcessor<Cx: Sync + Send>: Processor<Cx> {}
 
-impl<T: ?Sized + Processor> AnyProcessor for T {}
+impl<T: ?Sized + Processor<Cx>, Cx: Sync + Send> AnyProcessor<Cx> for T {}
 
 type Index = u32;
 type NodeIndex = daggy::NodeIndex<Index>;
@@ -40,18 +38,20 @@ enum LinkType {
     Write,
 }
 
-struct Slot<P: ?Sized + AnyProcessor> {
+struct Slot<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> {
     processor: Mutex<Option<Box<P>>>,
     dependencies_counter: AtomicUsize,
     dependencies_count: usize,
+    context: PhantomData<Cx>,
 }
 
-impl<P: ?Sized + AnyProcessor> Slot<P> {
+impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> Slot<P, Cx> {
     fn new(processor: Box<P>) -> Self {
         Slot {
             processor: Mutex::new(Some(processor)),
             dependencies_counter: AtomicUsize::new(0),
-            dependencies_count: 0
+            dependencies_count: 0,
+            context: PhantomData,
         }
     }
 
@@ -74,14 +74,14 @@ impl<P: ?Sized + AnyProcessor> Slot<P> {
     }
 }
 
-pub struct ExecutionGraphBuilder<P: ?Sized + AnyProcessor> {
-    execution_dag: Dag<Slot<P>, LinkType, Index>,
+pub struct ExecutionGraphBuilder<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> {
+    execution_dag: Dag<Slot<P, Cx>, LinkType, Index>,
     writes: HashMap<ComponentType, NodeIndex>,
     reads: HashMap<ComponentType, Vec<NodeIndex>>,
     heads: Vec<NodeIndex>,
 }
 
-impl<P: ?Sized + AnyProcessor> ExecutionGraphBuilder<P> {
+impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> ExecutionGraphBuilder<P, Cx> {
     pub fn new() -> Self {
         ExecutionGraphBuilder {
             execution_dag: Dag::new(),
@@ -92,8 +92,6 @@ impl<P: ?Sized + AnyProcessor> ExecutionGraphBuilder<P> {
     }
 
     pub fn register(mut self, processor: Box<P>) -> Self {
-        let type_id = Processor::get_type_id(&*processor);
-
         let writes = processor.writes();
         let reads = processor.reads();
 
@@ -105,8 +103,7 @@ impl<P: ?Sized + AnyProcessor> ExecutionGraphBuilder<P> {
         if read_dependencies == 0 && write_dependencies == 0 {
             self.heads.push(node);
         } else {
-            self.execution_dag[node]
-                .set_dependencies_count(read_dependencies + write_dependencies);
+            self.execution_dag[node].set_dependencies_count(read_dependencies + write_dependencies);
         }
 
         self.register_reads(node, reads);
@@ -170,7 +167,7 @@ impl<P: ?Sized + AnyProcessor> ExecutionGraphBuilder<P> {
         }
     }
 
-    fn build(self) -> Scheduler<P> {
+    pub fn build(self) -> Scheduler<P, Cx> {
         Scheduler {
             heads: self.heads,
             execution_dag: self.execution_dag,
@@ -178,30 +175,35 @@ impl<P: ?Sized + AnyProcessor> ExecutionGraphBuilder<P> {
     }
 }
 
-pub struct Scheduler<P: ?Sized + AnyProcessor> {
+pub struct Scheduler<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> {
     heads: Vec<NodeIndex>,
-    execution_dag: Dag<Slot<P>, LinkType, Index>,
+    execution_dag: Dag<Slot<P, Cx>, LinkType, Index>,
 }
 
-impl<P: ?Sized + AnyProcessor> Scheduler<P> {
-    pub fn par_for_each_mut<F>(&self, state: &mut State, f: F)
-        where F: Fn(&State, &mut P) + Sync + Send
+impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> Scheduler<P, Cx> {
+    pub fn par_for_each_mut<F>(&self, state: &mut State<Cx>, cx: &Cx, f: F)
+        where F: Fn(&State<Cx>, &Cx, &mut P) + Sync + Send
     {
         let f = &f;
         let state = &*state;
 
         rayon::scope(|scope| {
             for &head in &self.heads {
-                scope.spawn(move |scope| self.run_process_mut(scope, head, state, f));
+                scope.spawn(move |scope| self.run_process_mut(scope, head, state, cx, f));
             }
         });
     }
 
-    fn run_process_mut<'b: 'scope, 'scope, F>(&'b self, scope: &rayon::Scope<'scope>, node: NodeIndex, state: &'b State, f: &'b F)
-        where F: Fn(&State, &mut P) + Sync + Send
+    fn run_process_mut<'b: 'scope, 'scope, F>(&'b self,
+                                              scope: &rayon::Scope<'scope>,
+                                              node: NodeIndex,
+                                              state: &'b State<Cx>,
+                                              cx: &'b Cx,
+                                              f: &'b F)
+        where F: Fn(&State<Cx>, &Cx, &mut P) + Sync + Send
     {
         let mut process = self.take_process(node);
-        f(state, &mut *process);
+        f(state, cx, &mut *process);
         self.put_process(node, process);
 
         let mut children_walker = self.execution_dag.children(node);
@@ -209,7 +211,7 @@ impl<P: ?Sized + AnyProcessor> Scheduler<P> {
             let child_slot = &self.execution_dag[child];
 
             if child_slot.acknowledge_dependency_resolved() {
-                scope.spawn(move |scope| self.run_process_mut(scope, child, state, f));
+                scope.spawn(move |scope| self.run_process_mut(scope, child, state, cx, f));
             }
         }
     }

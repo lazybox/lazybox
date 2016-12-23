@@ -1,9 +1,11 @@
 use std::collections::HashMap;
 use std::any::{Any, TypeId};
 use std::sync::Mutex;
+use std::fmt::Debug;
 use std::mem;
+use mopa;
 
-use module::component::{Component, ComponentType};
+use module::component::{Component, Template, ComponentType};
 use entity::{Entity, EntityRef};
 
 /// An entity to be spawn
@@ -74,12 +76,17 @@ impl SpawnRequest {
     }
 }
 
+trait AnyTemplate: mopa::Any + Send + Debug + Sync {}
+mopafy!(AnyTemplate);
+
+impl<T: Template> AnyTemplate for T {}
+
 /// A prototype that defines the skeleton of an Entity.
 ///
 /// It is represented by a set of components with default values.
 #[derive(Debug)]
 pub struct Prototype {
-    components: HashMap<ComponentType, Box<Any>>,
+    components: HashMap<ComponentType, Box<AnyTemplate>>,
 }
 
 impl Prototype {
