@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 use std::any::{Any, TypeId};
-use std::sync::Mutex;
 use std::fmt::Debug;
 use std::mem;
 use mopa;
+use parking_lot::Mutex;
 
 use module::component::{Component, Template, ComponentType};
 use entity::{Entity, EntityRef};
@@ -163,12 +163,12 @@ impl SpawnQueue {
     }
 
     pub fn push(&self, request: SpawnRequest) {
-        let mut queue = self.queue.lock().unwrap();
+        let mut queue = self.queue.lock();
         queue.push(request);
     }
 
     pub fn take_requests(&mut self) -> Vec<SpawnRequest> {
-        let mut queue = self.queue.lock().unwrap();
+        let mut queue = self.queue.lock();
         mem::replace(&mut *queue, Vec::new())
     }
 }

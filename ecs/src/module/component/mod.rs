@@ -2,9 +2,10 @@ pub mod storage;
 
 use std::any::{Any, TypeId};
 use std::fmt::Debug;
+use super::HasComponent;
 
 pub trait Component: Any {
-    type Module;
+    type Module: HasComponent<Self>;
     type Template: Template;
 }
 
