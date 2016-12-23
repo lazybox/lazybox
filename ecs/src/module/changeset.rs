@@ -1,6 +1,6 @@
 use entity::Accessor;
 use policy::Id;
-use bit_set::{self,  BitSet};
+use bit_set::{self, BitSet};
 use fnv::FnvHashMap;
 use std::ops::{Index, IndexMut};
 
@@ -12,9 +12,7 @@ pub struct ChangeSet {
 
 impl ChangeSet {
     pub fn new() -> Self {
-        ChangeSet {
-            entities: BitSet::new()
-        }
+        ChangeSet { entities: BitSet::new() }
     }
 
     pub fn mark(&mut self, entity: Accessor) {
@@ -26,9 +24,7 @@ impl ChangeSet {
     }
 
     pub fn iter(&self) -> Iter {
-        Iter {
-            inner: self.entities.iter()
-        }
+        Iter { inner: self.entities.iter() }
     }
 }
 
@@ -43,7 +39,7 @@ impl<'a> IntoIterator for &'a ChangeSet {
 }
 
 pub struct Iter<'a> {
-    inner: bit_set::Iter<'a, u32>
+    inner: bit_set::Iter<'a, u32>,
 }
 
 impl<'a> Iterator for Iter<'a> {
@@ -56,17 +52,18 @@ impl<'a> Iterator for Iter<'a> {
 }
 
 pub struct ChangeSetMap {
-    changesets: FnvHashMap<ComponentType, ChangeSet>
+    changesets: FnvHashMap<ComponentType, ChangeSet>,
 }
 
 impl ChangeSetMap {
     pub fn new() -> Self {
-        ChangeSetMap {
-            changesets: FnvHashMap::default()
-        }
+        ChangeSetMap { changesets: FnvHashMap::default() }
     }
 
-    pub fn insert(&mut self, component_type: ComponentType, changeset: ChangeSet) -> Option<ChangeSet> {
+    pub fn insert(&mut self,
+                  component_type: ComponentType,
+                  changeset: ChangeSet)
+                  -> Option<ChangeSet> {
         self.changesets.insert(component_type, changeset)
     }
 
@@ -93,10 +90,8 @@ impl Index<ComponentType> for ChangeSetMap {
 }
 
 impl IndexMut<ComponentType> for ChangeSetMap {
-
     #[inline]
     fn index_mut(&mut self, component_type: ComponentType) -> &mut Self::Output {
         self.get_mut(component_type).unwrap()
     }
 }
-

@@ -12,7 +12,9 @@ use fnv::FnvHashMap;
 
 
 pub trait Module<Cx: Send>: Any + Sync {
-    fn get_type(&self) -> ModuleType { ModuleType(TypeId::of::<Self>()) }
+    fn get_type(&self) -> ModuleType {
+        ModuleType(TypeId::of::<Self>())
+    }
 
     fn update<'a: 'scope, 'scope>(&'a mut self, _scope: &Scope<'scope>, _context: &'a mut Cx) {}
     fn changesets(&self) -> &ChangeSetMap;
@@ -27,9 +29,7 @@ impl<Cx: Send> Module<Cx> {
     #[inline]
     pub fn downcast_ref<M: Module<Cx>>(&self) -> Option<&M> {
         if self.is::<M>() {
-            unsafe {
-                Some(self.downcast_ref_unchecked())
-            }
+            unsafe { Some(self.downcast_ref_unchecked()) }
         } else {
             None
         }
@@ -38,9 +38,7 @@ impl<Cx: Send> Module<Cx> {
     #[inline]
     pub fn downcast_mut<M: Module<Cx>>(&mut self) -> Option<&mut M> {
         if self.is::<M>() {
-            unsafe {
-                Some(self.downcast_mut_unchecked())
-            }
+            unsafe { Some(self.downcast_mut_unchecked()) }
         } else {
             None
         }
@@ -80,9 +78,7 @@ pub struct Modules<Cx: Send> {
 
 impl<Cx: Send> Modules<Cx> {
     pub fn new() -> Self {
-        Modules {
-            modules: FnvHashMap::default()
-        }
+        Modules { modules: FnvHashMap::default() }
     }
 
     pub fn insert(&mut self, module: Box<Module<Cx>>) {
@@ -90,20 +86,17 @@ impl<Cx: Send> Modules<Cx> {
     }
 
     pub fn get<M: Module<Cx>>(&self) -> Option<&M> {
-        self.modules.get(&ModuleType::of::<M, Cx>())
-                    .and_then(|module| module.downcast_ref())
+        self.modules
+            .get(&ModuleType::of::<M, Cx>())
+            .and_then(|module| module.downcast_ref())
     }
 
     pub fn iter(&self) -> Iter<Cx> {
-        Iter {
-            inner: self.modules.iter()
-        }
+        Iter { inner: self.modules.iter() }
     }
 
     pub fn iter_mut(&mut self) -> IterMut<Cx> {
-        IterMut {
-            inner: self.modules.iter_mut()
-        }
+        IterMut { inner: self.modules.iter_mut() }
     }
 }
 
@@ -131,7 +124,7 @@ impl<'a, Cx: Send + 'a> IntoIterator for &'a Modules<Cx> {
 
 
 pub struct IterMut<'a, Cx: Send + 'a> {
-    inner: hash_map::IterMut<'a, ModuleType, Box<Module<Cx>>>
+    inner: hash_map::IterMut<'a, ModuleType, Box<Module<Cx>>>,
 }
 
 impl<'a, Cx: Send + 'a> Iterator for IterMut<'a, Cx> {

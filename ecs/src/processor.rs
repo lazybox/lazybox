@@ -1,4 +1,4 @@
-use state::State;
+use state::{State, Commit};
 use module::component::ComponentType;
 use std::any::Any;
 use std::collections::HashMap;
@@ -9,7 +9,7 @@ use rayon;
 use std::marker::PhantomData;
 
 pub trait Model<Cx: Sync + Send> {
-    fn from_state(state: &State<Cx>) -> Self;
+    fn from_state(state: &State<Cx>, commit: Commit<Cx>) -> Self;
 
     fn writes() -> &'static [ComponentType];
     fn reads() -> &'static [ComponentType];
@@ -181,15 +181,13 @@ pub struct Scheduler<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> {
 }
 
 impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> Scheduler<P, Cx> {
-    pub fn par_for_each_mut<F>(&self, state: &mut State<Cx>, cx: &Cx, f: F)
-        where F: Fn(&State<Cx>, &Cx, &mut P) + Sync + Send
+    pub fn par_for_each_mut<F>(&self, state: &State<Cx>, commit: Commit<Cx>, cx: &Cx, f: F)
+        where F: Fn(&State<Cx>, Commit<Cx>, &Cx, &mut P) + Sync + Send
     {
         let f = &f;
-        let state = &*state;
-
         rayon::scope(|scope| {
             for &head in &self.heads {
-                scope.spawn(move |scope| self.run_process_mut(scope, head, state, cx, f));
+                scope.spawn(move |scope| self.run_process_mut(scope, head, state, commit, cx, f));
             }
         });
     }
@@ -198,12 +196,13 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> Scheduler<P, Cx> {
                                               scope: &rayon::Scope<'scope>,
                                               node: NodeIndex,
                                               state: &'b State<Cx>,
+                                              commit: Commit<'b, Cx>,
                                               cx: &'b Cx,
                                               f: &'b F)
-        where F: Fn(&State<Cx>, &Cx, &mut P) + Sync + Send
+        where F: Fn(&State<Cx>, Commit<Cx>, &Cx, &mut P) + Sync + Send
     {
         let mut process = self.take_process(node);
-        f(state, cx, &mut *process);
+        f(state, commit, cx, &mut *process);
         self.put_process(node, process);
 
         let mut children_walker = self.execution_dag.children(node);
@@ -211,7 +210,7 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> Scheduler<P, Cx> {
             let child_slot = &self.execution_dag[child];
 
             if child_slot.acknowledge_dependency_resolved() {
-                scope.spawn(move |scope| self.run_process_mut(scope, child, state, cx, f));
+                scope.spawn(move |scope| self.run_process_mut(scope, child, state, commit, cx, f));
             }
         }
     }
