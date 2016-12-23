@@ -6,6 +6,7 @@ extern crate vec_map;
 extern crate bit_set;
 extern crate daggy;
 extern crate rayon;
+extern crate fnv;
 #[macro_use]
 extern crate mopa;
 
@@ -13,5 +14,6 @@ pub mod policy;
 pub mod entity;
 pub mod processor;
 pub mod state;
-pub mod component;
+pub mod spawn;
+pub mod module;
 mod utils;

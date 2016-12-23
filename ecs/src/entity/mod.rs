@@ -1,3 +1,5 @@
+pub mod iter;
+
 use policy::{Id, Version};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use crossbeam::sync::SegQueue;
@@ -44,6 +46,13 @@ impl Entity {
 #[derive(Copy, Clone, Debug, Hash)]
 #[derive(PartialEq, Eq, PartialOrd, Ord)]
 pub struct EntityRef(Entity);
+
+impl EntityRef {
+    #[inline]
+    pub fn from_entity(entity: Entity) -> Self {
+        EntityRef(entity)
+    }
+}
 
 /// An entity accessor.
 /// It is the key to access and modify entity components
@@ -226,8 +235,6 @@ impl<'a> Iterator for Iter<'a> {
         self.inner.next().map(&|(index, _)| unsafe { Accessor::new_unchecked(index as Id) })
     }
 }
-
-
 
 
 #[cfg(test)]

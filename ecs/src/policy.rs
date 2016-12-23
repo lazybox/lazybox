@@ -8,6 +8,8 @@
 #[cfg(feature = "u16_handle")]
 pub use self::u16_handle::*;
 
+pub type IdSet = ::bit_set::BitSet;
+
 mod u16_handle {
     /// The id type for an entity
     pub type Id = u16;
