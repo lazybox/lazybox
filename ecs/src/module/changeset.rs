@@ -2,7 +2,6 @@ use entity::Accessor;
 use policy::Id;
 use bit_set::{self,  BitSet};
 use fnv::FnvHashMap;
-use std::collections::HashMap;
 use std::ops::{Index, IndexMut};
 
 use super::component::ComponentType;

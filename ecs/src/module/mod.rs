@@ -6,13 +6,15 @@ use self::component::storage::{StorageReadGuard, StorageWriteGuard};
 use self::changeset::ChangeSetMap;
 
 use std::any::{Any, TypeId};
+use std::collections::hash_map;
 use rayon::Scope;
 use fnv::FnvHashMap;
+
 
 pub trait Module<Cx: Send>: Any + Sync {
     fn get_type(&self) -> ModuleType { ModuleType(TypeId::of::<Self>()) }
 
-    fn update<'a: 'scope, 'scope>(&'a mut self, scope: &Scope<'scope>, context: &'a mut Cx) {}
+    fn update<'a: 'scope, 'scope>(&'a mut self, _scope: &Scope<'scope>, _context: &'a mut Cx) {}
     fn changesets(&self) -> &ChangeSetMap;
 }
 
@@ -63,7 +65,7 @@ pub trait HasComponent<C: ?Sized + Component> {
 }
 
 
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub struct ModuleType(TypeId);
 
 impl ModuleType {
@@ -90,5 +92,62 @@ impl<Cx: Send> Modules<Cx> {
     pub fn get<M: Module<Cx>>(&self) -> Option<&M> {
         self.modules.get(&ModuleType::of::<M, Cx>())
                     .and_then(|module| module.downcast_ref())
+    }
+
+    pub fn iter(&self) -> Iter<Cx> {
+        Iter {
+            inner: self.modules.iter()
+        }
+    }
+
+    pub fn iter_mut(&mut self) -> IterMut<Cx> {
+        IterMut {
+            inner: self.modules.iter_mut()
+        }
+    }
+}
+
+pub struct Iter<'a, Cx: Send + 'a> {
+    inner: hash_map::Iter<'a, ModuleType, Box<Module<Cx>>>,
+}
+
+impl<'a, Cx: Send + 'a> Iterator for Iter<'a, Cx> {
+    type Item = (ModuleType, &'a Module<Cx>);
+
+    #[inline]
+    fn next(&mut self) -> Option<Self::Item> {
+        self.inner.next().map(|(&module_type, module)| (module_type, &**module))
+    }
+}
+
+impl<'a, Cx: Send + 'a> IntoIterator for &'a Modules<Cx> {
+    type Item = (ModuleType, &'a Module<Cx>);
+    type IntoIter = Iter<'a, Cx>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
+
+
+pub struct IterMut<'a, Cx: Send + 'a> {
+    inner: hash_map::IterMut<'a, ModuleType, Box<Module<Cx>>>
+}
+
+impl<'a, Cx: Send + 'a> Iterator for IterMut<'a, Cx> {
+    type Item = (ModuleType, &'a mut Module<Cx>);
+
+    #[inline]
+    fn next(&mut self) -> Option<Self::Item> {
+        self.inner.next().map(|(&module_type, module)| (module_type, &mut **module))
+    }
+}
+
+impl<'a, Cx: Send> IntoIterator for &'a mut Modules<Cx> {
+    type Item = (ModuleType, &'a mut Module<Cx>);
+    type IntoIter = IterMut<'a, Cx>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter_mut()
     }
 }
