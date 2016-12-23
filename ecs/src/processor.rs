@@ -1,5 +1,5 @@
 use state::State;
-use component::ComponentType;
+use module::component::ComponentType;
 use entity::Entities;
 use std::any::{Any, TypeId};
 use std::collections::HashMap;
@@ -10,8 +10,8 @@ use parking_lot::Mutex;
 use rayon;
 
 pub trait Model {
-    fn from_state(state: State) -> Self;
-    fn merge_with(self, state: State) -> State;
+    fn from_state(state: &State) -> Self;
+    fn merge_with(self, state: &State) -> State;
 
     fn writes() -> &'static [ComponentType];
     fn reads() -> &'static [ComponentType];

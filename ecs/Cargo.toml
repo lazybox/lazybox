@@ -10,6 +10,7 @@ vec_map = "0.6"
 bit-set = "0.4"
 mopa = "0.2"
 daggy = "0.4"
+fnv = "1.0"
 
 # The git dependency is temporary until scope api is merged into cargo.
 rayon = { version = "0.6.0", features = ["unstable"] }
