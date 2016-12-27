@@ -128,7 +128,7 @@ impl PrototypeType {
 
 /// The manager responsible to hold defined prototype
 #[derive(Debug)]
-pub(crate) struct Prototypes {
+pub struct Prototypes {
     prototypes: HashMap<PrototypeType, Prototype>,
 }
 

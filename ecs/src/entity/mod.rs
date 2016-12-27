@@ -6,6 +6,7 @@ use crossbeam::sync::SegQueue;
 use std::marker::PhantomData;
 use policy;
 use vec_map::{self, VecMap};
+use spawn::SpawnRequest;
 
 /// Represents an unique entity in the world.
 /// There is no data associated to it.
@@ -218,6 +219,13 @@ impl Entities {
         });
 
         removed
+    }
+
+    /// Commit the entities changes.
+    pub fn commit(&mut self, requests: &[SpawnRequest]) {
+        for request in requests {
+            self.spawn(request.entity());
+        }
     }
 }
 
