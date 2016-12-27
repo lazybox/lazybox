@@ -16,3 +16,4 @@ pub mod processor;
 pub mod state;
 pub mod spawn;
 pub mod module;
+mod schema;

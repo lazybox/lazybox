@@ -9,14 +9,15 @@ use std::any::{Any, TypeId};
 use std::collections::hash_map;
 use rayon::Scope;
 use fnv::FnvHashMap;
+use spawn::{SpawnRequest, Prototypes};
+use entity::Entity;
 
-
-pub trait Module<Cx: Send>: Any + Sync {
+pub trait Module<Cx: Send>: Any + Send + Sync {
     fn get_type(&self) -> ModuleType {
         ModuleType(TypeId::of::<Self>())
     }
 
-    fn update<'a: 'scope, 'scope>(&'a mut self, _scope: &Scope<'scope>, _context: &'a mut Cx) {}
+    fn commit(&mut self, _args: &CommitArgs, _scope: &Scope, _context: &mut Cx) {}
     fn changesets(&self) -> &ChangeSetMap;
 }
 
@@ -91,6 +92,12 @@ impl<Cx: Send> Modules<Cx> {
             .and_then(|module| module.downcast_ref())
     }
 
+    pub fn commit(&mut self, args: &CommitArgs, scope: &Scope, cx: &mut Cx) {
+        for (_, module) in &mut self.modules {
+            module.commit(args, scope, cx);
+        }
+    }
+
     pub fn iter(&self) -> Iter<Cx> {
         Iter { inner: self.modules.iter() }
     }
@@ -143,4 +150,11 @@ impl<'a, Cx: Send> IntoIterator for &'a mut Modules<Cx> {
     fn into_iter(self) -> Self::IntoIter {
         self.iter_mut()
     }
+}
+
+
+pub struct CommitArgs<'a> {
+    pub prototypes: &'a Prototypes,
+    pub requests: &'a [SpawnRequest],
+    pub world_removes: &'a [Entity],
 }

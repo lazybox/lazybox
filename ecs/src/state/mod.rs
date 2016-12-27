@@ -1,22 +1,34 @@
+mod builder;
+
+pub use self::builder::StateBuilder;
+
 use entity::{Entities, EntityRef, Accessor};
 use module::component::storage::{StorageReadGuard, StorageWriteGuard};
 use module::component::Component;
-use module::{Module, Modules, HasComponent};
+use module::{Module, Modules, HasComponent, CommitArgs};
 use spawn::{SpawnQueue, SpawnRequest, PrototypeToken};
+use rayon;
+use schema::Schema;
 
 pub struct State<Cx: Send> {
+    schema: Schema,
     entities: Entities,
     modules: Modules<Cx>,
     spawn_queue: SpawnQueue
 }
 
 impl<Cx: Send> State<Cx> {
-    pub fn new() -> Self {
+    pub fn new(schema: Schema) -> Self {
         State {
+            schema: schema,
             entities: Entities::new(),
             modules: Modules::new(),
             spawn_queue: SpawnQueue::new()
         }
+    }
+
+    pub fn schema(&self) -> Schema {
+        self.schema.clone()
     }
 
     pub fn entity_ref<'a>(&self, accessor: Accessor<'a>) -> EntityRef {
@@ -64,7 +76,30 @@ impl<Cx: Send> State<Cx> {
                     .expect("the requested module doesn't exists")
     }
 
-    fn commit(&mut self, context: &mut Cx) {}
+    fn commit(&mut self, cx: &mut Cx) {
+        let world_removes = self.entities.push_removes();
+
+        
+        let &mut State {    ref schema,
+                            ref mut entities,
+                            ref mut modules,
+                            ref mut spawn_queue,
+                            .. } = self;
+            
+        let requests = spawn_queue.take_requests();
+
+        rayon::scope(|scope| {    
+            scope.spawn(|_| entities.commit(&requests));
+
+            let commit_args = CommitArgs {
+                prototypes: schema.prototypes(),
+                requests: &requests,
+                world_removes: &world_removes,
+            };
+
+            scope.spawn(move |scope| { modules.commit(&commit_args, scope, cx) });
+        });
+    }
 }
 
 pub struct Update<'a, Cx: Send + 'a> {
