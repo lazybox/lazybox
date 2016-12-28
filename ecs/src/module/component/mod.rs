@@ -4,6 +4,8 @@ use std::any::{Any, TypeId};
 use std::fmt::Debug;
 use super::HasComponent;
 
+pub use self::storage::{StorageLock, StorageWriteGuard, StorageReadGuard};
+
 pub trait Component: Any {
     type Module: HasComponent<Self>;
     type Template: Template;

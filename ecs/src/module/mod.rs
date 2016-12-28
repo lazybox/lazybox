@@ -17,8 +17,7 @@ pub trait Module<Cx: Send>: Any + Send + Sync {
         ModuleType(TypeId::of::<Self>())
     }
 
-    fn commit(&mut self, _args: &CommitArgs, _scope: &Scope, _context: &mut Cx) {}
-    fn changesets(&self) -> &ChangeSetMap;
+    fn commit(&mut self, args: &CommitArgs, context: &mut Cx);
 }
 
 impl<Cx: Send> Module<Cx> {
@@ -92,9 +91,9 @@ impl<Cx: Send> Modules<Cx> {
             .and_then(|module| module.downcast_ref())
     }
 
-    pub fn commit(&mut self, args: &CommitArgs, scope: &Scope, cx: &mut Cx) {
+    pub fn commit(&mut self, args: &CommitArgs, cx: &mut Cx) {
         for (_, module) in &mut self.modules {
-            module.commit(args, scope, cx);
+            module.commit(args, cx);
         }
     }
 

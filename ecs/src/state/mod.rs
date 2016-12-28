@@ -88,17 +88,16 @@ impl<Cx: Send> State<Cx> {
             
         let requests = spawn_queue.take_requests();
 
-        rayon::scope(|scope| {    
-            scope.spawn(|_| entities.commit(&requests));
+        let commit_args = CommitArgs {
+            prototypes: schema.prototypes(),
+            requests: &requests,
+            world_removes: &world_removes,
+        };
 
-            let commit_args = CommitArgs {
-                prototypes: schema.prototypes(),
-                requests: &requests,
-                world_removes: &world_removes,
-            };
-
-            scope.spawn(move |scope| { modules.commit(&commit_args, scope, cx) });
-        });
+        rayon::join(
+            || entities.commit(&requests),
+            || modules.commit(&commit_args, cx)
+        );
     }
 }
 
