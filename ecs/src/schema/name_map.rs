@@ -1,19 +1,20 @@
 use std::borrow::Borrow;
 use std::cmp::Eq;
 use std::hash::Hash;
-use std::collections::hash_map::{self, HashMap};
+use std::collections::hash_map;
+use fnv::FnvHashMap;
 
 #[derive(Debug)]
 pub struct NameMap<T: Hash + Eq + Clone + Copy> {
-    name_to: HashMap<String, T>,
-    to_name: HashMap<T, String>,
+    name_to: FnvHashMap<String, T>,
+    to_name: FnvHashMap<T, String>,
 }
 
 impl<T: Hash + Eq + Clone + Copy> NameMap<T> {
     pub fn new() -> Self {
         NameMap {
-            name_to: HashMap::new(),
-            to_name: HashMap::new(),
+            name_to: FnvHashMap::default(),
+            to_name: FnvHashMap::default(),
         }
     }
 
