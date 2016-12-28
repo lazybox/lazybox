@@ -59,11 +59,11 @@ impl SpawnRequest {
 
     /// Returns the entity of this request.
     #[inline]
-    pub(crate) fn entity(&self) -> Entity {
+    pub fn entity(&self) -> Entity {
         self.entity
     }
 
-    pub(crate) fn get<C: Component>(&self, prototypes: &Prototypes) -> Option<C::Template> {
+    pub fn get<C: Component>(&self, prototypes: &Prototypes) -> Option<C::Template> {
         self.overrides.get::<C>().or_else(|| {
             self.prototype.and_then(|p| prototypes.get(p).get::<C>())
         })

@@ -1,6 +1,7 @@
 use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::ops::{Deref, DerefMut};
 
+#[derive(Debug)]
 pub struct StorageLock<T: ?Sized>(RwLock<T>);
 
 impl<T> StorageLock<T> {

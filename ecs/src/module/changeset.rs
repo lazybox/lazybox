@@ -51,47 +51,32 @@ impl<'a> Iterator for Iter<'a> {
     }
 }
 
-pub struct ChangeSetMap {
-    changesets: FnvHashMap<ComponentType, ChangeSet>,
+pub struct ChangeSetMap<'a> {
+    changesets: FnvHashMap<ComponentType, &'a ChangeSet>,
 }
 
-impl ChangeSetMap {
+impl<'a> ChangeSetMap<'a> {
     pub fn new() -> Self {
         ChangeSetMap { changesets: FnvHashMap::default() }
     }
 
     pub fn insert(&mut self,
                   component_type: ComponentType,
-                  changeset: ChangeSet)
-                  -> Option<ChangeSet> {
+                  changeset: &'a ChangeSet)
+                  -> Option<&'a ChangeSet> {
         self.changesets.insert(component_type, changeset)
     }
 
-    pub fn get(&self, component_type: ComponentType) -> Option<&ChangeSet> {
-        self.changesets.get(&component_type)
-    }
-
-    pub fn get_mut(&mut self, component_type: ComponentType) -> Option<&mut ChangeSet> {
-        self.changesets.get_mut(&component_type)
-    }
-
-    pub fn take(&mut self, component_type: ComponentType) -> Option<ChangeSet> {
-        self.changesets.remove(&component_type)
+    pub fn get(&self, component_type: ComponentType) -> Option<&'a ChangeSet> {
+        self.changesets.get(&component_type).map(|&changeset| changeset)
     }
 }
 
-impl Index<ComponentType> for ChangeSetMap {
+impl<'a> Index<ComponentType> for ChangeSetMap<'a> {
     type Output = ChangeSet;
 
     #[inline]
     fn index(&self, component_type: ComponentType) -> &Self::Output {
         self.get(component_type).unwrap()
-    }
-}
-
-impl IndexMut<ComponentType> for ChangeSetMap {
-    #[inline]
-    fn index_mut(&mut self, component_type: ComponentType) -> &mut Self::Output {
-        self.get_mut(component_type).unwrap()
     }
 }
