@@ -17,4 +17,5 @@ pub mod state;
 pub mod spawn;
 pub mod module;
 pub mod data;
+pub mod group;
 mod schema;

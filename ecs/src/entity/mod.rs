@@ -134,6 +134,7 @@ impl Pool {
 pub struct Entities {
     pool: Pool,
     versions: VecMap<Version>,
+    spawns: SegQueue<Entity>
 }
 
 impl Entities {
@@ -141,6 +142,7 @@ impl Entities {
         Entities {
             pool: Pool::new(),
             versions: VecMap::new(),
+            spawns: SegQueue::new()
         }
     }
 
@@ -149,6 +151,13 @@ impl Entities {
     /// The entity is not considered alive until `spawn` is called
     pub fn create(&self) -> Entity {
         self.pool.acquire()
+    }
+
+    /// Spawns an entity when the state will be commited.
+    pub fn spawn_later(&self, entity: Entity) -> EntityRef {
+        self.spawns.push(entity);
+
+        EntityRef(entity)
     }
 
     /// Spawns an entity making it alive
@@ -222,9 +231,9 @@ impl Entities {
     }
 
     /// Commit the entities changes.
-    pub fn commit(&mut self, requests: &[SpawnRequest]) {
-        for request in requests {
-            self.spawn(request.entity());
+    pub fn commit(&mut self) {
+        while let Some(entity) = self.spawns.try_pop() {
+            self.spawn(entity);
         }
     }
 }

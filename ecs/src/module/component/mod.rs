@@ -12,7 +12,7 @@ pub trait Component: Any {
 }
 
 pub trait Template: Any + Send + Sync + Debug + Clone {
-    const NAME: &'static str;
+    fn name() -> &'static str where Self: Sized;
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]

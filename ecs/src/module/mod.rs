@@ -1,22 +1,21 @@
 pub mod component;
-pub mod changeset;
 
 use self::component::Component;
 use self::component::storage::{StorageReadGuard, StorageWriteGuard};
-use self::changeset::ChangeSetMap;
 
 use std::any::{Any, TypeId};
 use std::collections::hash_map;
 use rayon::Scope;
 use fnv::FnvHashMap;
-use spawn::{SpawnRequest, Prototypes};
 use entity::Entity;
+use state::CommitArgs;
 
 pub trait Module<Cx: Send>: Any + Send + Sync {
     fn get_type(&self) -> ModuleType {
         ModuleType(TypeId::of::<Self>())
     }
 
+    fn register_components() where Self: Sized;
     fn commit(&mut self, args: &CommitArgs, context: &mut Cx);
 }
 
@@ -149,11 +148,4 @@ impl<'a, Cx: Send> IntoIterator for &'a mut Modules<Cx> {
     fn into_iter(self) -> Self::IntoIter {
         self.iter_mut()
     }
-}
-
-
-pub struct CommitArgs<'a> {
-    pub prototypes: &'a Prototypes,
-    pub requests: &'a [SpawnRequest],
-    pub world_removes: &'a [Entity],
 }
