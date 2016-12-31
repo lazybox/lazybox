@@ -1,14 +1,13 @@
 use crossbeam::sync::SegQueue;
 use module::component::{Component, ComponentType};
-use bit_set::BitSet;
 use fnv::{FnvHashSet, FnvHashMap};
 use parking_lot::{RwLock, RwLockWriteGuard, RwLockReadGuard};
 use entity::{Entity, Accessor};
-use policy::Id;
+use policy::{Id, IdSet};
 use mopa;
 
 pub struct Monitor {
-    entities: BitSet,
+    entities: IdSet,
     modified: bool
 }
 
