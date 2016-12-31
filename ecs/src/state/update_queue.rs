@@ -19,6 +19,10 @@ impl Monitor {
         }
     }
 
+    pub fn entities(&self) -> &IdSet {
+        &self.entities
+    }
+
     #[inline]
     pub fn mark(&mut self, entity: Id) {
         self.modified = true;
@@ -155,5 +159,28 @@ impl UpdateQueues {
         for (_, queue) in &mut self.queues {
             queue.monitor_mut().clear_modified_flag()
         }
+    }
+
+    fn monitor(component_type: ComponentType) -> RwLockReadGuard<Monitor> {
+        self.queues.get(&component_type)
+                   .expect("the component has not been registered")
+                   .monitor()
+    }
+
+    fn monitors(&self) -> Monitors {
+        Monitors {
+            update_queues: self
+        }
+    }
+}
+
+pub struct Monitors<'a> {
+    update_queues: &'a UpdateQueues
+}
+
+impl<'a> Monitors<'a> {
+    #[inline]
+    pub fn get(component_type: ComponentType) -> RwLockReadGuard<Monitor> {
+        self.update_queues.monitor(component_type)
     }
 }

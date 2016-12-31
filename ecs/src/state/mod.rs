@@ -2,6 +2,7 @@ mod builder;
 mod update_queue;
 
 pub use self::builder::StateBuilder;
+pub use self::update_queue::Monitors as UpdateMonitors;
 
 use entity::{Entities, Entity, EntityRef, Accessor};
 use module::component::storage::{StorageReadGuard, StorageWriteGuard};
