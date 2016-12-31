@@ -6,47 +6,29 @@ use mopa;
 use parking_lot::Mutex;
 
 use module::component::{Component, Template, ComponentType};
-use entity::{Entity, EntityRef};
+use entity::{Entity, EntityRef, Accessor};
+use state::Commit;
 
 /// An entity to be spawn
-#[derive(Debug)]
-pub struct SpawnRequest {
+pub struct SpawnRequest<'a, Cx: Send + 'a> {
     entity: Entity,
-    overrides: Prototype,
-    prototype: Option<PrototypeType>,
+    commit: Commit<'a, Cx>
 }
 
-impl SpawnRequest {
+impl<'a, Cx: Send + 'a> SpawnRequest<'a, Cx> {
     /// Constructs a new SpawnRequest with the given `Entity`.
-    pub(crate) fn new(entity: Entity) -> Self {
+    pub(crate) fn new(entity: Entity, commit: Commit<'a, Cx>) -> Self {
         SpawnRequest {
             entity: entity,
-            overrides: Prototype::new(),
-            prototype: None,
+            commit: commit
         }
-    }
-
-    /// Associate this request to a given base prototype.
-    pub(crate) fn with_prototype<T: PrototypeToken>(entity: Entity) -> Self {
-        SpawnRequest {
-            entity: entity,
-            overrides: Prototype::new(),
-            prototype: Some(PrototypeType::of::<T>()),
-        }
-    }
-
-    /// Sets the overriding prototype of this prototype.
-    pub fn with_override(mut self, prototype: Prototype) -> Self {
-        self.overrides = prototype;
-
-        self
     }
 
     /// Sets a component to associate with the spawned entity.
-    ///
-    /// If the component already exists in the prototype, it will override it.
     pub fn set<C: Component>(mut self, component: C::Template) -> Self {
-        self.overrides = self.overrides.set::<C>(component);
+        let accessor = unsafe { Accessor::new_unchecked(self.entity.id()) };
+        self.commit.attach_later::<C>(accessor, component);
+
         self
     }
 
@@ -62,113 +44,20 @@ impl SpawnRequest {
     pub fn entity(&self) -> Entity {
         self.entity
     }
-
-    pub fn get<C: Component>(&self, prototypes: &Prototypes) -> Option<C::Template> {
-        self.overrides.get::<C>().or_else(|| {
-            self.prototype.and_then(|p| prototypes.get(p).get::<C>())
-        })
-    }
-
-    /// Returns the type of the prototype associated with this request.
-    #[inline]
-    pub fn prototype(&self) -> Option<PrototypeType> {
-        self.prototype
-    }
 }
 
-trait AnyTemplate: mopa::Any + Send + Debug + Sync {}
-mopafy!(AnyTemplate);
+pub trait Prototype: Sized {
+    type Batch: Batch<Prototype = Self>;
 
-impl<T: Template> AnyTemplate for T {}
+    fn spawn_later_with<'a, Cx: Send>(self, spawn: SpawnRequest<'a, Cx>)
+        where Self: Sized;
 
-/// A prototype that defines the skeleton of an Entity.
-///
-/// It is represented by a set of components with default values.
-#[derive(Debug)]
-pub struct Prototype {
-    components: HashMap<ComponentType, Box<AnyTemplate>>,
+    fn batch<'a, Cx: Send>(commit: Commit<'a, Cx>) -> Self::Batch 
+        where Self: Sized; 
 }
 
-impl Prototype {
-    /// Constructs a new empty `Prototype`.
-    pub fn new() -> Self {
-        Prototype { components: HashMap::new() }
-    }
+pub trait Batch {
+    type Prototype: Prototype;
 
-    /// Adds a default `component` to the prototype.
-    pub fn set<C: Component>(mut self, component: C::Template) -> Self {
-        self.components.insert(ComponentType::of::<C>(), Box::new(component));
-        self
-    }
-
-    /// Returns the component `C` value of this prototype.
-    pub fn get<C: Component>(&self) -> Option<C::Template> {
-        self.components
-            .get(&ComponentType::of::<C>())
-            .and_then(|data| data.downcast_ref())
-            .cloned()
-    }
-}
-
-/// A token identity to a `Prototype`.
-pub trait PrototypeToken: Any {
-    fn prototype() -> Prototype;
-}
-
-/// A unique id for a given `PrototypeToken` type.
-#[derive(Debug, Clone, Copy, Hash, Eq, PartialEq)]
-pub struct PrototypeType(TypeId);
-
-impl PrototypeType {
-    /// Returns the type of `PrototypeType` of token `T`.
-    pub fn of<T: PrototypeToken>() -> Self {
-        PrototypeType(TypeId::of::<T>())
-    }
-}
-
-/// The manager responsible to hold defined prototype
-#[derive(Debug)]
-pub struct Prototypes {
-    prototypes: HashMap<PrototypeType, Prototype>,
-}
-
-impl Prototypes {
-    /// Constructs a new empty `Prototypes`
-    pub fn new() -> Self {
-        Prototypes { prototypes: HashMap::new() }
-    }
-
-    /// Registers a new prototype with the given token.
-    pub fn register<T: PrototypeToken>(&mut self) {
-        let key = PrototypeType::of::<T>();
-        self.prototypes.entry(key).or_insert_with(|| T::prototype());
-    }
-
-    /// Returns a prototype
-    pub fn get(&self, prototype_type: PrototypeType) -> &Prototype {
-        self.prototypes
-            .get(&prototype_type)
-            .expect("the prototype has not been registered")
-    }
-}
-
-#[derive(Debug)]
-pub(crate) struct SpawnQueue {
-    queue: Mutex<Vec<SpawnRequest>>,
-}
-
-impl SpawnQueue {
-    pub fn new() -> SpawnQueue {
-        SpawnQueue { queue: Mutex::new(Vec::new()) }
-    }
-
-    pub fn push(&self, request: SpawnRequest) {
-        let mut queue = self.queue.lock();
-        queue.push(request);
-    }
-
-    pub fn take_requests(&mut self) -> Vec<SpawnRequest> {
-        let mut queue = self.queue.lock();
-        mem::replace(&mut *queue, Vec::new())
-    }
+    fn spawn_later<'a, Cx: Send>(&self, prototype: Self::Prototype);
 }

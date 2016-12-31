@@ -1,7 +1,7 @@
 mod storages;
 
-use module::{Module, HasComponent, CommitArgs};
-use module::changeset::ChangeSetMap;
+use state::CommitArgs;
+use module::{Module, HasComponent};
 use module::component::{Component, Template, ComponentType};
 use module::component::storage::{StorageReadGuard, StorageWriteGuard};
 use fnv::FnvHashMap;
@@ -11,8 +11,9 @@ use std::fmt::Debug;
 use std::any::Any;
 
 pub trait DataComponent: Any + Clone + Debug + Send + Sync {
-    const NAME: &'static str;
     type Storage: Storage;
+
+    fn name() -> &'static str where Self: Sized;
 }
 
 impl<C: DataComponent> Component for C {
@@ -21,7 +22,11 @@ impl<C: DataComponent> Component for C {
 }
 
 impl<C: DataComponent> Template for C {
-    const NAME: &'static str = <C as DataComponent>::NAME;
+    fn name() -> &'static str 
+        where Self: Sized {
+
+        C::name()
+    }
 }
 
 pub struct DataModule {
@@ -56,6 +61,8 @@ impl DataModule {
 }
 
 impl<Cx: Send> Module<Cx> for DataModule {
+    fn register_components() {}
+
     fn commit(&mut self, args: &CommitArgs, _context: &mut Cx) {
         rayon::scope(|scope| {
             for (_, handler) in &mut self.handlers {

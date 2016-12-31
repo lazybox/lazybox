@@ -1,11 +1,10 @@
 use std::any::Any;
 use mopa;
 use entity::Accessor;
-use module::CommitArgs;
+use state::CommitArgs;
 use module::component::{Component, StorageLock, StorageReadGuard, StorageWriteGuard};
-use module::changeset::ChangeSet;
-use super::DataComponent;
 use std::fmt::Debug;
+use super::DataComponent;
 
 /// Defines any `DataComponent` storage that can be used.
 ///
@@ -40,18 +39,21 @@ impl<S: Storage> StorageHandler<S> {
 impl<S: Storage> Handler for StorageHandler<S> {
     fn commit(&mut self, args: &CommitArgs) {
         let mut storage = self.storage.write();
+        let mut updates = args.update_reader_for::<S::Component>();
 
-        for entity in args.world_removes {
-            let accessor = unsafe { Accessor::new_unchecked(entity.id()) };
+        while let Some((id, component)) = updates.next_attach_query() {
+            let accessor = unsafe { Accessor::new_unchecked(id) };
+            storage.insert(accessor, component);
+        }
+
+        while let Some(id) = updates.next_detach_query() {
+            let accessor = unsafe { Accessor::new_unchecked(id) };
             storage.remove(accessor);
         }
 
-        for request in args.requests {
-            let accessor = unsafe { Accessor::new_unchecked(request.entity().id()) };
-
-            if let Some(component) = request.get::<S::Component>(args.prototypes) {
-                storage.insert(accessor, component);
-            }
+        for entity in args.world_removes() {
+            let accessor = unsafe { Accessor::new_unchecked(entity.id()) };
+            storage.remove(accessor);
         }
     }
 }

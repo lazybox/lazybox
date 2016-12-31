@@ -1,17 +1,18 @@
-pub mod name_map;
+mod name_map;
 
 use std::sync::Arc;
-use spawn::{PrototypeToken, Prototypes};
+use module::component::{Component, Template, ComponentType};
+use self::name_map::NameMap;
 
 #[derive(Debug)]
 struct SchemaData {
-    prototypes: Prototypes
+    components: NameMap<ComponentType>
 }
 
 impl SchemaData {
     pub fn new() -> Self {
         SchemaData {
-            prototypes: Prototypes::new(),
+            components: NameMap::new()
         }
     }
 }
@@ -23,8 +24,8 @@ impl SchemaBuilder {
         SchemaBuilder(SchemaData::new())
     }
 
-    pub fn register_prototype<P: PrototypeToken>(&mut self) -> &mut Self {
-        self.0.prototypes.register::<P>();
+    pub fn register_component<C: Component>(&mut self) -> &mut Self {
+        self.0.components.insert(ComponentType::of::<C>(), C::Template::name().into());
         self
     }
 
@@ -37,7 +38,12 @@ impl SchemaBuilder {
 pub struct Schema(Arc<SchemaData>);
 
 impl Schema {
-    pub fn prototypes(&self) -> &Prototypes {
-        &self.0.prototypes
+    pub fn component_name(&self, component_type: ComponentType) -> Option<&str> {
+        self.0.components.name_of(&component_type)
+    }
+
+    pub fn component_type(&self, name: &str) -> Option<ComponentType> {
+        self.0.components.of_name(name)
+                         .cloned()
     }
 }

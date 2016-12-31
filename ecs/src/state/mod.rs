@@ -1,29 +1,31 @@
 mod builder;
+mod update_queue;
 
 pub use self::builder::StateBuilder;
 
-use entity::{Entities, EntityRef, Accessor};
+use entity::{Entities, Entity, EntityRef, Accessor};
 use module::component::storage::{StorageReadGuard, StorageWriteGuard};
 use module::component::Component;
-use module::{Module, Modules, HasComponent, CommitArgs};
-use spawn::{SpawnQueue, SpawnRequest, PrototypeToken};
+use module::{Module, Modules, HasComponent};
+use spawn::{SpawnRequest, Prototype};
 use rayon;
 use schema::Schema;
+use self::update_queue::{UpdateQueues, UpdateQueue, UpdateQueueReader};
 
 pub struct State<Cx: Send> {
     schema: Schema,
     entities: Entities,
     modules: Modules<Cx>,
-    spawn_queue: SpawnQueue
+    update_queues: UpdateQueues,
 }
 
 impl<Cx: Send> State<Cx> {
-    pub fn new(schema: Schema) -> Self {
+    pub fn new(schema: Schema, update_queues: UpdateQueues) -> Self {
         State {
             schema: schema,
             entities: Entities::new(),
             modules: Modules::new(),
-            spawn_queue: SpawnQueue::new()
+            update_queues: update_queues,
         }
     }
 
@@ -39,20 +41,25 @@ impl<Cx: Send> State<Cx> {
         self.entities.upgrade(entity_ref)
     }
 
-    pub fn spawn_request(&self) -> SpawnRequest {
+    fn spawn_later(&self) -> Entity {
         let entity = self.entities.create();
+        self.entities.spawn_later(entity);
 
-        SpawnRequest::new(entity)
+        entity
     }
 
-    pub fn spawn_request_with<T: PrototypeToken>(&self) -> SpawnRequest {
-        let entity = self.entities.create();
-
-        SpawnRequest::with_prototype::<T>(entity)
+    fn attach_later<'a, C: Component>(&self, accessor: Accessor<'a>, component: C::Template) {
+        self.update_queue::<C>().attach(accessor, component);
     }
 
-    fn spawn_later(&self, spawn: SpawnRequest) {
-        self.spawn_queue.push(spawn);
+    fn detach_later<'a, C: Component>(&self, accessor: Accessor<'a>) {
+        self.update_queue::<C>().detach(accessor);        
+    }
+
+    fn update_queue<C: Component>(&self) -> &UpdateQueue<C> {
+        self.update_queues  
+            .get::<C>()
+            .expect("the component has not been registered")
     }
 
     fn remove_later<'a>(&self, entity: Accessor<'a>) {
@@ -81,21 +88,18 @@ impl<Cx: Send> State<Cx> {
 
         
         let &mut State {    ref schema,
+                            ref update_queues,        
                             ref mut entities,
                             ref mut modules,
-                            ref mut spawn_queue,
                             .. } = self;
             
-        let requests = spawn_queue.take_requests();
-
         let commit_args = CommitArgs {
-            prototypes: schema.prototypes(),
-            requests: &requests,
+            update_queues: update_queues,
             world_removes: &world_removes,
         };
 
         rayon::join(
-            || entities.commit(&requests),
+            || entities.commit(),
             || modules.commit(&commit_args, cx)
         );
     }
@@ -121,13 +125,41 @@ pub struct Commit<'a, Cx: Send + 'a> {
 
 impl<'a, Cx: Send + 'a> Commit<'a, Cx> {
     #[inline]
-    pub fn spawn_later(self, spawn: SpawnRequest) {
-        self.state.spawn_later(spawn)
+    pub fn spawn_later(self) -> SpawnRequest<'a, Cx> {
+        let entity = self.state.spawn_later();
+        SpawnRequest::new(entity, self)
     }
+
+    #[inline]
+    pub fn spawn_later_with<P: Prototype>(self, prototype: P) {
+        let request = self.spawn_later();
+        prototype.spawn_later_with(request);
+    }
+
+    #[inline]
+    pub fn spawn_in_batch<P: Prototype>(self) -> P::Batch {
+        P::batch(self)
+    }
+
+    #[inline]
+    pub fn update_queue<C: Component>(self) -> &'a UpdateQueue<C> {
+        self.state.update_queue::<C>()
+    }
+
 
     #[inline]
     pub fn remove_later(self, entity: Accessor) {
         self.state.remove_later(entity)
+    }
+
+    #[inline]
+    pub fn attach_later<C: Component>(self, entity: Accessor, component: C::Template) {
+        self.state.attach_later::<C>(entity, component);
+    }
+
+    #[inline]
+    pub fn detach_later<C: Component>(self, entity: Accessor) {
+        self.state.detach_later::<C>(entity);
     }
 
     #[inline]
@@ -144,3 +176,22 @@ impl<'a, Cx: Send + 'a> Clone for Commit<'a, Cx> {
 }
 
 impl<'a, Cx: Send + 'a> Copy for Commit<'a, Cx> {}
+
+
+pub struct CommitArgs<'a> {
+    update_queues: &'a UpdateQueues,
+    world_removes: &'a [Entity],
+}
+
+impl<'a> CommitArgs<'a> {
+    pub fn update_reader_for<C: Component>(&self) -> UpdateQueueReader<C> {
+        self.update_queues
+            .get::<C>()
+            .expect("the component has not been registered")
+            .process(self.world_removes)
+    }
+
+    pub fn world_removes(&self) -> &[Entity] {
+        &self.world_removes
+    }
+}
