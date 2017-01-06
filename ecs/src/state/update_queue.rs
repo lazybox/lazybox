@@ -14,7 +14,7 @@ pub struct Monitor {
 impl Monitor {
     pub fn new() -> Self {
         Monitor {
-            entities: BitSet::new(),
+            entities: IdSet::new(),
             modified: false
         }
     }
@@ -161,13 +161,13 @@ impl UpdateQueues {
         }
     }
 
-    fn monitor(component_type: ComponentType) -> RwLockReadGuard<Monitor> {
+    fn monitor(&self, component_type: ComponentType) -> RwLockReadGuard<Monitor> {
         self.queues.get(&component_type)
                    .expect("the component has not been registered")
                    .monitor()
     }
 
-    fn monitors(&self) -> Monitors {
+    pub fn monitors(&self) -> Monitors {
         Monitors {
             update_queues: self
         }
@@ -180,7 +180,7 @@ pub struct Monitors<'a> {
 
 impl<'a> Monitors<'a> {
     #[inline]
-    pub fn get(component_type: ComponentType) -> RwLockReadGuard<Monitor> {
+    pub fn monitor(&self, component_type: ComponentType) -> RwLockReadGuard<'a, Monitor> {
         self.update_queues.monitor(component_type)
     }
 }
