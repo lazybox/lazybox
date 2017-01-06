@@ -1,11 +1,4 @@
-use std::collections::HashMap;
-use std::any::{Any, TypeId};
-use std::fmt::Debug;
-use std::mem;
-use mopa;
-use parking_lot::Mutex;
-
-use module::component::{Component, Template, ComponentType};
+use module::component::Component;
 use entity::{Entity, EntityRef, Accessor};
 use state::Commit;
 
@@ -25,7 +18,7 @@ impl<'a, Cx: Send + 'a> SpawnRequest<'a, Cx> {
     }
 
     /// Sets a component to associate with the spawned entity.
-    pub fn set<C: Component>(mut self, component: C::Template) -> Self {
+    pub fn set<C: Component>(self, component: C::Template) -> Self {
         let accessor = unsafe { Accessor::new_unchecked(self.entity.id()) };
         self.commit.attach_later::<C>(accessor, component);
 

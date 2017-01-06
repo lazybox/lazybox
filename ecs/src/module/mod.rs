@@ -6,8 +6,7 @@ use self::component::storage::{StorageReadGuard, StorageWriteGuard};
 use std::any::{Any, TypeId};
 use std::collections::hash_map;
 use fnv::FnvHashMap;
-use entity::Entity;
-use state::{CommitArgs, ComponentRegistry};
+use state::{CommitArgs};
 
 pub trait Module<Cx: Send>: Any + Send + Sync {
     fn get_type(&self) -> ModuleType {
