@@ -30,10 +30,6 @@ impl<T: Hash + Eq + Clone + Copy> NameMap<T> {
     pub fn of_name<S: Borrow<str>>(&self, name: S) -> Option<&T> {
         self.name_to.get(name.borrow())
     }
-
-    pub fn iter(&self) -> Iter<T> {
-        self.to_name.iter()
-    }
 }
 
 pub type Iter<'a, T> = hash_map::Iter<'a, T, String>;

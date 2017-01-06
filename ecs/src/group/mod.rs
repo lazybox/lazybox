@@ -2,9 +2,8 @@ pub mod filter;
 
 pub use self::filter::Filter;
 
-use policy::{Id, IdSet};
-use std::collections::HashSet;
-use entity::{self, Entity};
+use policy::IdSet;
+use entity;
 use state::UpdateMonitors;
 use fnv::FnvHashMap;
 use std::any::{Any, TypeId};

@@ -61,8 +61,6 @@ impl DataModule {
 }
 
 impl<Cx: Send> Module<Cx> for DataModule {
-    fn register_components() {}
-
     fn commit(&mut self, args: &CommitArgs, _context: &mut Cx) {
         rayon::scope(|scope| {
             for (_, handler) in &mut self.handlers {

@@ -3,7 +3,6 @@ mod update_queue;
 
 pub use self::builder::StateBuilder;
 pub use self::update_queue::Monitors as UpdateMonitors;
-pub use self::builder::{StateBuilder, ComponentRegistry};
 
 use entity::{Entities, Entity, EntityRef, Accessor};
 use module::component::storage::{StorageReadGuard, StorageWriteGuard};
@@ -24,11 +23,11 @@ pub struct State<Cx: Send> {
 }
 
 impl<Cx: Send> State<Cx> {
-    pub fn new(schema: Schema, groups: Groups, update_queues: UpdateQueues) -> Self {
+    pub fn new(schema: Schema, modules: Modules<Cx>, groups: Groups, update_queues: UpdateQueues) -> Self {
         State {
             schema: schema,
             entities: Entities::new(),
-            modules: Modules::new(),
+            modules: modules,
             groups: groups,
             update_queues: update_queues,
         }
@@ -91,24 +90,23 @@ impl<Cx: Send> State<Cx> {
     fn commit(&mut self, cx: &mut Cx) {
         let world_removes = self.entities.push_removes();
 
-        let &mut State { ref schema,
-                         ref update_queues,        
+        let &mut State { ref mut update_queues,        
                          ref mut groups,
                          ref mut entities,
                          ref mut modules,
                          .. } = self;
 
+        {
+            let commit_args = CommitArgs {
+                update_queues: update_queues,
+                world_removes: &world_removes,
+            };
 
-        let commit_args = CommitArgs {
-            update_queues: update_queues,
-            world_removes: &world_removes,
-        };
-
-        rayon::join(
-            || entities.commit(),
-            || modules.commit(&commit_args, cx)
-        );
-
+            rayon::join(
+                || entities.commit(),
+                || modules.commit(&commit_args, cx)
+            );
+        }
         groups.commit(&update_queues.monitors());
         update_queues.clear_flags();
     }

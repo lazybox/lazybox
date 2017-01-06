@@ -33,6 +33,7 @@ impl<T: ?Sized + Processor<Cx>, Cx: Sync + Send> AnyProcessor<Cx> for T {}
 type Index = u32;
 type NodeIndex = daggy::NodeIndex<Index>;
 
+#[derive(Debug)]
 enum LinkType {
     Read,
     Write,
@@ -124,7 +125,9 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> ExecutionGraphBuilder<P, Cx>
                 Entry::Occupied(mut old_writer) => {
                     dependencies_count += 1;
 
-                    self.execution_dag.add_edge(*old_writer.get(), processor_node, LinkType::Write);
+                    self.execution_dag.add_edge(*old_writer.get(), processor_node, LinkType::Write)
+                        .expect("cyclic dependency");
+
                     old_writer.insert(processor_node);
                 }
                 Entry::Vacant(vacant_entry) => {
@@ -135,7 +138,8 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> ExecutionGraphBuilder<P, Cx>
             let read_nodes = self.reads.entry(write).or_insert(Vec::new());
             for &read in &*read_nodes {
                 dependencies_count += 1;
-                self.execution_dag.add_edge(read, processor_node, LinkType::Write);
+                self.execution_dag.add_edge(read, processor_node, LinkType::Write)
+                    .expect("cyclic dependency");
             }
             read_nodes.clear();
         }
@@ -153,7 +157,8 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> ExecutionGraphBuilder<P, Cx>
         for read in reads {
             if let Some(&writer) = self.writes.get(read) {
                 dependencies_count += 1;
-                self.execution_dag.add_edge(writer, processor_node, LinkType::Read);
+                self.execution_dag.add_edge(writer, processor_node, LinkType::Read)
+                    .expect("cyclic dependency");
             }
         }
 
