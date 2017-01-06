@@ -5,17 +5,15 @@ use self::component::storage::{StorageReadGuard, StorageWriteGuard};
 
 use std::any::{Any, TypeId};
 use std::collections::hash_map;
-use rayon::Scope;
 use fnv::FnvHashMap;
 use entity::Entity;
-use state::CommitArgs;
+use state::{CommitArgs, ComponentRegistry};
 
 pub trait Module<Cx: Send>: Any + Send + Sync {
     fn get_type(&self) -> ModuleType {
         ModuleType(TypeId::of::<Self>())
     }
 
-    fn register_components() where Self: Sized;
     fn commit(&mut self, args: &CommitArgs, context: &mut Cx);
 }
 

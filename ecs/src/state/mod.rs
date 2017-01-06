@@ -3,6 +3,7 @@ mod update_queue;
 
 pub use self::builder::StateBuilder;
 pub use self::update_queue::Monitors as UpdateMonitors;
+pub use self::builder::{StateBuilder, ComponentRegistry};
 
 use entity::{Entities, Entity, EntityRef, Accessor};
 use module::component::storage::{StorageReadGuard, StorageWriteGuard};
@@ -12,20 +13,23 @@ use spawn::{SpawnRequest, Prototype};
 use rayon;
 use schema::Schema;
 use self::update_queue::{UpdateQueues, UpdateQueue, UpdateQueueReader};
+use group::Groups;
 
 pub struct State<Cx: Send> {
     schema: Schema,
     entities: Entities,
     modules: Modules<Cx>,
+    groups: Groups,
     update_queues: UpdateQueues,
 }
 
 impl<Cx: Send> State<Cx> {
-    pub fn new(schema: Schema, update_queues: UpdateQueues) -> Self {
+    pub fn new(schema: Schema, groups: Groups, update_queues: UpdateQueues) -> Self {
         State {
             schema: schema,
             entities: Entities::new(),
             modules: Modules::new(),
+            groups: groups,
             update_queues: update_queues,
         }
     }
@@ -87,13 +91,14 @@ impl<Cx: Send> State<Cx> {
     fn commit(&mut self, cx: &mut Cx) {
         let world_removes = self.entities.push_removes();
 
-        
-        let &mut State {    ref schema,
-                            ref update_queues,        
-                            ref mut entities,
-                            ref mut modules,
-                            .. } = self;
-            
+        let &mut State { ref schema,
+                         ref update_queues,        
+                         ref mut groups,
+                         ref mut entities,
+                         ref mut modules,
+                         .. } = self;
+
+
         let commit_args = CommitArgs {
             update_queues: update_queues,
             world_removes: &world_removes,
@@ -103,6 +108,9 @@ impl<Cx: Send> State<Cx> {
             || entities.commit(),
             || modules.commit(&commit_args, cx)
         );
+
+        groups.commit(&update_queues.monitors());
+        update_queues.clear_flags();
     }
 }
 
