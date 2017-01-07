@@ -133,7 +133,7 @@ impl Pool {
 pub struct Entities {
     pool: Pool,
     versions: VecMap<Version>,
-    spawns: SegQueue<Entity>
+    spawns: SegQueue<Entity>,
 }
 
 impl Entities {
@@ -141,7 +141,7 @@ impl Entities {
         Entities {
             pool: Pool::new(),
             versions: VecMap::new(),
-            spawns: SegQueue::new()
+            spawns: SegQueue::new(),
         }
     }
 

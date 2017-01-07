@@ -84,20 +84,20 @@ type GroupIndex = usize;
 
 pub struct Groups {
     groups: Vec<Group>,
-    type_to_index: FnvHashMap<GroupType, GroupIndex>
+    type_to_index: FnvHashMap<GroupType, GroupIndex>,
 }
 
 impl Groups {
     pub fn new() -> Self {
         Groups {
             groups: Vec::new(),
-            type_to_index: FnvHashMap::default()
+            type_to_index: FnvHashMap::default(),
         }
     }
 
     pub fn insert(&mut self, group_type: GroupType, group: Group) {
         use std::collections::hash_map::Entry;
-        
+
         match self.type_to_index.entry(group_type) {
             Entry::Vacant(vacant) => {
                 vacant.insert(self.groups.len());
@@ -110,12 +110,14 @@ impl Groups {
     }
 
     pub fn get(&self, group_type: GroupType) -> Option<&Group> {
-        self.type_to_index.get(&group_type)
-                          .and_then(|&index| self.groups.get(index))
+        self.type_to_index
+            .get(&group_type)
+            .and_then(|&index| self.groups.get(index))
     }
 
     pub fn commit(&mut self, monitors: &UpdateMonitors) {
-        self.groups.par_iter_mut()
-                   .for_each(|group| group.commit(monitors));
+        self.groups
+            .par_iter_mut()
+            .for_each(|group| group.commit(monitors));
     }
 }

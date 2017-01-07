@@ -8,14 +8,14 @@ use mopa;
 
 pub struct Monitor {
     entities: IdSet,
-    modified: bool
+    modified: bool,
 }
 
 impl Monitor {
     pub fn new() -> Self {
         Monitor {
             entities: IdSet::new(),
-            modified: false
+            modified: false,
         }
     }
 
@@ -83,7 +83,7 @@ impl<C: Component> UpdateQueue<C> {
             monitor: self.monitor.write(),
             attach_queue: &self.attach_queue,
             detach_queue: &self.detach_queue,
-            world_removes: world_removes
+            world_removes: world_removes,
         }
     }
 }
@@ -92,14 +92,14 @@ pub struct UpdateQueueReader<'a, 'b, C: Component> {
     monitor: RwLockWriteGuard<'a, Monitor>,
     attach_queue: &'a AttachQueue<C::Template>,
     detach_queue: &'a DetachQueue,
-    world_removes: &'b [Entity]
+    world_removes: &'b [Entity],
 }
 
 impl<'a, 'b, C: Component> UpdateQueueReader<'a, 'b, C> {
     pub fn next_attach_query(&mut self) -> Option<(Id, C::Template)> {
         self.attach_queue.try_pop().map(|(entity, template)| {
             self.monitor.mark(entity);
-            
+
             (entity, template)
         })
     }
@@ -136,14 +136,12 @@ impl<C: Component> AnyUpdateQueue for UpdateQueue<C> {
 }
 
 pub struct UpdateQueues {
-    queues: FnvHashMap<ComponentType, Box<AnyUpdateQueue>>
+    queues: FnvHashMap<ComponentType, Box<AnyUpdateQueue>>,
 }
 
 impl UpdateQueues {
     pub fn new() -> Self {
-        UpdateQueues {
-            queues: FnvHashMap::default()
-        }
+        UpdateQueues { queues: FnvHashMap::default() }
     }
 
     pub fn register<C: Component>(&mut self) {
@@ -151,8 +149,9 @@ impl UpdateQueues {
     }
 
     pub fn get<C: Component>(&self) -> Option<&UpdateQueue<C>> {
-        self.queues.get(&ComponentType::of::<C>())
-                   .and_then(|queue| queue.downcast_ref())
+        self.queues
+            .get(&ComponentType::of::<C>())
+            .and_then(|queue| queue.downcast_ref())
     }
 
     pub fn clear_flags(&mut self) {
@@ -162,20 +161,19 @@ impl UpdateQueues {
     }
 
     fn monitor(&self, component_type: ComponentType) -> RwLockReadGuard<Monitor> {
-        self.queues.get(&component_type)
-                   .expect("the component has not been registered")
-                   .monitor()
+        self.queues
+            .get(&component_type)
+            .expect("the component has not been registered")
+            .monitor()
     }
 
     pub fn monitors(&self) -> Monitors {
-        Monitors {
-            update_queues: self
-        }
+        Monitors { update_queues: self }
     }
 }
 
 pub struct Monitors<'a> {
-    update_queues: &'a UpdateQueues
+    update_queues: &'a UpdateQueues,
 }
 
 impl<'a> Monitors<'a> {

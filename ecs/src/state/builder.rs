@@ -34,6 +34,9 @@ impl<Cx: Send> StateBuilder<Cx> {
     }
 
     pub fn build(self) -> State<Cx> {
-        State::new(self.schema.build(), self.modules, self.groups, self.update_queues)
+        State::new(self.schema.build(),
+                   self.modules,
+                   self.groups,
+                   self.update_queues)
     }
 }

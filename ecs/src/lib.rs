@@ -9,6 +9,8 @@ extern crate rayon;
 extern crate fnv;
 #[macro_use]
 extern crate mopa;
+extern crate serde;
+extern crate erased_serde;
 
 pub mod policy;
 pub mod entity;
