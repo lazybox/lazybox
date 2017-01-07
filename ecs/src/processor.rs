@@ -125,7 +125,8 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> ExecutionGraphBuilder<P, Cx>
                 Entry::Occupied(mut old_writer) => {
                     dependencies_count += 1;
 
-                    self.execution_dag.add_edge(*old_writer.get(), processor_node, LinkType::Write)
+                    self.execution_dag
+                        .add_edge(*old_writer.get(), processor_node, LinkType::Write)
                         .expect("cyclic dependency");
 
                     old_writer.insert(processor_node);
@@ -138,7 +139,8 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> ExecutionGraphBuilder<P, Cx>
             let read_nodes = self.reads.entry(write).or_insert(Vec::new());
             for &read in &*read_nodes {
                 dependencies_count += 1;
-                self.execution_dag.add_edge(read, processor_node, LinkType::Write)
+                self.execution_dag
+                    .add_edge(read, processor_node, LinkType::Write)
                     .expect("cyclic dependency");
             }
             read_nodes.clear();
@@ -157,7 +159,8 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> ExecutionGraphBuilder<P, Cx>
         for read in reads {
             if let Some(&writer) = self.writes.get(read) {
                 dependencies_count += 1;
-                self.execution_dag.add_edge(writer, processor_node, LinkType::Read)
+                self.execution_dag
+                    .add_edge(writer, processor_node, LinkType::Read)
                     .expect("cyclic dependency");
             }
         }
@@ -192,7 +195,9 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> Scheduler<P, Cx> {
         let f = &f;
         rayon::scope(|scope| {
             for &head in &self.heads {
-                scope.spawn(move |scope| self.run_process_mut(scope, head, state, commit, cx, f));
+                scope.spawn(move |scope| {
+                    self.run_process_mut(scope, head, state, commit, cx, f)
+                });
             }
         });
     }
@@ -215,7 +220,9 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> Scheduler<P, Cx> {
             let child_slot = &self.execution_dag[child];
 
             if child_slot.acknowledge_dependency_resolved() {
-                scope.spawn(move |scope| self.run_process_mut(scope, child, state, commit, cx, f));
+                scope.spawn(move |scope| {
+                    self.run_process_mut(scope, child, state, commit, cx, f)
+                });
             }
         }
     }

@@ -22,22 +22,21 @@ impl<C: DataComponent> Component for C {
 }
 
 impl<C: DataComponent> Template for C {
-    fn name() -> &'static str 
-        where Self: Sized {
+    fn name() -> &'static str
+        where Self: Sized
+    {
 
         C::name()
     }
 }
 
 pub struct DataModule {
-    handlers: FnvHashMap<ComponentType, Box<Handler>>
+    handlers: FnvHashMap<ComponentType, Box<Handler>>,
 }
 
 impl DataModule {
     pub fn new() -> Self {
-        DataModule {
-            handlers: FnvHashMap::default()
-        }
+        DataModule { handlers: FnvHashMap::default() }
     }
 
     pub fn register<D: DataComponent>(&mut self, storage: D::Storage)
@@ -48,15 +47,17 @@ impl DataModule {
     }
 
     pub fn read<D: DataComponent>(&self) -> Option<StorageReadGuard<D::Storage>> {
-        self.handlers.get(&ComponentType::of::<D>())
-                     .and_then(|handler| handler.downcast_ref::<StorageHandler<D::Storage>>())
-                     .map(|handler| handler.storage.read())
+        self.handlers
+            .get(&ComponentType::of::<D>())
+            .and_then(|handler| handler.downcast_ref::<StorageHandler<D::Storage>>())
+            .map(|handler| handler.storage.read())
     }
 
     pub fn write<D: DataComponent>(&self) -> Option<StorageWriteGuard<D::Storage>> {
-        self.handlers.get(&ComponentType::of::<D>())
-                     .and_then(|handler| handler.downcast_ref::<StorageHandler<D::Storage>>())
-                     .map(|handler| handler.storage.write())
+        self.handlers
+            .get(&ComponentType::of::<D>())
+            .and_then(|handler| handler.downcast_ref::<StorageHandler<D::Storage>>())
+            .map(|handler| handler.storage.write())
     }
 }
 
@@ -65,7 +66,7 @@ impl<Cx: Send> Module<Cx> for DataModule {
         rayon::scope(|scope| {
             for (_, handler) in &mut self.handlers {
                 scope.spawn(move |_| handler.commit(args));
-            }            
+            }
         });
     }
 }

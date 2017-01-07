@@ -23,7 +23,11 @@ pub struct State<Cx: Send> {
 }
 
 impl<Cx: Send> State<Cx> {
-    pub fn new(schema: Schema, modules: Modules<Cx>, groups: Groups, update_queues: UpdateQueues) -> Self {
+    pub fn new(schema: Schema,
+               modules: Modules<Cx>,
+               groups: Groups,
+               update_queues: UpdateQueues)
+               -> Self {
         State {
             schema: schema,
             entities: Entities::new(),
@@ -57,11 +61,11 @@ impl<Cx: Send> State<Cx> {
     }
 
     fn detach_later<'a, C: Component>(&self, accessor: Accessor<'a>) {
-        self.update_queue::<C>().detach(accessor);        
+        self.update_queue::<C>().detach(accessor);
     }
 
     fn update_queue<C: Component>(&self) -> &UpdateQueue<C> {
-        self.update_queues  
+        self.update_queues
             .get::<C>()
             .expect("the component has not been registered")
     }
@@ -83,14 +87,15 @@ impl<Cx: Send> State<Cx> {
     }
 
     pub fn module<M: Module<Cx>>(&self) -> &M {
-        self.modules.get::<M>()
-                    .expect("the requested module doesn't exists")
+        self.modules
+            .get::<M>()
+            .expect("the requested module doesn't exists")
     }
 
     fn commit(&mut self, cx: &mut Cx) {
         let world_removes = self.entities.push_removes();
 
-        let &mut State { ref mut update_queues,        
+        let &mut State { ref mut update_queues,
                          ref mut groups,
                          ref mut entities,
                          ref mut modules,
@@ -102,10 +107,7 @@ impl<Cx: Send> State<Cx> {
                 world_removes: &world_removes,
             };
 
-            rayon::join(
-                || entities.commit(),
-                || modules.commit(&commit_args, cx)
-            );
+            rayon::join(|| entities.commit(), || modules.commit(&commit_args, cx));
         }
         groups.commit(&update_queues.monitors());
         update_queues.clear_flags();
@@ -113,11 +115,13 @@ impl<Cx: Send> State<Cx> {
 }
 
 pub struct Update<'a, Cx: Send + 'a> {
-    state: &'a mut State<Cx>
+    state: &'a mut State<Cx>,
 }
 
 impl<'a, Cx: Send + 'a> Update<'a, Cx> {
-    pub fn commit<F>(&mut self, context: &mut Cx, f: F) where F: FnOnce(&State<Cx>, Commit<Cx>, &mut Cx) {
+    pub fn commit<F>(&mut self, context: &mut Cx, f: F)
+        where F: FnOnce(&State<Cx>, Commit<Cx>, &mut Cx)
+    {
         {
             let state = &*self.state;
             f(state, Commit { state: state }, context);
@@ -127,7 +131,7 @@ impl<'a, Cx: Send + 'a> Update<'a, Cx> {
 }
 
 pub struct Commit<'a, Cx: Send + 'a> {
-    state: &'a State<Cx>
+    state: &'a State<Cx>,
 }
 
 impl<'a, Cx: Send + 'a> Commit<'a, Cx> {
@@ -171,7 +175,8 @@ impl<'a, Cx: Send + 'a> Commit<'a, Cx> {
 
     #[inline]
     pub fn write<C: Component>(&self) -> StorageWriteGuard<<C::Module as HasComponent<C>>::Storage>
-        where C::Module: Module<Cx> {
+        where C::Module: Module<Cx>
+    {
 
         self.state.write::<C>()
     }
@@ -179,7 +184,9 @@ impl<'a, Cx: Send + 'a> Commit<'a, Cx> {
 
 impl<'a, Cx: Send + 'a> Clone for Commit<'a, Cx> {
     #[inline]
-    fn clone(&self) -> Self { Commit { state: self.state } }
+    fn clone(&self) -> Self {
+        Commit { state: self.state }
+    }
 }
 
 impl<'a, Cx: Send + 'a> Copy for Commit<'a, Cx> {}

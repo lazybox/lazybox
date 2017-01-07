@@ -6,14 +6,12 @@ use self::name_map::NameMap;
 
 #[derive(Debug)]
 struct SchemaData {
-    components: NameMap<ComponentType>
+    components: NameMap<ComponentType>,
 }
 
 impl SchemaData {
     pub fn new() -> Self {
-        SchemaData {
-            components: NameMap::new()
-        }
+        SchemaData { components: NameMap::new() }
     }
 }
 
@@ -43,7 +41,9 @@ impl Schema {
     }
 
     pub fn component_type(&self, name: &str) -> Option<ComponentType> {
-        self.0.components.of_name(name)
-                         .cloned()
+        self.0
+            .components
+            .of_name(name)
+            .cloned()
     }
 }
