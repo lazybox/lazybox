@@ -1,5 +1,5 @@
 use state::{State, Commit};
-use module::component::ComponentType;
+use module::ComponentType;
 use std::any::Any;
 use std::collections::HashMap;
 use daggy::{self, Dag, Walker};

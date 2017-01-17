@@ -1,7 +1,8 @@
 pub mod component;
 
-use self::component::Component;
-use self::component::storage::{StorageReadGuard, StorageWriteGuard};
+pub use self::component::{Component, Template, ComponentType};
+pub use self::component::storage::{StorageLock, StorageReadGuard, StorageWriteGuard};
+
 
 use std::any::{Any, TypeId};
 use std::collections::hash_map;

@@ -5,8 +5,7 @@ pub use self::builder::StateBuilder;
 pub use self::update_queue::Monitors as UpdateMonitors;
 
 use entity::{Entities, Entity, EntityRef, Accessor};
-use module::component::storage::{StorageReadGuard, StorageWriteGuard};
-use module::component::Component;
+use module::{Component, StorageReadGuard, StorageWriteGuard};
 use module::{Module, Modules, HasComponent};
 use spawn::{SpawnRequest, Prototype};
 use rayon;

@@ -11,9 +11,7 @@ pub trait Component: Any {
     type Template: Template;
 }
 
-pub trait Template: Any + Send + Sync + Debug + Clone {
-    fn name() -> &'static str where Self: Sized;
-}
+pub trait Template: Any + Send + Sync + Debug + Clone {}
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub struct ComponentType(TypeId);

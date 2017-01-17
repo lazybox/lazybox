@@ -1,7 +1,7 @@
 //! The filter module
 //!
 
-use module::component::{Component, ComponentType};
+use module::{Component, ComponentType};
 use fnv::FnvHashSet;
 
 /// Represents a filter of entities
