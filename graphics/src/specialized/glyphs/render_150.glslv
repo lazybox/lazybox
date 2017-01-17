@@ -1,4 +1,4 @@
-#version 150
+#version 150 core
 
 in vec2 a_Position; // FIXME: unused
 in vec2 a_TranslateInf;
@@ -33,7 +33,7 @@ void main() {
         vec2(a_TexCoordInf.x, a_TexCoordSup.y), // top left
         vec2(a_TexCoordInf.x, a_TexCoordInf.y) // bottom left
     );
-	v_TexCoord = tex_coords[gl_VertexID];
+    v_TexCoord = tex_coords[gl_VertexID];
     v_Color = unpack_color(a_Color);
 }
 

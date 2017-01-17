@@ -1,6 +1,5 @@
 pub mod cache;
 
-use gfx;
 use gfx_core;
 use rusttype::{PositionedGlyph, Point};
 
@@ -24,6 +23,7 @@ mod defines {
     pub use types::*;
     pub use utils::*;
     pub use camera;
+    use gfx;
 
     gfx_defines! {
         vertex GlyphInstance {
@@ -41,14 +41,14 @@ mod defines {
             glyph_sampler: gfx::TextureSampler<f32> = "s_Glyph",
             scissor: gfx::pso::target::Scissor = (),
             color_target: gfx::BlendTarget<ColorFormat> =
-                ("o_Color", gfx::state::MASK_ALL, gfx::preset::blend::ALPHA),
+                ("Target0", gfx::state::MASK_ALL, gfx::preset::blend::ALPHA),
         }
     }
 }
 
 pub struct Renderer {
     bundle: Bundle<pipe::Data<Resources>>,
-    mapping: MappingWritable<GlyphInstance>,
+    upload: GpuBuffer<GlyphInstance>,
     cache: GlyphCache,
     queue: Vec<(usize, PackedColor, PositionedGlyph<'static>)>,
 }
@@ -68,10 +68,8 @@ impl Renderer {
         let (vertices, slice) = graphics.factory
             .create_vertex_buffer_with_slice(&QUAD_VERTICES, &QUAD_INDICES[..]);
         
-        let (instances, mapping) = graphics.factory
-            .create_buffer_persistent_writable(GLYPH_BUFFER_SIZE,
-                                               gfx::buffer::Role::Vertex,
-                                               gfx::Bind::empty());
+        let (instances, upload) =
+            create_vertex_upload_pair(&mut graphics.factory, GLYPH_BUFFER_SIZE);
 
         let linear_sampler = graphics.factory.create_sampler_linear();
 
@@ -89,7 +87,7 @@ impl Renderer {
 
         Renderer {
             bundle: Bundle::new(slice, pso, data),
-            mapping: mapping,
+            upload: upload,
             cache: cache,
             queue: Vec::with_capacity(GLYPH_BUFFER_SIZE),
         }
@@ -133,13 +131,14 @@ impl Renderer {
     }
 
     fn draw(&mut self, frame: &mut Frame) {
-        let &mut Graphics { ref mut encoder, .. } = frame.graphics;
+        use gfx::traits::*;
+        let &mut Graphics { ref mut encoder, ref mut factory, .. } = frame.graphics;
 
         self.cache.cache_queued(encoder).unwrap();
 
         let conv_point = |p: Point<i32>| [p.x as f32, p.y as f32];
 
-        let mut writer = self.mapping.write();
+        let mut writer = factory.write_mapping(&self.upload).unwrap();
         let mut i = 0;
         for (font_id, color, glyph) in self.queue.drain(..) {
             if let Ok(Some((uv, screen))) = self.cache.rect_for(font_id, &glyph) {
@@ -151,12 +150,14 @@ impl Renderer {
                     color: color.0,
                 };
 
-                writer.set(i, instance);
-                i += 1;                
+                writer[i] = instance;
+                i += 1;
             }
         }
 
         self.bundle.slice.instances = Some((i as u32, 0));
+        encoder.copy_buffer(&self.upload, &self.bundle.data.instances,
+                            0, 0, i).unwrap();
         self.bundle.encode(encoder);
     }
 }

@@ -25,6 +25,7 @@ mod defines {
     pub use utils::*;
     pub use specialized::dynamic_lights::OcclusionFormat;
     pub use camera;
+    use gfx;
 
     gfx_defines! {
         vertex SpriteInstance {
@@ -62,7 +63,7 @@ mod defines {
 
 pub struct Renderer {
     bundle: SpriteBundle,
-    mapping: MappingWritable<SpriteInstance>,
+    upload: GpuBuffer<SpriteInstance>,
     layers: Layers<LayerEntities, LayerData>,
 }
 
@@ -155,10 +156,8 @@ impl Renderer {
         let (vertices, slice) = graphics.factory
             .create_vertex_buffer_with_slice(&HALF_QUAD_VERTICES, &HALF_QUAD_INDICES[..]);
 
-        let (instances, mapping) = graphics.factory
-            .create_buffer_persistent_writable(SPRITE_BUFFER_SIZE,
-                                               gfx::buffer::Role::Vertex,
-                                               gfx::Bind::empty());
+        let (instances, upload) =
+            create_vertex_upload_pair(&mut graphics.factory, SPRITE_BUFFER_SIZE);
 
         let bundle = SpriteBundle {
             pso: pso,
@@ -175,7 +174,7 @@ impl Renderer {
 
         Renderer {
             bundle: bundle,
-            mapping: mapping,
+            upload: upload,
             layers: Layers::new(),
         }
     }
@@ -222,6 +221,7 @@ impl Renderer {
     pub fn submit(&mut self, frame: &mut Frame) {
         let &mut Graphics { ref mut encoder,
                             ref mut device,
+                            ref mut factory,
                             ref texture_binds,
                             .. } = frame.graphics;
 
@@ -233,6 +233,7 @@ impl Renderer {
                 Self::preprocess_layer(&mut buffers, data);
             });
 
+        let mut writer = MappingWriter::new(&self.upload);
         for layer in &mut self.layers.vec {
             let (mut buffers, data) = layer.access();
 
@@ -242,10 +243,13 @@ impl Renderer {
             encoder.update_constant_buffer(&self.bundle.layer_locals, &layer_locals);
 
             let bundle = &mut self.bundle;
-            let mut draw = |texture_id, start, end, encoder: &mut Encoder| {
+            let mut draw = |writer: &mut MappingWriter<SpriteInstance>, texture_id, start, end, encoder: &mut Encoder| {
                 let texture = texture_binds.get(texture_id);
-                let count = (end - start) as u32;
-                bundle.encode(encoder, texture, count, start as u32);
+                let count = end - start;
+                writer.release();
+                encoder.copy_buffer(writer.buffer(), &bundle.instances,
+                                    start, start, count).unwrap();
+                bundle.encode(encoder, texture, count as u32, start as u32);
             };
 
             let mut current_texture = None;
@@ -255,27 +259,27 @@ impl Renderer {
                 let (texture, buffer_index, index) = key.into();
 
                 if end == SPRITE_BUFFER_SIZE {
-                    draw(current_texture.unwrap(), start, end, encoder);
+                    draw(&mut writer, current_texture.unwrap(), start, end, encoder);
                     encoder.flush(device);
                     frame.should_flush = false;
                     start = 0;
                     end = 0;
                 } else if let Some(current) = current_texture {
                     if current != texture {
-                        draw(current, start, end, encoder);
+                        draw(&mut writer, current, start, end, encoder);
                         frame.should_flush = true;
                         start = end;
                     }
                 }
 
-                // TODO: call `write()` less often :/
-                self.mapping.write().set(end, buffers[buffer_index].sprites[index].1);
+                let mut w = writer.acquire(factory);
+                w[end] = buffers[buffer_index].sprites[index].1;
                 current_texture = Some(texture);
                 end += 1;
             }
 
             if let Some(current) = current_texture {
-                draw(current, start, end, encoder);
+                draw(&mut writer, current, start, end, encoder);
                 encoder.flush(device);
                 frame.should_flush = false;
             }

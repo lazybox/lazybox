@@ -20,6 +20,7 @@ mod defines {
     pub use types::*;
     pub use utils::*;
     pub use camera;
+    use gfx;
 
     gfx_defines! {
         vertex ImageInstance {
@@ -37,7 +38,7 @@ mod defines {
             image_sampler: gfx::TextureSampler<[f32; 4]> = "s_Image",
             scissor: gfx::pso::target::Scissor = (),
             color_target: gfx::BlendTarget<ColorFormat> =
-                ("o_Color", gfx::state::MASK_ALL, gfx::preset::blend::ALPHA),
+                ("Target0", gfx::state::MASK_ALL, gfx::preset::blend::ALPHA),
         }
     }
 }
@@ -46,12 +47,12 @@ pub struct Renderer {
     pso: PipelineState<render_pipe::Meta>,
     vertices: GpuBuffer<Position>,
     instances: GpuBuffer<ImageInstance>,
+    upload: GpuBuffer<ImageInstance>,
     camera_locals: GpuBuffer<camera::Locals>,
     sampler: Sampler,
     scissor: gfx_core::target::Rect,
     color_target: RenderTargetView<ColorFormat>,
     slice: Slice,
-    mapping: MappingWritable<ImageInstance>,
 }
 
 impl Renderer {
@@ -69,10 +70,8 @@ impl Renderer {
         let (vertices, slice) = graphics.factory
             .create_vertex_buffer_with_slice(&QUAD_VERTICES, &QUAD_INDICES[..]);
 
-        let (instances, mapping) = graphics.factory
-        	.create_buffer_persistent_writable(IMAGE_BUFFER_SIZE,
-                                               gfx::buffer::Role::Vertex,
-                                               gfx::Bind::empty());
+        let (instances, upload) =
+            create_vertex_upload_pair(&mut graphics.factory, IMAGE_BUFFER_SIZE);
 
         let linear_sampler = graphics.factory.create_sampler_linear();
 
@@ -80,12 +79,12 @@ impl Renderer {
             pso: pso,
             vertices: vertices,
             instances: instances,
+            upload: upload,
             camera_locals: camera_locals,
             sampler: linear_sampler,
             scissor: scissor,
             color_target: color_target,
             slice: slice,
-            mapping: mapping,
         }
     }
 
@@ -99,7 +98,16 @@ impl Renderer {
 
     pub fn render(&mut self, _: &mut Frame) -> Render {
         Render {
-            renderer: self,
+            pso: &self.pso,
+            vertices: &self.vertices,
+            instances: &self.instances,
+            writer: MappingWriter::new(&self.upload),
+            camera_locals: &self.camera_locals,
+            sampler: &self.sampler,
+            scissor: &mut self.scissor,
+            color_target: &self.color_target,
+            slice: &mut self.slice,
+
             start: 0,
             end: 0,
             current_texture: None,
@@ -108,7 +116,16 @@ impl Renderer {
 }
 
 pub struct Render<'a> {
-    renderer: &'a mut Renderer,
+    pso: &'a PipelineState<render_pipe::Meta>,
+    vertices: &'a GpuBuffer<Position>,
+    instances: &'a GpuBuffer<ImageInstance>,
+    writer: MappingWriter<'a, ImageInstance>,
+    camera_locals: &'a GpuBuffer<camera::Locals>,
+    sampler: &'a Sampler,
+    scissor: &'a mut gfx_core::target::Rect,
+    color_target: &'a RenderTargetView<ColorFormat>,
+    slice: &'a mut Slice,
+
     start: usize,
     end: usize,
     current_texture: Option<TextureView<ColorFormat>>,
@@ -145,8 +162,7 @@ impl<'a> Render<'a> {
             color: PackedColor::from(color).0,
         };
 
-        // TODO: call `write()` less often :/
-        self.renderer.mapping.write().set(self.end, instance);
+        self.writer.acquire(&mut frame.graphics.factory)[self.end] = instance;
         self.end += 1;
         self.current_texture = Some(texture_view);
     }
@@ -155,6 +171,7 @@ impl<'a> Render<'a> {
         self.ensure_drawed(frame);
         self.start = 0;
         self.end = 0;
+        self.writer.release();
     }
 
     pub fn ensure_drawed(&mut self, frame: &mut Frame) {
@@ -169,22 +186,24 @@ impl<'a> Render<'a> {
             encoder: &mut Encoder)
     {
         let data = render_pipe::Data {
-            vertices: self.renderer.vertices.clone(),
-            instances: self.renderer.instances.clone(),
-            camera: self.renderer.camera_locals.clone(),
-            image_sampler: (texture_view, self.renderer.sampler.clone()),
-            scissor: self.renderer.scissor.clone(),
-            color_target: self.renderer.color_target.clone(),
+            vertices: self.vertices.clone(),
+            instances: self.instances.clone(),
+            camera: self.camera_locals.clone(),
+            image_sampler: (texture_view, self.sampler.clone()),
+            scissor: self.scissor.clone(),
+            color_target: self.color_target.clone(),
         };
 
-        let count = (self.end - self.start) as gfx::InstanceCount;
-        self.renderer.slice.instances = Some((count, self.start as gfx::VertexCount));
-
-        encoder.draw(&self.renderer.slice, &self.renderer.pso, &data);
+        let count = self.end - self.start;
+        self.slice.instances = Some((count as gfx::InstanceCount,
+                                     self.start as gfx::VertexCount));
+        encoder.copy_buffer(self.writer.buffer(), self.instances,
+                            self.start, self.start, count).unwrap();
+        encoder.draw(self.slice, self.pso, &data);
         self.start = self.end;
     }
 
     pub fn scissor_mut(&mut self) -> &mut gfx_core::target::Rect {
-        self.renderer.scissor_mut()
+        self.scissor
     }
 }

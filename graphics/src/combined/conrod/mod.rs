@@ -25,13 +25,14 @@ pub use self::defines::forward_pipe;
 mod defines {
     pub use types::*;
     pub use utils::*;
+    use gfx;
 
     gfx_defines! {
         pipeline forward_pipe {
             vertices: gfx::VertexBuffer<Position> = (),
             color_sampler: gfx::TextureSampler<[f32; 4]> = "s_Color",
             color_target: gfx::BlendTarget<ColorFormat> =
-                ("o_Color", gfx::state::MASK_ALL, gfx::preset::blend::ALPHA),
+                ("Target0", gfx::state::MASK_ALL, gfx::preset::blend::ALPHA),
         }
     }
 }

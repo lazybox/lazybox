@@ -17,6 +17,7 @@ pub use self::defines::forward_pipe;
 mod defines {
     pub use types::*;
     pub use utils::*;
+    use gfx;
 
     gfx_defines! {
         pipeline forward_pipe {

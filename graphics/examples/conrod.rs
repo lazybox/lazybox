@@ -14,14 +14,14 @@ use frameclock::*;
 
 fn main() {
     let builder = WindowBuilder::new()
+        .with_gl(glutin::GlRequest::Specific(glutin::Api::OpenGl, (2, 1)))
         .with_title("Conrod".to_string())
-        .with_dimensions(512, 512)
-        .with_gl(glutin::GlRequest::Specific(glutin::Api::OpenGl, (3, 2)));
+        .with_dimensions(512, 512);
 
     let (window, mut graphics) = Graphics::new(builder);
     let mut renderer = Renderer::new(window.hidpi_factor(), &mut graphics);
 
-    let mut ui = conrod::UiBuilder::new().build();
+    let mut ui = conrod::UiBuilder::new([512., 512.]).build();
     ui.fonts.insert_from_file("resources/fonts/NotoSans/NotoSans-Regular.ttf").unwrap();
 
     widget_ids!{
@@ -52,8 +52,6 @@ fn main() {
     let mut fps = 0;
 
     'main: loop {
-        let (w, h) = window.get_inner_size_pixels().unwrap();
-        let dpi_factor = window.hidpi_factor() as conrod::Scalar;
         let delta_time = frameclock.reset();
         if let Some(fps_sample) = fps_counter.update(delta_time) {
             mspf = 1000. / fps_sample;
@@ -67,13 +65,11 @@ fn main() {
                 _ => {},
             }
 
-            let (w, h) = (w as conrod::Scalar, h as conrod::Scalar);
-            if let Some(event) = conrod::backend::glutin::convert(event.clone(), w, h, dpi_factor) {
+            if let Some(event) = conrod::backend::glutin::convert(event.clone(), &window) {
                 ui.handle_event(event);
             }
         }
 
-        ui.handle_event(conrod::event::render(delta_time, w, h, dpi_factor));
         {
             let mut ui = &mut ui.set_widgets();
             use conrod::{Colorable, Positionable, Sizeable, Widget};
