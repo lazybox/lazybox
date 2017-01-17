@@ -1,8 +1,7 @@
 use state::State;
 use state::update_queue::UpdateQueues;
 use group::Groups;
-use module::{Module, Modules};
-use module::component::Component;
+use module::{Module, Modules,Component};
 
 pub struct StateBuilder<Cx: Send> {
     update_queues: UpdateQueues,

@@ -1,5 +1,5 @@
 use crossbeam::sync::SegQueue;
-use module::component::{Component, ComponentType};
+use module::{Component, ComponentType};
 use fnv::FnvHashMap;
 use parking_lot::{RwLock, RwLockWriteGuard, RwLockReadGuard};
 use entity::{Entity, Accessor};

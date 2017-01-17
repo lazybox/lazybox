@@ -11,6 +11,7 @@ use vec_map::{self, VecMap};
 /// There is no data associated to it.
 #[derive(Copy, Clone, Debug, Hash)]
 #[derive(PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Serialize, Deserialize)]
 pub struct Entity(Id, Version);
 
 impl Entity {
@@ -45,6 +46,7 @@ impl Entity {
 /// You can use the method `updgrade_entity_ref` on the state to get an accessor from it.
 #[derive(Copy, Clone, Debug, Hash)]
 #[derive(PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Serialize, Deserialize)]
 pub struct EntityRef(Entity);
 
 impl EntityRef {

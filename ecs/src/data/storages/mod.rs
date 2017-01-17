@@ -2,7 +2,7 @@ use std::any::Any;
 use mopa;
 use entity::Accessor;
 use state::CommitArgs;
-use module::component::StorageLock;
+use module::StorageLock;
 use std::fmt::Debug;
 use super::DataComponent;
 
