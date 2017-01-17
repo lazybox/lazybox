@@ -10,12 +10,10 @@ use module::component::Component;
 use module::{Module, Modules, HasComponent};
 use spawn::{SpawnRequest, Prototype};
 use rayon;
-use schema::Schema;
 use self::update_queue::{UpdateQueues, UpdateQueue, UpdateQueueReader};
 use group::Groups;
 
 pub struct State<Cx: Send> {
-    schema: Schema,
     entities: Entities,
     modules: Modules<Cx>,
     groups: Groups,
@@ -23,22 +21,16 @@ pub struct State<Cx: Send> {
 }
 
 impl<Cx: Send> State<Cx> {
-    pub fn new(schema: Schema,
-               modules: Modules<Cx>,
+    pub fn new(modules: Modules<Cx>,
                groups: Groups,
                update_queues: UpdateQueues)
                -> Self {
         State {
-            schema: schema,
             entities: Entities::new(),
             modules: modules,
             groups: groups,
             update_queues: update_queues,
         }
-    }
-
-    pub fn schema(&self) -> Schema {
-        self.schema.clone()
     }
 
     pub fn entity_ref<'a>(&self, accessor: Accessor<'a>) -> EntityRef {
