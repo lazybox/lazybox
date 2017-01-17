@@ -9,8 +9,6 @@ extern crate rayon;
 extern crate fnv;
 #[macro_use]
 extern crate mopa;
-extern crate serde;
-extern crate erased_serde;
 
 pub mod policy;
 pub mod entity;
@@ -20,4 +18,3 @@ pub mod spawn;
 pub mod module;
 pub mod data;
 pub mod group;
-mod schema;

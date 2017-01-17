@@ -1,4 +1,3 @@
-use schema::SchemaBuilder;
 use state::State;
 use state::update_queue::UpdateQueues;
 use group::Groups;
@@ -6,7 +5,6 @@ use module::{Module, Modules};
 use module::component::Component;
 
 pub struct StateBuilder<Cx: Send> {
-    schema: SchemaBuilder,
     update_queues: UpdateQueues,
     groups: Groups,
     modules: Modules<Cx>,
@@ -15,7 +13,6 @@ pub struct StateBuilder<Cx: Send> {
 impl<Cx: Send> StateBuilder<Cx> {
     pub fn new() -> Self {
         StateBuilder {
-            schema: SchemaBuilder::new(),
             update_queues: UpdateQueues::new(),
             groups: Groups::new(),
             modules: Modules::new(),
@@ -23,7 +20,6 @@ impl<Cx: Send> StateBuilder<Cx> {
     }
 
     pub fn register_component<C: Component>(&mut self) -> &mut Self {
-        self.schema.register_component::<C>();
         self.update_queues.register::<C>();
         self
     }
@@ -34,8 +30,7 @@ impl<Cx: Send> StateBuilder<Cx> {
     }
 
     pub fn build(self) -> State<Cx> {
-        State::new(self.schema.build(),
-                   self.modules,
+        State::new(self.modules,
                    self.groups,
                    self.update_queues)
     }

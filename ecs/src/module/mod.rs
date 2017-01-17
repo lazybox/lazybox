@@ -7,9 +7,6 @@ use std::any::{Any, TypeId};
 use std::collections::hash_map;
 use fnv::FnvHashMap;
 use state::CommitArgs;
-use erased_serde;
-
-type ModuleSnapshot = Box<erased_serde::Serialize>;
 
 pub trait Module<Cx: Send>: Any + Send + Sync {
     fn get_type(&self) -> ModuleType {
