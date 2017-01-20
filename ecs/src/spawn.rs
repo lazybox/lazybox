@@ -1,4 +1,4 @@
-use module::component::Component;
+use module::Component;
 use entity::{Entity, EntityRef, Accessor};
 use state::Commit;
 
