@@ -369,6 +369,7 @@ enum_str_conv! {
     Back,
     Return,
     Space,
+    Compose,
     Numlock,
     Numpad0,
     Numpad1,
