@@ -1,12 +1,12 @@
 use ecs::state::{State, Commit};
 use ecs::module::ComponentType;
 use std::any::Any;
-use std::collections::HashMap;
 use daggy::{self, Dag, Walker};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use parking_lot::Mutex;
 use rayon;
 use context::Context;
+use fnv::FnvHashMap;
 
 pub type ComponentTypes = [ComponentType];
 
@@ -25,6 +25,43 @@ pub trait Processor: Send + Any {
     fn fixed_update(&mut self, _state: &State, _commit: Commit, _context: &Context) {}
 }
 
+type ProcessorIndex = usize;
+type TakeableProcessor = Mutex<Option<Box<Processor>>>;
+
+struct Processors {
+    processors: Vec<TakeableProcessor>,
+}
+
+impl Processors {
+    pub fn new() -> Self {
+        Processors { processors: Vec::new() }
+    }
+
+    pub fn push<F>(&mut self, processor: Box<Processor>, mut handler: F) -> ProcessorIndex
+        where F: FnMut(ProcessorIndex, &Processor)
+    {
+        let index = self.processors.len();
+        handler(index, &*processor);
+        self.processors.push(Mutex::new(Some(processor)));
+
+        index
+    }
+
+    pub fn take(&self, index: ProcessorIndex) -> Option<Box<Processor>> {
+        let mut processor_opt = self.processors[index].lock();
+        processor_opt.take()
+    }
+
+    pub fn put(&self, index: ProcessorIndex, processor: Box<Processor>) {
+        let mut processor_opt = self.processors[index].lock();
+        *processor_opt = Some(processor)
+    }
+
+    pub fn shrink_to_fit(&mut self) {
+        self.processors.shrink_to_fit();
+    }
+}
+
 type Index = u32;
 type NodeIndex = daggy::NodeIndex<Index>;
 
@@ -35,15 +72,15 @@ enum LinkType {
 }
 
 struct Slot {
-    processor: Mutex<Option<Box<Processor>>>,
+    processor: ProcessorIndex,
     dependencies_counter: AtomicUsize,
     dependencies_count: usize,
 }
 
 impl Slot {
-    fn new(processor: Box<Processor>) -> Self {
+    fn new(processor: ProcessorIndex) -> Self {
         Slot {
-            processor: Mutex::new(Some(processor)),
+            processor: processor,
             dependencies_counter: AtomicUsize::new(0),
             dependencies_count: 0,
         }
@@ -68,28 +105,28 @@ impl Slot {
     }
 }
 
-pub struct ExecutionGraphBuilder {
-    execution_dag: Dag<Slot, LinkType, Index>,
-    writes: HashMap<ComponentType, NodeIndex>,
-    reads: HashMap<ComponentType, Vec<NodeIndex>>,
+struct ActionGraphBuilder {
     heads: Vec<NodeIndex>,
+    execution_dag: Dag<Slot, LinkType, Index>,
+    writes: FnvHashMap<ComponentType, NodeIndex>,
+    reads: FnvHashMap<ComponentType, Vec<NodeIndex>>,
 }
 
-impl ExecutionGraphBuilder {
+impl ActionGraphBuilder {
     pub fn new() -> Self {
-        ExecutionGraphBuilder {
+        ActionGraphBuilder {
             execution_dag: Dag::new(),
-            writes: HashMap::new(),
-            reads: HashMap::new(),
+            writes: FnvHashMap::default(),
+            reads: FnvHashMap::default(),
             heads: Vec::new(),
         }
     }
 
-    pub fn register(mut self, processor: Box<Processor>) -> Self {
-        let writes = processor.writes();
-        let reads = processor.reads();
-
-        let node = self.execution_dag.add_node(Slot::new(processor));
+    pub fn register(&mut self,
+                    processor_index: ProcessorIndex,
+                    reads: &ComponentTypes,
+                    writes: &ComponentTypes) {
+        let node = self.execution_dag.add_node(Slot::new(processor_index));
 
         let read_dependencies = self.add_read_dependencies(node, reads);
         let write_dependencies = self.add_write_dependencies(node, writes);
@@ -101,8 +138,6 @@ impl ExecutionGraphBuilder {
         }
 
         self.register_reads(node, reads);
-
-        self
     }
 
     fn add_write_dependencies(&mut self,
@@ -168,45 +203,55 @@ impl ExecutionGraphBuilder {
         }
     }
 
-    pub fn build(self) -> Scheduler {
-        Scheduler {
+    pub fn build(self) -> ActionGraph {
+        ActionGraph {
             heads: self.heads,
             execution_dag: self.execution_dag,
         }
     }
 }
 
-pub struct Scheduler {
+
+pub struct ActionGraph {
     heads: Vec<NodeIndex>,
     execution_dag: Dag<Slot, LinkType, Index>,
 }
 
-impl Scheduler {
-    pub fn par_for_each_mut<F>(&self, state: &State, commit: Commit, cx: &Context, f: F)
+impl ActionGraph {
+    fn par_for_each_mut<F>(&self,
+                           processors: &Processors,
+                           state: &State,
+                           commit: Commit,
+                           cx: &Context,
+                           f: F)
         where F: Fn(&State, Commit, &Context, &mut Processor) + Sync + Send
     {
         let f = &f;
         rayon::scope(|scope| {
             for &head in &self.heads {
                 scope.spawn(move |scope| {
-                    self.run_process_mut(scope, head, state, commit, cx, f)
+                    self.run_process_mut(processors, scope, head, state, commit, cx, f)
                 });
             }
         });
     }
 
-    fn run_process_mut<'b: 'scope, 'scope, F>(&'b self,
-                                              scope: &rayon::Scope<'scope>,
-                                              node: NodeIndex,
-                                              state: &'b State,
-                                              commit: Commit<'b>,
-                                              cx: &'b Context,
-                                              f: &'b F)
-        where F: Fn(&State, Commit, &Context, &mut Processor) + Sync + Send
+    fn run_process_mut<'a: 's, 's, F: 'a>(&'a self,
+                                          processors: &'a Processors,
+                                          scope: &rayon::Scope<'s>,
+                                          node: NodeIndex,
+                                          state: &'a State,
+                                          commit: Commit<'a>,
+                                          cx: &'a Context,
+                                          f: &'a F)
+        where F: Fn(&'a State, Commit<'a>, &'a Context, &mut Processor) + Sync + Send
     {
-        let mut process = self.take_process(node);
-        f(state, commit, cx, &mut *process);
-        self.put_process(node, process);
+        let slot = &self.execution_dag[node];
+        let mut processor = processors.take(slot.processor).unwrap();
+
+        f(state, commit, cx, &mut *processor);
+
+        processors.put(slot.processor, processor);
 
         let mut children_walker = self.execution_dag.children(node);
         while let Some((_, child)) = children_walker.next(&self.execution_dag) {
@@ -214,21 +259,90 @@ impl Scheduler {
 
             if child_slot.acknowledge_dependency_resolved() {
                 scope.spawn(move |scope| {
-                    self.run_process_mut(scope, child, state, commit, cx, f)
+                    self.run_process_mut(processors, scope, child, state, commit, cx, f)
                 });
             }
         }
     }
+}
 
-    #[inline]
-    fn take_process(&self, node: NodeIndex) -> Box<Processor> {
-        let mut slot_opt = self.execution_dag[node].processor.lock();
-        slot_opt.take().unwrap()
+pub enum UpdateType {
+    Frame,
+    Fixed,
+    Both,
+}
+
+pub struct SchedulerBuilder {
+    processors: Processors,
+    updates: ActionGraphBuilder,
+    fixed_updates: ActionGraphBuilder,
+}
+
+impl SchedulerBuilder {
+    pub fn new() -> Self {
+        SchedulerBuilder {
+            processors: Processors::new(),
+            updates: ActionGraphBuilder::new(),
+            fixed_updates: ActionGraphBuilder::new()
+        }
     }
 
-    #[inline]
-    fn put_process(&self, node: NodeIndex, process: Box<Processor>) {
-        let mut slot_opt = self.execution_dag[node].processor.lock();
-        *slot_opt = Some(process);
+    pub fn register<P: Processor>(&mut self, processor: P, update_type: UpdateType) -> &mut Self {
+        {
+            let &mut SchedulerBuilder { ref mut processors, ref mut updates, ref mut fixed_updates } = self;
+            processors.push(Box::new(processor), |index, processor| {
+                let reads = processor.reads();
+                let writes = processor.writes();
+
+                match update_type {
+                    UpdateType::Frame => { updates.register(index, reads, writes); },
+                    UpdateType::Fixed => { fixed_updates.register(index, reads, writes); }
+                    UpdateType::Both => {
+                        updates.register(index, reads, writes);
+                        fixed_updates.register(index, reads, writes);
+                    }
+                }
+            });
+        }
+
+        self
+    }
+
+    pub fn build(mut self) -> Scheduler {
+        self.processors.shrink_to_fit();
+
+        Scheduler {
+            processors: self.processors,
+            updates: self.updates.build(),
+            fixed_updates: self.fixed_updates.build(),
+        }
+    }
+}
+
+pub struct Scheduler {
+    processors: Processors,
+    updates: ActionGraph,
+    fixed_updates: ActionGraph,
+}
+
+impl Scheduler {
+    pub fn update(&mut self, state: &mut State, context: &mut Context, delta: f32) {
+        let mut update = state.update();
+
+        update.commit(context, |state, commit, context| {
+            self.updates.par_for_each_mut(&self.processors, state, commit, context, |state, commit, context, processor| {
+                processor.update(state, commit, context, delta);
+            });
+        });
+    }
+
+    pub fn fixed_update(&mut self, state: &mut State, context: &mut Context) {
+        let mut update = state.update();
+
+        update.commit(context, |state, commit, context| {
+            self.fixed_updates.par_for_each_mut(&self.processors, state, commit, context, |state, commit, context, processor| {
+                processor.fixed_update(state, commit, context);
+            });
+        });
     }
 }

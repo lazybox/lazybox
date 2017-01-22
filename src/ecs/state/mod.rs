@@ -85,6 +85,10 @@ impl State {
             .expect("the requested module doesn't exists")
     }
 
+    pub fn update(&mut self) -> Update {
+        Update { state: self }
+    }
+
     fn commit(&mut self, cx: &mut Context) {
         let world_removes = self.entities.push_removes();
 
