@@ -7,10 +7,25 @@ authors = ["Thomas Koehler <basta.t.k+git@gmail.com>",
            "Romain Vaillant <rph.vaillant@gmail.com>"]
 
 [dependencies]
-#lazybox_ecs = { path = "ecs" }
 lazybox_graphics = { path = "graphics" }
 lazybox_settings = { path = "settings" }
 lazybox_inputs = { path = "inputs" }
 lazybox_events = { path = "events" }
 lazybox_assets = { path = "assets" }
 lazybox_frameclock = { path = "frameclock" }
+
+parking_lot = "0.3"
+crossbeam = "0.2"
+vec_map = "0.6"
+bit-set = "0.4"
+mopa = "0.2"
+daggy = "0.4"
+fnv = "1.0"
+serde = "0.8"
+serde_derive = "0.8"
+rayon = { version = "0.6.0", features = ["unstable"] }
+
+[features]
+unstable = []
+default = ["u16_handle"]
+u16_handle = []
