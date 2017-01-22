@@ -45,7 +45,8 @@ pub struct Graphics {
 impl Graphics {
     pub fn new(builder: WindowBuilder) -> (Window, Self) {
         let (window, device, mut factory, color, depth) =
-            gfx_window_glutin::init::<ColorFormat, DepthFormat>(builder);
+            gfx_window_glutin::init::<ColorFormat, DepthFormat>(
+                builder.with_gl(glutin::GlRequest::Specific(glutin::Api::OpenGl, (3, 2))));
         let encoder = factory.create_command_buffer().into();
 
         let graphics = Graphics {

@@ -6,6 +6,7 @@ use gfx_core;
 use {Graphics, Frame, Color};
 use camera;
 use color::PackedColor;
+use utils::*;
 use types::*;
 
 pub type Triangle = [[f32; 2]; 3];
@@ -22,6 +23,7 @@ pub use self::defines::{Vertex, pipe};
 mod defines {
     pub use types::*;
     pub use camera;
+    use gfx;
 
     gfx_defines! {
         vertex Vertex {
@@ -33,7 +35,7 @@ mod defines {
             vertices: gfx::VertexBuffer<Vertex> = (),
             camera: gfx::ConstantBuffer<camera::Locals> = "Camera",
             scissor: gfx::pso::target::Scissor = (),
-            color_target: gfx::RenderTarget<ColorFormat> = "o_Color",
+            color_target: gfx::RenderTarget<ColorFormat> = "Target0",
         }
     }
 }
@@ -41,7 +43,7 @@ mod defines {
 pub struct Renderer {
     pso: PipelineState<pipe::Meta>,
     data: pipe::Data<Resources>,
-    mapping: MappingWritable<Vertex>,
+    upload: GpuBuffer<Vertex>,
 }
 
 impl Renderer {
@@ -55,10 +57,8 @@ impl Renderer {
             .create_pipeline_simple(RENDER_GLSLV_150, RENDER_GLSLF_150, pipe::new())
             .expect("could not create polygon render pipeline");
 
-        let (vertices, mapping) = graphics.factory
-            .create_buffer_persistent_writable(VERTEX_BUFFER_SIZE,
-                                               gfx::buffer::Role::Vertex,
-                                               gfx::Bind::empty());
+        let (vertices, upload) =
+            create_vertex_upload_pair(&mut graphics.factory, VERTEX_BUFFER_SIZE);
 
         Renderer {
             pso: pso,
@@ -68,7 +68,7 @@ impl Renderer {
                 scissor: scissor,
                 color_target: color_target,
             },
-            mapping: mapping,
+            upload: upload,
         }
     }
 
@@ -90,7 +90,9 @@ impl Renderer {
 
     pub fn render(&mut self, _: &mut Frame) -> Render {
         Render {
-            renderer: self, 
+            pso: &self.pso,
+            data: &mut self.data,
+            writer: MappingWriter::new(&self.upload),
             start: 0,
             end: 0,
         }
@@ -98,7 +100,9 @@ impl Renderer {
 }
 
 pub struct Render<'a> {
-    renderer: &'a mut Renderer,
+    pso: &'a PipelineState<pipe::Meta>,
+    data: &'a mut pipe::Data<Resources>,
+    writer: MappingWriter<'a, Vertex>,
     start: usize,
     end: usize,
 }
@@ -118,11 +122,11 @@ impl<'a> Render<'a> {
         }
 
         let color = PackedColor::from(color).0;
-        // TODO: call `write()` less often :/
-        let mut writer = self.renderer.mapping.write();
+        
+        let mut upload = self.writer.acquire(&mut frame.graphics.factory);
         for &p in triangle {
             let vertex = Vertex { position: p, color: color };
-            writer.set(self.end, vertex);
+            upload[self.end] = vertex;
             self.end += 1;
         }
     }
@@ -143,6 +147,7 @@ impl<'a> Render<'a> {
         self.ensure_drawed(frame);
         self.start = 0;
         self.end = 0;
+        self.writer.release();
     }
 
     pub fn ensure_drawed(&mut self, frame: &mut Frame) {
@@ -161,11 +166,14 @@ impl<'a> Render<'a> {
             instances: None,
         };
 
-        encoder.draw(&slice, &self.renderer.pso, &self.renderer.data);
+        encoder.copy_buffer(self.writer.buffer(), &self.data.vertices,
+                            self.start, self.start, self.end - self.start)
+            .unwrap();
+        encoder.draw(&slice, self.pso, self.data);
         self.start = self.end;
     }
 
     pub fn scissor_mut(&mut self) -> &mut gfx_core::target::Rect {
-        self.renderer.scissor_mut()
+        &mut self.data.scissor
     }
 }

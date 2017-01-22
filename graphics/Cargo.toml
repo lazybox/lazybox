@@ -5,17 +5,17 @@ version = "0.1.0"
 authors = ["Thomas Koehler <basta.t.k+git@gmail.com>"]
 
 [dependencies]
-gfx = { git = "https://github.com/gfx-rs/gfx" }
-gfx_core = { git = "https://github.com/gfx-rs/gfx" }
-gfx_device_gl = { git = "https://github.com/gfx-rs/gfx" }
-gfx_window_glutin = { git = "https://github.com/gfx-rs/gfx" }
-glutin = "^0.6"
+gfx = "^0.14"
+gfx_core = "^0.6"
+gfx_device_gl = "^0.13"
+gfx_window_glutin = "^0.14"
+glutin = "^0.7"
 rusttype = "^0.2"
-conrod = { version = "^0.44", default-features = false, features = ["glutin"] }
-cgmath = "^0.11"
-image = "^0.10"
+conrod = { version = "^0.48", default-features = false, features = ["glutin"] }
+cgmath = "^0.12"
+image = "^0.12"
 quickersort = "^2.0"
-rayon = "^0.4"
+rayon = "^0.6"
 
 [dev_dependencies]
 rand = "^0.3"

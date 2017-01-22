@@ -75,7 +75,7 @@ mod defines {
 
 pub struct Renderer {
     lights: [GpuBuffer<LightInstance>; CATEGORY_COUNT],
-    mappings: [MappingWritable<LightInstance>; CATEGORY_COUNT],
+    uploads: [GpuBuffer<LightInstance>; CATEGORY_COUNT],
     shadow_maps_views: [ShaderResourceView<f32>; CATEGORY_COUNT],
     shadow_maps_targets: [RenderTargetView<f32>; CATEGORY_COUNT],
     shadow_map_bundle: Bundle<shadow_map_pipe::Data<Resources>>,
@@ -113,23 +113,19 @@ impl Renderer {
                                     render_pipe::new())
             .expect("could not create light render pipeline");
 
-        let (small_lights, small_mapping) = graphics.factory
-            .create_buffer_persistent_writable(SHADOW_MAP_COUNTS[0] as usize,
-                                               gfx::buffer::Role::Constant,
-                                               gfx::Bind::empty());
+        let (small_lights, small_upload) =
+            create_constant_upload_pair(&mut graphics.factory, SHADOW_MAP_COUNTS[0] as usize);
 
         let (_, small_shadow_maps_view, small_shadow_maps_target) =
             Self::create_shadow_maps(SHADOW_MAP_SIZES[0], SHADOW_MAP_COUNTS[0], &mut graphics.factory);
 
-        let (big_lights, big_mapping) = graphics.factory
-            .create_buffer_persistent_writable(SHADOW_MAP_COUNTS[1] as usize,
-                                               gfx::buffer::Role::Constant,
-                                               gfx::Bind::empty());
+        let (big_lights, big_upload) =
+            create_constant_upload_pair(&mut graphics.factory, SHADOW_MAP_COUNTS[1] as usize);
 
         let (_, big_shadow_maps_view, big_shadow_maps_target) =
             Self::create_shadow_maps(SHADOW_MAP_SIZES[1], SHADOW_MAP_COUNTS[1], &mut graphics.factory);
 
-            let linear_sampler = graphics.factory.create_sampler_linear();
+        let linear_sampler = graphics.factory.create_sampler_linear();
 
         let shadow_map_bundle = {
             let (vertices, slice) = graphics.factory
@@ -164,7 +160,7 @@ impl Renderer {
 
         Renderer {
             lights: [small_lights, big_lights],
-            mappings: [small_mapping, big_mapping],
+            uploads: [small_upload, big_upload],
             shadow_maps_views: [small_shadow_maps_view, big_shadow_maps_view],
             shadow_maps_targets: [small_shadow_maps_target, big_shadow_maps_target],
             shadow_map_bundle: shadow_map_bundle,
@@ -179,7 +175,7 @@ impl Renderer {
 
         let kind = texture::Kind::D1Array(size, count);
         let bind = gfx::SHADER_RESOURCE | gfx::RENDER_TARGET;
-        let usage = memory::Usage::GpuOnly;
+        let usage = memory::Usage::Data;
         let channel = format::ChannelType::Float;
         let texture = factory.create_texture(kind, 1, bind, usage, Some(channel)).unwrap();
         let swizzle = format::Swizzle::new();
@@ -204,7 +200,14 @@ impl Renderer {
 
     pub fn render(&mut self, layer_count: u8, _: &mut Frame) -> Render {
         Render {
-            renderer: self,
+            lights: &self.lights,
+            writers: [MappingWriter::new(&self.uploads[0]),
+                      MappingWriter::new(&self.uploads[1])],
+            shadow_maps_views: &self.shadow_maps_views,
+            shadow_maps_targets: &self.shadow_maps_targets,
+            shadow_map_bundle: &mut self.shadow_map_bundle,
+            render_bundle: &mut self.render_bundle,
+
             offsets: [0; CATEGORY_COUNT],
             layer_count: layer_count as f32,
         }
@@ -212,7 +215,13 @@ impl Renderer {
 }
 
 pub struct Render<'a> {
-    renderer: &'a mut Renderer,
+    lights: &'a [GpuBuffer<LightInstance>; CATEGORY_COUNT],
+    writers: [MappingWriter<'a, LightInstance>; CATEGORY_COUNT],
+    shadow_maps_views: &'a [ShaderResourceView<f32>; CATEGORY_COUNT],
+    shadow_maps_targets: &'a [RenderTargetView<f32>; CATEGORY_COUNT],
+    shadow_map_bundle: &'a mut Bundle<shadow_map_pipe::Data<Resources>>,
+    render_bundle: &'a mut Bundle<render_pipe::Data<Resources>>,
+
     offsets: [usize; CATEGORY_COUNT],
     layer_count: f32,
 }
@@ -234,8 +243,8 @@ impl<'a> Render<'a> {
             frame.flush();
         }
 
-        // TODO: call `write()` less often :/
-        self.renderer.mappings[c].write().set(self.offsets[c], LightInstance {
+        let mut writer = self.writers[c].acquire(&mut frame.graphics.factory);
+        writer[self.offsets[c]] = LightInstance {
             color_intensity: [
                 light.color.r,
                 light.color.g,
@@ -248,7 +257,7 @@ impl<'a> Render<'a> {
             occlusion_threshold: ((light.source_layer.0) as f32 + 0.5) / self.layer_count,
             padding_1: 0.,
             padding_2: [0.; 2],
-        });
+        };
         self.offsets[c] += 1;
     }
 
@@ -265,15 +274,17 @@ impl<'a> Render<'a> {
         let &mut Graphics { ref mut encoder, .. } = frame.graphics;
 
         let instances = Some((self.offsets[c] as u32, 0));
-        self.renderer.shadow_map_bundle.slice.instances = instances;
-        self.renderer.shadow_map_bundle.data.lights = self.renderer.lights[c].clone();
-        self.renderer.shadow_map_bundle.data.shadow_target = self.renderer.shadow_maps_targets[c].clone();
-        self.renderer.render_bundle.slice.instances = instances;
-        self.renderer.render_bundle.data.lights = self.renderer.lights[c].clone();
-        self.renderer.render_bundle.data.shadow_map_sampler.0 = self.renderer.shadow_maps_views[c].clone();
+        self.shadow_map_bundle.slice.instances = instances;
+        self.shadow_map_bundle.data.lights = self.lights[c].clone();
+        self.shadow_map_bundle.data.shadow_target = self.shadow_maps_targets[c].clone();
+        self.render_bundle.slice.instances = instances;
+        self.render_bundle.data.lights = self.lights[c].clone();
+        self.render_bundle.data.shadow_map_sampler.0 = self.shadow_maps_views[c].clone();
 
-        self.renderer.shadow_map_bundle.encode(encoder);
-        self.renderer.render_bundle.encode(encoder);
+        encoder.copy_buffer(self.writers[c].buffer(), &self.lights[c],
+                            0, 0, self.offsets[c]).unwrap();
+        self.shadow_map_bundle.encode(encoder);
+        self.render_bundle.encode(encoder);
         self.offsets[c] = 0;
     }
 }

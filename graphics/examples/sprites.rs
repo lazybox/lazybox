@@ -22,8 +22,7 @@ use frameclock::*;
 fn main() {
     let builder = WindowBuilder::new()
         .with_title("Sprites".to_string())
-        .with_dimensions(1080, 768)
-        .with_gl(glutin::GlRequest::Specific(glutin::Api::OpenGl, (3, 2)));
+        .with_dimensions(1080, 768);
 
     let (window, mut graphics) = Graphics::new(builder);
     let mut renderer = Renderer::new(&mut graphics);
