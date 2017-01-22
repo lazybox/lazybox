@@ -8,20 +8,23 @@ use parking_lot::Mutex;
 use rayon;
 use context::Context;
 
+pub type ComponentTypes = [ComponentType];
+
 pub trait Model {
     fn from_state(state: &State, commit: Commit) -> Self;
 
-    fn writes() -> &'static [ComponentType];
-    fn reads() -> &'static [ComponentType];
+    fn writes() -> &'static ComponentTypes;
+    fn reads() -> &'static ComponentTypes;
 }
 
 pub trait Processor: Send + Any {
     type Model: Model;
 
-    fn writes(&self) -> &'static [ComponentType] {
+    fn writes(&self) -> &'static ComponentTypes {
         Self::Model::writes()
     }
-    fn reads(&self) -> &'static [ComponentType] {
+
+    fn reads(&self) -> &'static ComponentTypes {
         Self::Model::reads()
     }
 }
