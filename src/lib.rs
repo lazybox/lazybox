@@ -20,5 +20,10 @@ pub extern crate lazybox_events as events;
 pub extern crate lazybox_assets as assets;
 pub extern crate lazybox_frameclock as frameclock;
 
+pub use context::Context;
+pub use self::processor::{Model, Processor};
+
 pub mod ecs;
 pub mod modules;
+pub mod context;
+pub mod processor;
