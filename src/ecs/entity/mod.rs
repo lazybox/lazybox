@@ -260,7 +260,7 @@ mod tests {
     use super::*;
     use super::Entities;
 
-    use policy::{self, Id};
+    use ecs::policy::{self, Id};
 
     #[test]
     fn test_create_entity() {
