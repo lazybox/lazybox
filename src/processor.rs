@@ -18,20 +18,12 @@ pub trait Model {
 }
 
 pub trait Processor: Send + Any {
-    type Model: Model;
+    fn writes(&self) -> &'static ComponentTypes;
+    fn reads(&self) -> &'static ComponentTypes;
 
-    fn writes(&self) -> &'static ComponentTypes {
-        Self::Model::writes()
-    }
-
-    fn reads(&self) -> &'static ComponentTypes {
-        Self::Model::reads()
-    }
+    fn update(&mut self, _state: &State, _commit: Commit, _context: &Context, _delta: f32) {}
+    fn fixed_update(&mut self, _state: &State, _commit: Commit, _context: &Context) {}
 }
-
-pub trait AnyProcessor: Processor {}
-
-impl<T: ?Sized + Processor> AnyProcessor for T {}
 
 type Index = u32;
 type NodeIndex = daggy::NodeIndex<Index>;
@@ -42,14 +34,14 @@ enum LinkType {
     Write,
 }
 
-struct Slot<P: ?Sized + AnyProcessor> {
-    processor: Mutex<Option<Box<P>>>,
+struct Slot {
+    processor: Mutex<Option<Box<Processor>>>,
     dependencies_counter: AtomicUsize,
     dependencies_count: usize,
 }
 
-impl<P: ?Sized + AnyProcessor> Slot<P> {
-    fn new(processor: Box<P>) -> Self {
+impl Slot {
+    fn new(processor: Box<Processor>) -> Self {
         Slot {
             processor: Mutex::new(Some(processor)),
             dependencies_counter: AtomicUsize::new(0),
@@ -76,14 +68,14 @@ impl<P: ?Sized + AnyProcessor> Slot<P> {
     }
 }
 
-pub struct ExecutionGraphBuilder<P: ?Sized + AnyProcessor> {
-    execution_dag: Dag<Slot<P>, LinkType, Index>,
+pub struct ExecutionGraphBuilder {
+    execution_dag: Dag<Slot, LinkType, Index>,
     writes: HashMap<ComponentType, NodeIndex>,
     reads: HashMap<ComponentType, Vec<NodeIndex>>,
     heads: Vec<NodeIndex>,
 }
 
-impl<P: ?Sized + AnyProcessor> ExecutionGraphBuilder<P> {
+impl ExecutionGraphBuilder {
     pub fn new() -> Self {
         ExecutionGraphBuilder {
             execution_dag: Dag::new(),
@@ -93,7 +85,7 @@ impl<P: ?Sized + AnyProcessor> ExecutionGraphBuilder<P> {
         }
     }
 
-    pub fn register(mut self, processor: Box<P>) -> Self {
+    pub fn register(mut self, processor: Box<Processor>) -> Self {
         let writes = processor.writes();
         let reads = processor.reads();
 
@@ -115,7 +107,7 @@ impl<P: ?Sized + AnyProcessor> ExecutionGraphBuilder<P> {
 
     fn add_write_dependencies(&mut self,
                               processor_node: NodeIndex,
-                              writes: &[ComponentType])
+                              writes: &ComponentTypes)
                               -> usize {
         use std::collections::hash_map::Entry;
 
@@ -152,7 +144,7 @@ impl<P: ?Sized + AnyProcessor> ExecutionGraphBuilder<P> {
 
     fn add_read_dependencies(&mut self,
                              processor_node: NodeIndex,
-                             reads: &[ComponentType])
+                             reads: &ComponentTypes)
                              -> usize {
 
         let mut dependencies_count = 0;
@@ -169,14 +161,14 @@ impl<P: ?Sized + AnyProcessor> ExecutionGraphBuilder<P> {
         dependencies_count
     }
 
-    fn register_reads(&mut self, processor_node: NodeIndex, reads: &[ComponentType]) {
+    fn register_reads(&mut self, processor_node: NodeIndex, reads: &ComponentTypes) {
         for &read in reads {
             let read_nodes = self.reads.entry(read).or_insert(Vec::new());
             read_nodes.push(processor_node);
         }
     }
 
-    pub fn build(self) -> Scheduler<P> {
+    pub fn build(self) -> Scheduler {
         Scheduler {
             heads: self.heads,
             execution_dag: self.execution_dag,
@@ -184,14 +176,14 @@ impl<P: ?Sized + AnyProcessor> ExecutionGraphBuilder<P> {
     }
 }
 
-pub struct Scheduler<P: ?Sized + AnyProcessor> {
+pub struct Scheduler {
     heads: Vec<NodeIndex>,
-    execution_dag: Dag<Slot<P>, LinkType, Index>,
+    execution_dag: Dag<Slot, LinkType, Index>,
 }
 
-impl<P: ?Sized + AnyProcessor> Scheduler<P> {
+impl Scheduler {
     pub fn par_for_each_mut<F>(&self, state: &State, commit: Commit, cx: &Context, f: F)
-        where F: Fn(&State, Commit, &Context, &mut P) + Sync + Send
+        where F: Fn(&State, Commit, &Context, &mut Processor) + Sync + Send
     {
         let f = &f;
         rayon::scope(|scope| {
@@ -210,7 +202,7 @@ impl<P: ?Sized + AnyProcessor> Scheduler<P> {
                                               commit: Commit<'b>,
                                               cx: &'b Context,
                                               f: &'b F)
-        where F: Fn(&State, Commit, &Context, &mut P) + Sync + Send
+        where F: Fn(&State, Commit, &Context, &mut Processor) + Sync + Send
     {
         let mut process = self.take_process(node);
         f(state, commit, cx, &mut *process);
@@ -229,13 +221,13 @@ impl<P: ?Sized + AnyProcessor> Scheduler<P> {
     }
 
     #[inline]
-    fn take_process(&self, node: NodeIndex) -> Box<P> {
+    fn take_process(&self, node: NodeIndex) -> Box<Processor> {
         let mut slot_opt = self.execution_dag[node].processor.lock();
         slot_opt.take().unwrap()
     }
 
     #[inline]
-    fn put_process(&self, node: NodeIndex, process: Box<P>) {
+    fn put_process(&self, node: NodeIndex, process: Box<Processor>) {
         let mut slot_opt = self.execution_dag[node].processor.lock();
         *slot_opt = Some(process);
     }
