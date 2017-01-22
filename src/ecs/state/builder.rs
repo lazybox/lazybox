@@ -3,13 +3,13 @@ use ecs::state::update_queue::UpdateQueues;
 use ecs::group::Groups;
 use ecs::module::{Module, Modules,Component};
 
-pub struct StateBuilder<Cx: Send> {
+pub struct StateBuilder {
     update_queues: UpdateQueues,
     groups: Groups,
-    modules: Modules<Cx>,
+    modules: Modules,
 }
 
-impl<Cx: Send> StateBuilder<Cx> {
+impl StateBuilder {
     pub fn new() -> Self {
         StateBuilder {
             update_queues: UpdateQueues::new(),
@@ -23,12 +23,12 @@ impl<Cx: Send> StateBuilder<Cx> {
         self
     }
 
-    pub fn register_module<M: Module<Cx>>(&mut self, module: M) -> &mut Self {
+    pub fn register_module<M: Module>(&mut self, module: M) -> &mut Self {
         self.modules.insert(Box::new(module));
         self
     }
 
-    pub fn build(self) -> State<Cx> {
+    pub fn build(self) -> State {
         State::new(self.modules,
                    self.groups,
                    self.update_queues)

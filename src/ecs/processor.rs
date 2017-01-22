@@ -6,17 +6,17 @@ use daggy::{self, Dag, Walker};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use parking_lot::Mutex;
 use rayon;
-use std::marker::PhantomData;
+use context::Context;
 
-pub trait Model<Cx: Sync + Send> {
-    fn from_state(state: &State<Cx>, commit: Commit<Cx>) -> Self;
+pub trait Model {
+    fn from_state(state: &State, commit: Commit) -> Self;
 
     fn writes() -> &'static [ComponentType];
     fn reads() -> &'static [ComponentType];
 }
 
-pub trait Processor<Cx: Sync + Send>: Send + Any {
-    type Model: Model<Cx>;
+pub trait Processor: Send + Any {
+    type Model: Model;
 
     fn writes(&self) -> &'static [ComponentType] {
         Self::Model::writes()
@@ -26,9 +26,9 @@ pub trait Processor<Cx: Sync + Send>: Send + Any {
     }
 }
 
-pub trait AnyProcessor<Cx: Sync + Send>: Processor<Cx> {}
+pub trait AnyProcessor: Processor {}
 
-impl<T: ?Sized + Processor<Cx>, Cx: Sync + Send> AnyProcessor<Cx> for T {}
+impl<T: ?Sized + Processor> AnyProcessor for T {}
 
 type Index = u32;
 type NodeIndex = daggy::NodeIndex<Index>;
@@ -39,20 +39,18 @@ enum LinkType {
     Write,
 }
 
-struct Slot<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> {
+struct Slot<P: ?Sized + AnyProcessor> {
     processor: Mutex<Option<Box<P>>>,
     dependencies_counter: AtomicUsize,
     dependencies_count: usize,
-    context: PhantomData<Cx>,
 }
 
-impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> Slot<P, Cx> {
+impl<P: ?Sized + AnyProcessor> Slot<P> {
     fn new(processor: Box<P>) -> Self {
         Slot {
             processor: Mutex::new(Some(processor)),
             dependencies_counter: AtomicUsize::new(0),
             dependencies_count: 0,
-            context: PhantomData,
         }
     }
 
@@ -75,14 +73,14 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> Slot<P, Cx> {
     }
 }
 
-pub struct ExecutionGraphBuilder<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> {
-    execution_dag: Dag<Slot<P, Cx>, LinkType, Index>,
+pub struct ExecutionGraphBuilder<P: ?Sized + AnyProcessor> {
+    execution_dag: Dag<Slot<P>, LinkType, Index>,
     writes: HashMap<ComponentType, NodeIndex>,
     reads: HashMap<ComponentType, Vec<NodeIndex>>,
     heads: Vec<NodeIndex>,
 }
 
-impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> ExecutionGraphBuilder<P, Cx> {
+impl<P: ?Sized + AnyProcessor> ExecutionGraphBuilder<P> {
     pub fn new() -> Self {
         ExecutionGraphBuilder {
             execution_dag: Dag::new(),
@@ -175,7 +173,7 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> ExecutionGraphBuilder<P, Cx>
         }
     }
 
-    pub fn build(self) -> Scheduler<P, Cx> {
+    pub fn build(self) -> Scheduler<P> {
         Scheduler {
             heads: self.heads,
             execution_dag: self.execution_dag,
@@ -183,14 +181,14 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> ExecutionGraphBuilder<P, Cx>
     }
 }
 
-pub struct Scheduler<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> {
+pub struct Scheduler<P: ?Sized + AnyProcessor> {
     heads: Vec<NodeIndex>,
-    execution_dag: Dag<Slot<P, Cx>, LinkType, Index>,
+    execution_dag: Dag<Slot<P>, LinkType, Index>,
 }
 
-impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> Scheduler<P, Cx> {
-    pub fn par_for_each_mut<F>(&self, state: &State<Cx>, commit: Commit<Cx>, cx: &Cx, f: F)
-        where F: Fn(&State<Cx>, Commit<Cx>, &Cx, &mut P) + Sync + Send
+impl<P: ?Sized + AnyProcessor> Scheduler<P> {
+    pub fn par_for_each_mut<F>(&self, state: &State, commit: Commit, cx: &Context, f: F)
+        where F: Fn(&State, Commit, &Context, &mut P) + Sync + Send
     {
         let f = &f;
         rayon::scope(|scope| {
@@ -205,11 +203,11 @@ impl<P: ?Sized + AnyProcessor<Cx>, Cx: Sync + Send> Scheduler<P, Cx> {
     fn run_process_mut<'b: 'scope, 'scope, F>(&'b self,
                                               scope: &rayon::Scope<'scope>,
                                               node: NodeIndex,
-                                              state: &'b State<Cx>,
-                                              commit: Commit<'b, Cx>,
-                                              cx: &'b Cx,
+                                              state: &'b State,
+                                              commit: Commit<'b>,
+                                              cx: &'b Context,
                                               f: &'b F)
-        where F: Fn(&State<Cx>, Commit<Cx>, &Cx, &mut P) + Sync + Send
+        where F: Fn(&State, Commit, &Context, &mut P) + Sync + Send
     {
         let mut process = self.take_process(node);
         f(state, commit, cx, &mut *process);
