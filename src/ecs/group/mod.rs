@@ -2,9 +2,9 @@ pub mod filter;
 
 pub use self::filter::Filter;
 
-use policy::IdSet;
-use entity;
-use state::UpdateMonitors;
+use ecs::policy::IdSet;
+use ecs::entity;
+use ecs::state::UpdateMonitors;
 use fnv::FnvHashMap;
 use std::any::{Any, TypeId};
 use rayon::prelude::*;

@@ -1,6 +1,6 @@
-use module::Component;
-use entity::{Entity, EntityRef, Accessor};
-use state::Commit;
+use ecs::module::Component;
+use ecs::entity::{Entity, EntityRef, Accessor};
+use ecs::state::Commit;
 
 /// An entity to be spawn
 pub struct SpawnRequest<'a, Cx: Send + 'a> {

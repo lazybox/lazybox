@@ -1,10 +1,10 @@
 pub mod iter;
 
-use policy::{Id, Version};
+use ecs::policy::{Id, Version};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use crossbeam::sync::SegQueue;
 use std::marker::PhantomData;
-use policy;
+use ecs::policy;
 use vec_map::{self, VecMap};
 
 /// Represents an unique entity in the world.

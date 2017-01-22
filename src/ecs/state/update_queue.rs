@@ -1,10 +1,10 @@
 use crossbeam::sync::SegQueue;
-use module::{Component, ComponentType};
 use fnv::FnvHashMap;
 use parking_lot::{RwLock, RwLockWriteGuard, RwLockReadGuard};
-use entity::{Entity, Accessor};
-use policy::{Id, IdSet};
 use mopa;
+use ecs::module::{Component, ComponentType};
+use ecs::entity::{Entity, Accessor};
+use ecs::policy::{Id, IdSet};
 
 pub struct Monitor {
     entities: IdSet,

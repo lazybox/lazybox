@@ -4,13 +4,13 @@ mod update_queue;
 pub use self::builder::StateBuilder;
 pub use self::update_queue::Monitors as UpdateMonitors;
 
-use entity::{Entities, Entity, EntityRef, Accessor};
-use module::{Component, StorageReadGuard, StorageWriteGuard};
-use module::{Module, Modules, HasComponent};
-use spawn::{SpawnRequest, Prototype};
-use rayon;
+use ecs::entity::{Entities, Entity, EntityRef, Accessor};
+use ecs::module::{Component, StorageReadGuard, StorageWriteGuard};
+use ecs::module::{Module, Modules, HasComponent};
+use ecs::spawn::{SpawnRequest, Prototype};
+use ecs::group::Groups;
 use self::update_queue::{UpdateQueues, UpdateQueue, UpdateQueueReader};
-use group::Groups;
+use rayon;
 
 pub struct State<Cx: Send> {
     entities: Entities,

@@ -1,7 +1,7 @@
-use state::State;
-use state::update_queue::UpdateQueues;
-use group::Groups;
-use module::{Module, Modules,Component};
+use ecs::state::State;
+use ecs::state::update_queue::UpdateQueues;
+use ecs::group::Groups;
+use ecs::module::{Module, Modules,Component};
 
 pub struct StateBuilder<Cx: Send> {
     update_queues: UpdateQueues,

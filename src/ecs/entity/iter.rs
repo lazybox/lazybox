@@ -1,8 +1,8 @@
 use std::slice;
 use bit_set;
 
-use policy::{Id, IdSet};
-use entity::Accessor;
+use ecs::policy::{Id, IdSet};
+use ecs::entity::Accessor;
 
 /// Creates an accessor iterator from a slice of `Id`.
 ///

@@ -1,9 +1,9 @@
 mod storages;
 
-use state::CommitArgs;
-use module::{Module, HasComponent};
-use module::{Component, Template, ComponentType};
-use module::{StorageReadGuard, StorageWriteGuard};
+use ecs::state::CommitArgs;
+use ecs::module::{Module, HasComponent};
+use ecs::module::{Component, Template, ComponentType};
+use ecs::module::{StorageReadGuard, StorageWriteGuard};
 use fnv::FnvHashMap;
 use self::storages::{Storage, StorageHandler, Handler};
 use rayon;
