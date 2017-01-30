@@ -1,6 +1,5 @@
 #![feature(pub_restricted)]
 
-pub extern crate lazybox_events as events;
 extern crate glutin;
 extern crate cgmath;
 extern crate yaml_rust;
@@ -12,7 +11,6 @@ pub mod interaction;
 pub use state::InputState;
 pub use interaction::{Interaction, InteractionBuilder, InterfaceBuilder, ActionEvent};
 
-use events::EventDispatcher;
 use glutin::Event;
 use cgmath::Point2;
 use yaml_rust::YamlLoader;
@@ -50,15 +48,15 @@ impl Inputs {
         self.interaction.load_profile(&docs[0]);
     }
 
-    pub fn handle_event(&mut self, event: &Event, dispatcher: &EventDispatcher) {
-        let &mut Inputs { ref mut state, ref interaction } = self;
+    pub fn handle_event(&mut self, event: &Event) {
+        let &mut Inputs { ref mut state, ref mut interaction } = self;
 
         match event {
             &Event::KeyboardInput(e_state, _, Some(key)) => {
                 state.update_key(key, e_state);
 
                 let input = interaction::Input::Key(e_state, key);
-                interaction.dispatch_input_actions(&input, state, dispatcher);
+                interaction.acknowledge_input_actions(&input, state);
             }
             &Event::MouseMoved(x, y) => {
                 state.update_mouse_position(Point2::new(x, y));
@@ -67,7 +65,7 @@ impl Inputs {
                 state.update_mouse_button(button, e_state);
 
                 let input = interaction::Input::MouseButton(e_state, button);
-                interaction.dispatch_input_actions(&input, state, dispatcher);
+                interaction.acknowledge_input_actions(&input, state);
             }
             &Event::Focused(focused) => {
                 state.update_window_focus(focused);
@@ -76,9 +74,13 @@ impl Inputs {
         }
     }
 
-    pub fn dispatch_state_actions(&mut self, dispatcher: &EventDispatcher) {
-        let &mut Inputs { ref mut state, ref interaction } = self;
+    pub fn update_state_actions(&mut self) {
+        let &mut Inputs { ref mut state, ref mut interaction } = self;
         
-        interaction.dispatch_state_actions(state, dispatcher);
+        interaction.update_state_actions(state);
+    }
+
+    pub fn clear_actions(&mut self) {
+        self.interaction.clear_actions();
     }
 }

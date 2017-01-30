@@ -1,5 +1,4 @@
 use std::collections::{HashMap, HashSet};
-use events::*;
 use glutin::{VirtualKeyCode, MouseButton, ElementState};
 use yaml_rust::Yaml;
 use state::InputState;
@@ -85,14 +84,12 @@ impl InteractionBuilder {
 
 pub struct InterfaceBuilder {
     actions: HashSet<Action>,
-    dispatch: fn(Action, &EventDispatcher),
 }
 
 impl InterfaceBuilder {
     pub fn new<E: ActionEvent>() -> Self {
         InterfaceBuilder {
             actions: HashSet::new(),
-            dispatch: E::dispatch,
         }
     }
 
@@ -105,13 +102,13 @@ impl InterfaceBuilder {
         Interface {
             actions: self.actions,
             rules: Rules::new(),
-            dispatch: self.dispatch,
+            triggered_actions: Vec::new()
         }
     }
 }
 
-pub trait ActionEvent: Event {
-    fn dispatch(action: &'static str, dispatcher: &EventDispatcher);
+pub trait ActionEvent {
+    fn dispatch(action: &'static str);
 }
 
 pub struct Interaction {
@@ -129,20 +126,24 @@ impl Interaction {
         }
     }
 
-    pub(crate) fn dispatch_input_actions(&self, input: &Input,
-                                     state: &InputState,
-                                     dispatcher: &EventDispatcher)
+    pub(crate) fn acknowledge_input_actions(&mut self, input: &Input, state: &InputState)
     {
         // TODO: enable/disable interface dispatch
-        for (_, interface) in &self.interfaces {
-            interface.dispatch_input_actions(input, state, dispatcher);
+        for (_, interface) in &mut self.interfaces {
+            interface.acknowledge_input_actions(input, state);
         }
     }
 
-    pub(crate) fn dispatch_state_actions(&self, state: &InputState, dispatcher: &EventDispatcher) {
+    pub(crate) fn update_state_actions(&mut self, state: &InputState) {
         // TODO: enable/disable interface dispatch
-        for (_, interface) in &self.interfaces {
-            interface.dispatch_state_actions(state, dispatcher);
+        for (_, interface) in &mut self.interfaces {
+            interface.update_state_actions(state);
+        }
+    }
+
+    pub(crate) fn clear_actions(&mut self) {
+        for (_, interface) in &mut self.interfaces {
+            interface.clear_actions();
         }
     }
 }
@@ -150,7 +151,7 @@ impl Interaction {
 pub(crate) struct Interface {
     actions: HashSet<Action>,
     rules: Rules,
-    dispatch: fn(Action, &EventDispatcher),
+    triggered_actions: Vec<Action>,
 }
 
 impl Interface {
@@ -182,21 +183,24 @@ impl Interface {
         }
     }
 
-    fn dispatch_input_actions(&self, input: &Input,
-                                     _state: &InputState,
-                                     dispatcher: &EventDispatcher)
+    fn acknowledge_input_actions(&mut self, input: &Input,
+                                     _state: &InputState)
     {
         if let Some(action) = self.rules.by_input.get(input) {
-            (self.dispatch)(action, dispatcher);
+            self.triggered_actions.push(action);
         }
     }
 
-    fn dispatch_state_actions(&self, state: &InputState, dispatcher: &EventDispatcher) {
+    fn update_state_actions(&mut self, state: &InputState) {
         for ca in &self.rules.others {
             if let Some(action) = ca.may_trigger(state) {
-                (self.dispatch)(action, dispatcher);
+               self.triggered_actions.push(action);
             }
         }
+    }
+
+    fn clear_actions(&mut self) {
+        self.triggered_actions.clear();
     }
 }
 
@@ -239,25 +243,6 @@ impl WhenParse {
                 })
             }
             _ => None
-        }
-    }
-
-    pub fn to_string(&self) -> String {
-        use self::WhenParse::*;
-        use self::Input::*;
-        use self::Condition::*;
-        use glutin::ElementState::*;
-
-        match self {
-            &Input(Key(Pressed, key)) => "Key.Pressed.".to_string() + key_to_str(key),
-            &Input(Key(Released, key)) => "Key.Released.".to_string() + key_to_str(key),
-            &Condition(KeyHeld(key)) => "Key.Held.".to_string() + key_to_str(key),
-            &Input(MouseButton(Pressed, button)) =>
-                "MouseButton.Pressed.".to_string() + mouse_button_to_str(button),
-            &Input(MouseButton(Released, button)) =>
-                "MouseButton.Released.".to_string() + mouse_button_to_str(button),
-            &Condition(MouseButtonHeld(button)) =>
-                "MouseButton.Held.".to_string() + mouse_button_to_str(button),
         }
     }
 }
