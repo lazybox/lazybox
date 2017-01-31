@@ -30,9 +30,10 @@ impl ActionListener {
 
 fn main() {
     let mut inputs = Inputs::new(build_interaction());
-    inputs.load_interaction_profile("interaction/profile.yml");
 
-    let mut action_listener = ActionListener;
+    inputs.load_interaction_profile("interaction/profile.yml").unwrap();
+
+    let action_listener = ActionListener;
 
     let window = Window::new().unwrap();
 

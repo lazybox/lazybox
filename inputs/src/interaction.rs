@@ -107,19 +107,30 @@ impl InterfaceBuilder {
     }
 }
 
+#[derive(Debug, Copy, Clone)]
+pub enum ProfileError {
+    RulesFormat,
+    InterfaceFormat,
+    ConditionFormat,
+    UnknownInterface,
+}
+
 pub struct Interaction {
     interfaces: HashMap<&'static str, Interface>,
 }
 
 impl Interaction {
-    pub fn load_profile(&mut self, profile: &Yaml) {
-        let wrong_fmt = "wrong interaction profile format";
-
+    #[must_use]
+    pub fn load_profile(&mut self, profile: &Yaml) -> Result<(), ProfileError> {
         for (&name, interface) in &mut self.interfaces {
-            let rules = profile[name]["rules"].as_vec().expect(wrong_fmt);
-
-            interface.load_rules(rules);
+            if let Some(rules) = profile[name]["rules"].as_vec() {
+                interface.load_rules(rules)?;
+            } else {
+                return Err(ProfileError::RulesFormat)
+            }
         }
+
+        Ok(())
     }
 
     pub(crate) fn interface(&self, name: &str) -> Option<&Interface> {
@@ -155,16 +166,23 @@ pub(crate) struct Interface {
 }
 
 impl Interface {
-    fn load_rules(&mut self, rules: &[Yaml]) {
-        let wrong_fmt = "wrong interface rule format";
-
+    fn load_rules(&mut self, rules: &[Yaml]) -> Result<(), ProfileError> {
         self.rules.clear();
         for rule in rules {
-            let action = rule["action"].as_str().expect(wrong_fmt);
-            let when = rule["when"].as_str().expect(wrong_fmt);
+            let action = match rule["action"].as_str() {
+                Some(action) => action,
+                None => return Err(ProfileError::InterfaceFormat)
+            };
+
+            let when = match rule["when"].as_str() {
+                Some(when) => when,
+                None => return Err(ProfileError::InterfaceFormat)
+            };
+
 
             if let Some(action) = self.actions.get(action) {
                 use self::WhenParse::*;
+                
                 match WhenParse::from_str(when) {
                     Some(Input(input)) => {
                         self.rules.by_input.insert(input, action);
@@ -175,12 +193,14 @@ impl Interface {
                             condition: condition,
                         });
                     }
-                    None => panic!("could not parse interface rule condition"),
+                    None => return Err(ProfileError::ConditionFormat),
                 }
             } else {
-                println!("unknown interface action is ignored");
+                return Err(ProfileError::UnknownInterface);
             }
         }
+
+        Ok(())
     }
 
     fn acknowledge_input_actions(&mut self, input: &Input,

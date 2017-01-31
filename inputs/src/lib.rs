@@ -9,12 +9,38 @@ pub mod interaction;
 #[macro_use] pub mod macros;
 
 pub use state::InputState;
-pub use interaction::{Interaction, InteractionBuilder, InterfaceBuilder, Action};
+pub use interaction::{Interaction, InteractionBuilder, InterfaceBuilder, Action, ProfileError};
 use interaction::{Interface};
 
+use std::io;
 use glutin::Event;
 use cgmath::Point2;
-use yaml_rust::YamlLoader;
+use yaml_rust::{YamlLoader, ScanError};
+
+#[derive(Debug)]
+pub enum Error {
+    Io(io::Error),
+    Profile(ProfileError),
+    Yaml(ScanError)
+}
+
+impl From<ProfileError> for Error {
+    fn from(error: ProfileError) -> Self {
+        Error::Profile(error)
+    }
+}
+
+impl From<io::Error> for Error {
+    fn from(error: io::Error) -> Self {
+        Error::Io(error)
+    }
+}
+
+impl From<ScanError> for Error {
+    fn from(error: ScanError) -> Self {
+        Error::Yaml(error)
+    }
+}
 
 pub struct Inputs {
     state: InputState,
@@ -42,16 +68,17 @@ impl Inputs {
                         .map(Interface::triggered_actions)
     }
 
-    pub fn load_interaction_profile(&mut self, path: &str) {
+    pub fn load_interaction_profile(&mut self, path: &str) -> Result<(), Error> {
         use std::fs::File;
         use std::io::prelude::*;
 
-        let mut f = File::open(path).unwrap();
+        let mut f = File::open(path)?;
         let mut s = String::new();
-        f.read_to_string(&mut s).unwrap();
+        f.read_to_string(&mut s)?;
 
-        let docs = YamlLoader::load_from_str(&s).unwrap();
-        self.interaction.load_profile(&docs[0]);
+        let docs = YamlLoader::load_from_str(&s)?;
+        
+        self.interaction.load_profile(&docs[0]).map_err(Error::from)
     }
 
     pub fn handle_event(&mut self, event: &Event) {
