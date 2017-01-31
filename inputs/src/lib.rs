@@ -9,7 +9,8 @@ pub mod interaction;
 #[macro_use] pub mod macros;
 
 pub use state::InputState;
-pub use interaction::{Interaction, InteractionBuilder, InterfaceBuilder, ActionEvent};
+pub use interaction::{Interaction, InteractionBuilder, InterfaceBuilder, Action};
+use interaction::{Interface};
 
 use glutin::Event;
 use cgmath::Point2;
@@ -34,6 +35,11 @@ impl Inputs {
 
     pub fn interaction_mut(&mut self) -> &mut Interaction {
         &mut self.interaction
+    }
+
+    pub fn triggered_actions(&self, interface_name: &str) -> Option<&[Action]> {
+        self.interaction.interface(interface_name)
+                        .map(Interface::triggered_actions)
     }
 
     pub fn load_interaction_profile(&mut self, path: &str) {

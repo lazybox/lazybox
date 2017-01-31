@@ -87,7 +87,7 @@ pub struct InterfaceBuilder {
 }
 
 impl InterfaceBuilder {
-    pub fn new<E: ActionEvent>() -> Self {
+    pub fn new() -> Self {
         InterfaceBuilder {
             actions: HashSet::new(),
         }
@@ -107,10 +107,6 @@ impl InterfaceBuilder {
     }
 }
 
-pub trait ActionEvent {
-    fn dispatch(action: &'static str);
-}
-
 pub struct Interaction {
     interfaces: HashMap<&'static str, Interface>,
 }
@@ -124,6 +120,10 @@ impl Interaction {
 
             interface.load_rules(rules);
         }
+    }
+
+    pub(crate) fn interface(&self, name: &str) -> Option<&Interface> {
+        self.interfaces.get(name)
     }
 
     pub(crate) fn acknowledge_input_actions(&mut self, input: &Input, state: &InputState)
@@ -197,6 +197,10 @@ impl Interface {
                self.triggered_actions.push(action);
             }
         }
+    }
+
+    pub fn triggered_actions(&self) -> &[Action] {
+        &self.triggered_actions
     }
 
     fn clear_actions(&mut self) {
