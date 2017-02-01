@@ -6,11 +6,10 @@ use inputs::Inputs;
 use frameclock::FrameClock;
 use glutin::Window;
 
-inputs_interaction! {
-    "spaceship" => ActionIterator, Action { 
-        Shoot => "Shoot", 
-        LaunchBomb => "LaunchBomb",
-    }
+use self::spaceship::{Action, ActionIterator};
+
+input_interfaces! {
+    spaceship => { Shoot, LaunchBomb, }
 }
 
 pub struct ActionListener;
