@@ -89,7 +89,7 @@ impl Inputs {
                 state.update_key(key, e_state);
 
                 let input = interaction::Input::Key(e_state, key);
-                interaction.acknowledge_input_actions(&input, state);
+                interaction.trigger_input_actions(&input, state);
             }
             &Event::MouseMoved(x, y) => {
                 state.update_mouse_position(Point2::new(x, y));
@@ -98,7 +98,7 @@ impl Inputs {
                 state.update_mouse_button(button, e_state);
 
                 let input = interaction::Input::MouseButton(e_state, button);
-                interaction.acknowledge_input_actions(&input, state);
+                interaction.trigger_input_actions(&input, state);
             }
             &Event::Focused(focused) => {
                 state.update_window_focus(focused);
@@ -107,10 +107,10 @@ impl Inputs {
         }
     }
 
-    pub fn update_state_actions(&mut self) {
+    pub fn trigger_state_actions(&mut self) {
         let &mut Inputs { ref mut state, ref mut interaction } = self;
         
-        interaction.update_state_actions(state);
+        interaction.trigger_state_actions(state);
     }
 
     pub fn clear_actions(&mut self) {

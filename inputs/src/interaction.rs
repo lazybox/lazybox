@@ -137,18 +137,18 @@ impl Interaction {
         self.interfaces.get(name)
     }
 
-    pub(crate) fn acknowledge_input_actions(&mut self, input: &Input, state: &InputState)
+    pub(crate) fn trigger_input_actions(&mut self, input: &Input, state: &InputState)
     {
         // TODO: enable/disable interface dispatch
         for (_, interface) in &mut self.interfaces {
-            interface.acknowledge_input_actions(input, state);
+            interface.trigger_input_actions(input, state);
         }
     }
 
-    pub(crate) fn update_state_actions(&mut self, state: &InputState) {
+    pub(crate) fn trigger_state_actions(&mut self, state: &InputState) {
         // TODO: enable/disable interface dispatch
         for (_, interface) in &mut self.interfaces {
-            interface.update_state_actions(state);
+            interface.trigger_state_actions(state);
         }
     }
 
@@ -203,7 +203,7 @@ impl Interface {
         Ok(())
     }
 
-    fn acknowledge_input_actions(&mut self, input: &Input,
+    fn trigger_input_actions(&mut self, input: &Input,
                                      _state: &InputState)
     {
         if let Some(action) = self.rules.by_input.get(input) {
@@ -211,7 +211,7 @@ impl Interface {
         }
     }
 
-    fn update_state_actions(&mut self, state: &InputState) {
+    fn trigger_state_actions(&mut self, state: &InputState) {
         for ca in &self.rules.others {
             if let Some(action) = ca.may_trigger(state) {
                self.triggered_actions.push(action);

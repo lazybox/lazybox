@@ -51,7 +51,7 @@ fn main() {
         }
 
         for _ in frameclock.drain_updates() {
-            inputs.update_state_actions();
+            inputs.trigger_state_actions();
             action_listener.process(&inputs);
             inputs.clear_actions();
         }
