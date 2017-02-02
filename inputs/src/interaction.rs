@@ -66,9 +66,7 @@ pub struct InteractionBuilder {
 
 impl InteractionBuilder {
     pub fn new() -> Self {
-        InteractionBuilder {
-            interfaces: HashMap::new(),
-        }
+        InteractionBuilder { interfaces: HashMap::new() }
     }
 
     pub fn interface(mut self, name: &'static str, builder: InterfaceBuilder) -> Self {
@@ -77,9 +75,7 @@ impl InteractionBuilder {
     }
 
     pub(crate) fn build(self) -> Interaction {
-        Interaction {
-            interfaces: self.interfaces,
-        }
+        Interaction { interfaces: self.interfaces }
     }
 }
 
@@ -89,9 +85,7 @@ pub struct InterfaceBuilder {
 
 impl InterfaceBuilder {
     pub fn new() -> Self {
-        InterfaceBuilder {
-            actions: HashSet::new(),
-        }
+        InterfaceBuilder { actions: HashSet::new() }
     }
 
     pub fn action(mut self, a: Action) -> Self {
@@ -103,7 +97,7 @@ impl InterfaceBuilder {
         Interface {
             actions: self.actions,
             rules: Rules::new(),
-            triggered_actions: Vec::new()
+            triggered_actions: Vec::new(),
         }
     }
 }
@@ -130,8 +124,7 @@ impl Interaction {
         self.interfaces.get(name)
     }
 
-    pub(crate) fn trigger_input_actions(&mut self, input: &Input, state: &InputState)
-    {
+    pub(crate) fn trigger_input_actions(&mut self, input: &Input, state: &InputState) {
         // TODO: enable/disable interface dispatch
         for (_, interface) in &mut self.interfaces {
             interface.trigger_input_actions(input, state);
@@ -164,18 +157,18 @@ impl Interface {
         for rule in rules {
             let action = match rule["action"].as_str() {
                 Some(action) => action,
-                None => bail!(ErrorKind::InterfaceFormat)
+                None => bail!(ErrorKind::InterfaceFormat),
             };
 
             let when = match rule["when"].as_str() {
                 Some(when) => when,
-                None => bail!(ErrorKind::InterfaceFormat)
+                None => bail!(ErrorKind::InterfaceFormat),
             };
 
 
             if let Some(action) = self.actions.get(action) {
                 use self::WhenParse::*;
-                
+
                 match WhenParse::from_str(when) {
                     Some(Input(input)) => {
                         self.rules.by_input.insert(input, action);
@@ -196,9 +189,7 @@ impl Interface {
         Ok(())
     }
 
-    fn trigger_input_actions(&mut self, input: &Input,
-                                     _state: &InputState)
-    {
+    fn trigger_input_actions(&mut self, input: &Input, _state: &InputState) {
         if let Some(action) = self.rules.by_input.get(input) {
             self.triggered_actions.push(action);
         }
@@ -207,7 +198,7 @@ impl Interface {
     fn trigger_state_actions(&mut self, state: &InputState) {
         for ca in &self.rules.others {
             if let Some(action) = ca.may_trigger(state) {
-               self.triggered_actions.push(action);
+                self.triggered_actions.push(action);
             }
         }
     }
@@ -237,29 +228,27 @@ impl WhenParse {
         match split.next() {
             Some("Key") => {
                 split.next().and_then(|state| {
-                    split.next().and_then(|k| key_from_str(k)).and_then(|key| {
-                        match state {
-                            "Pressed" => Some(Input(Key(Pressed, key))),
-                            "Released" => Some(Input(Key(Released, key))),
-                            "Held" => Some(Condition(KeyHeld(key))),
-                            _ => None
-                        }
+                    split.next().and_then(|k| key_from_str(k)).and_then(|key| match state {
+                        "Pressed" => Some(Input(Key(Pressed, key))),
+                        "Released" => Some(Input(Key(Released, key))),
+                        "Held" => Some(Condition(KeyHeld(key))),
+                        _ => None,
                     })
                 })
             }
             Some("MouseButton") => {
                 split.next().and_then(|state| {
-                    split.next().and_then(|b| mouse_button_from_str(b)).and_then(|button| {
-                        match state {
+                    split.next()
+                        .and_then(|b| mouse_button_from_str(b))
+                        .and_then(|button| match state {
                             "Pressed" => Some(Input(MouseButton(Pressed, button))),
                             "Released" => Some(Input(MouseButton(Released, button))),
                             "Held" => Some(Condition(MouseButtonHeld(button))),
-                            _ => None
-                        }
-                    })
+                            _ => None,
+                        })
                 })
             }
-            _ => None
+            _ => None,
         }
     }
 }

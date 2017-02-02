@@ -9,12 +9,13 @@ extern crate error_chain;
 pub mod error;
 pub mod state;
 pub mod interaction;
-#[macro_use] pub mod macros;
+#[macro_use]
+pub mod macros;
 
-pub use error::{Error};
+pub use error::Error;
 pub use state::InputState;
 pub use interaction::{Interaction, InteractionBuilder, InterfaceBuilder, Action};
-use interaction::{Interface};
+use interaction::Interface;
 use error::Result;
 
 use glutin::Event;
@@ -43,8 +44,9 @@ impl Inputs {
     }
 
     pub fn triggered_actions(&self, interface_name: &str) -> Option<&[Action]> {
-        self.interaction.interface(interface_name)
-                        .map(Interface::triggered_actions)
+        self.interaction
+            .interface(interface_name)
+            .map(Interface::triggered_actions)
     }
 
     pub fn load_interaction_profile(&mut self, path: &str) -> Result<()> {
@@ -56,7 +58,7 @@ impl Inputs {
         f.read_to_string(&mut s)?;
 
         let docs = YamlLoader::load_from_str(&s)?;
-        
+
         self.interaction.load_profile(&docs[0]).map_err(Error::from)
     }
 
@@ -88,7 +90,7 @@ impl Inputs {
 
     pub fn trigger_state_actions(&mut self) {
         let &mut Inputs { ref mut state, ref mut interaction } = self;
-        
+
         interaction.trigger_state_actions(state);
     }
 
