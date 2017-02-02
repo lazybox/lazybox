@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 use glutin::{VirtualKeyCode, MouseButton, ElementState};
 use yaml_rust::Yaml;
 use state::InputState;
+use error::{ErrorKind, Result};
 
 #[derive(Clone, Eq, PartialEq, Hash)]
 pub(crate) enum Input {
@@ -107,26 +108,18 @@ impl InterfaceBuilder {
     }
 }
 
-#[derive(Debug, Copy, Clone)]
-pub enum ProfileError {
-    RulesFormat,
-    InterfaceFormat,
-    ConditionFormat,
-    UnknownInterface,
-}
-
 pub struct Interaction {
     interfaces: HashMap<&'static str, Interface>,
 }
 
 impl Interaction {
     #[must_use]
-    pub fn load_profile(&mut self, profile: &Yaml) -> Result<(), ProfileError> {
+    pub fn load_profile(&mut self, profile: &Yaml) -> Result<()> {
         for (&name, interface) in &mut self.interfaces {
             if let Some(rules) = profile[name]["rules"].as_vec() {
                 interface.load_rules(rules)?;
             } else {
-                return Err(ProfileError::RulesFormat)
+                bail!(ErrorKind::RulesFormat)
             }
         }
 
@@ -166,17 +159,17 @@ pub(crate) struct Interface {
 }
 
 impl Interface {
-    fn load_rules(&mut self, rules: &[Yaml]) -> Result<(), ProfileError> {
+    fn load_rules(&mut self, rules: &[Yaml]) -> Result<()> {
         self.rules.clear();
         for rule in rules {
             let action = match rule["action"].as_str() {
                 Some(action) => action,
-                None => return Err(ProfileError::InterfaceFormat)
+                None => bail!(ErrorKind::InterfaceFormat)
             };
 
             let when = match rule["when"].as_str() {
                 Some(when) => when,
-                None => return Err(ProfileError::InterfaceFormat)
+                None => bail!(ErrorKind::InterfaceFormat)
             };
 
 
@@ -193,10 +186,10 @@ impl Interface {
                             condition: condition,
                         });
                     }
-                    None => return Err(ProfileError::ConditionFormat),
+                    None => bail!(ErrorKind::ConditionFormat),
                 }
             } else {
-                return Err(ProfileError::UnknownInterface);
+                bail!(ErrorKind::UnknownInterface);
             }
         }
 

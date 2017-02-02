@@ -8,6 +8,7 @@ authors = ["Thomas Koehler <basta.t.k+git@gmail.com>"]
 glutin = "0.6"
 cgmath = "0.11"
 yaml-rust = "0.3"
+error-chain = "0.8"
 
 [dev_dependencies]
 lazybox_frameclock = { path = "../frameclock" }

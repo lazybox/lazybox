@@ -3,44 +3,23 @@
 extern crate glutin;
 extern crate cgmath;
 extern crate yaml_rust;
+#[macro_use]
+extern crate error_chain;
 
+pub mod error;
 pub mod state;
 pub mod interaction;
 #[macro_use] pub mod macros;
 
+pub use error::{Error};
 pub use state::InputState;
-pub use interaction::{Interaction, InteractionBuilder, InterfaceBuilder, Action, ProfileError};
+pub use interaction::{Interaction, InteractionBuilder, InterfaceBuilder, Action};
 use interaction::{Interface};
+use error::Result;
 
-use std::io;
 use glutin::Event;
 use cgmath::Point2;
-use yaml_rust::{YamlLoader, ScanError};
-
-#[derive(Debug)]
-pub enum Error {
-    Io(io::Error),
-    Profile(ProfileError),
-    Yaml(ScanError)
-}
-
-impl From<ProfileError> for Error {
-    fn from(error: ProfileError) -> Self {
-        Error::Profile(error)
-    }
-}
-
-impl From<io::Error> for Error {
-    fn from(error: io::Error) -> Self {
-        Error::Io(error)
-    }
-}
-
-impl From<ScanError> for Error {
-    fn from(error: ScanError) -> Self {
-        Error::Yaml(error)
-    }
-}
+use yaml_rust::YamlLoader;
 
 pub struct Inputs {
     state: InputState,
@@ -68,7 +47,7 @@ impl Inputs {
                         .map(Interface::triggered_actions)
     }
 
-    pub fn load_interaction_profile(&mut self, path: &str) -> Result<(), Error> {
+    pub fn load_interaction_profile(&mut self, path: &str) -> Result<()> {
         use std::fs::File;
         use std::io::prelude::*;
 
