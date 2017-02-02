@@ -80,9 +80,7 @@ pub(crate) struct KeyboardState {
 
 impl KeyboardState {
     pub fn new() -> Self {
-        KeyboardState {
-            keys: HashSet::new(),
-        }
+        KeyboardState { keys: HashSet::new() }
     }
 }
 
@@ -92,8 +90,6 @@ pub(crate) struct WindowState {
 
 impl WindowState {
     pub fn new() -> Self {
-        WindowState {
-            focused: true,
-        }
+        WindowState { focused: true }
     }
 }

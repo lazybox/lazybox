@@ -1,8 +1,8 @@
 use std::collections::{HashMap, HashSet};
-use events::*;
 use glutin::{VirtualKeyCode, MouseButton, ElementState};
 use yaml_rust::Yaml;
 use state::InputState;
+use error::{ErrorKind, Result};
 
 #[derive(Clone, Eq, PartialEq, Hash)]
 pub(crate) enum Input {
@@ -66,9 +66,7 @@ pub struct InteractionBuilder {
 
 impl InteractionBuilder {
     pub fn new() -> Self {
-        InteractionBuilder {
-            interfaces: HashMap::new(),
-        }
+        InteractionBuilder { interfaces: HashMap::new() }
     }
 
     pub fn interface(mut self, name: &'static str, builder: InterfaceBuilder) -> Self {
@@ -77,23 +75,17 @@ impl InteractionBuilder {
     }
 
     pub(crate) fn build(self) -> Interaction {
-        Interaction {
-            interfaces: self.interfaces,
-        }
+        Interaction { interfaces: self.interfaces }
     }
 }
 
 pub struct InterfaceBuilder {
     actions: HashSet<Action>,
-    dispatch: fn(Action, &EventDispatcher),
 }
 
 impl InterfaceBuilder {
-    pub fn new<E: ActionEvent>() -> Self {
-        InterfaceBuilder {
-            actions: HashSet::new(),
-            dispatch: E::dispatch,
-        }
+    pub fn new() -> Self {
+        InterfaceBuilder { actions: HashSet::new() }
     }
 
     pub fn action(mut self, a: Action) -> Self {
@@ -105,13 +97,9 @@ impl InterfaceBuilder {
         Interface {
             actions: self.actions,
             rules: Rules::new(),
-            dispatch: self.dispatch,
+            triggered_actions: Vec::new(),
         }
     }
-}
-
-pub trait ActionEvent: Event {
-    fn dispatch(action: &'static str, dispatcher: &EventDispatcher);
 }
 
 pub struct Interaction {
@@ -119,30 +107,40 @@ pub struct Interaction {
 }
 
 impl Interaction {
-    pub fn load_profile(&mut self, profile: &Yaml) {
-        let wrong_fmt = "wrong interaction profile format";
-
+    #[must_use]
+    pub fn load_profile(&mut self, profile: &Yaml) -> Result<()> {
         for (&name, interface) in &mut self.interfaces {
-            let rules = profile[name]["rules"].as_vec().expect(wrong_fmt);
+            if let Some(rules) = profile[name]["rules"].as_vec() {
+                interface.load_rules(rules)?;
+            } else {
+                bail!(ErrorKind::RulesFormat)
+            }
+        }
 
-            interface.load_rules(rules);
+        Ok(())
+    }
+
+    pub(crate) fn interface(&self, name: &str) -> Option<&Interface> {
+        self.interfaces.get(name)
+    }
+
+    pub(crate) fn trigger_input_actions(&mut self, input: &Input, state: &InputState) {
+        // TODO: enable/disable interface dispatch
+        for (_, interface) in &mut self.interfaces {
+            interface.trigger_input_actions(input, state);
         }
     }
 
-    pub(crate) fn dispatch_input_actions(&self, input: &Input,
-                                     state: &InputState,
-                                     dispatcher: &EventDispatcher)
-    {
+    pub(crate) fn trigger_state_actions(&mut self, state: &InputState) {
         // TODO: enable/disable interface dispatch
-        for (_, interface) in &self.interfaces {
-            interface.dispatch_input_actions(input, state, dispatcher);
+        for (_, interface) in &mut self.interfaces {
+            interface.trigger_state_actions(state);
         }
     }
 
-    pub(crate) fn dispatch_state_actions(&self, state: &InputState, dispatcher: &EventDispatcher) {
-        // TODO: enable/disable interface dispatch
-        for (_, interface) in &self.interfaces {
-            interface.dispatch_state_actions(state, dispatcher);
+    pub(crate) fn clear_actions(&mut self) {
+        for (_, interface) in &mut self.interfaces {
+            interface.clear_actions();
         }
     }
 }
@@ -150,20 +148,27 @@ impl Interaction {
 pub(crate) struct Interface {
     actions: HashSet<Action>,
     rules: Rules,
-    dispatch: fn(Action, &EventDispatcher),
+    triggered_actions: Vec<Action>,
 }
 
 impl Interface {
-    fn load_rules(&mut self, rules: &[Yaml]) {
-        let wrong_fmt = "wrong interface rule format";
-
+    fn load_rules(&mut self, rules: &[Yaml]) -> Result<()> {
         self.rules.clear();
         for rule in rules {
-            let action = rule["action"].as_str().expect(wrong_fmt);
-            let when = rule["when"].as_str().expect(wrong_fmt);
+            let action = match rule["action"].as_str() {
+                Some(action) => action,
+                None => bail!(ErrorKind::InterfaceFormat),
+            };
+
+            let when = match rule["when"].as_str() {
+                Some(when) => when,
+                None => bail!(ErrorKind::InterfaceFormat),
+            };
+
 
             if let Some(action) = self.actions.get(action) {
                 use self::WhenParse::*;
+
                 match WhenParse::from_str(when) {
                     Some(Input(input)) => {
                         self.rules.by_input.insert(input, action);
@@ -174,29 +179,36 @@ impl Interface {
                             condition: condition,
                         });
                     }
-                    None => panic!("could not parse interface rule condition"),
+                    None => bail!(ErrorKind::ConditionFormat),
                 }
             } else {
-                println!("unknown interface action is ignored");
+                bail!(ErrorKind::UnknownInterface);
             }
         }
+
+        Ok(())
     }
 
-    fn dispatch_input_actions(&self, input: &Input,
-                                     _state: &InputState,
-                                     dispatcher: &EventDispatcher)
-    {
+    fn trigger_input_actions(&mut self, input: &Input, _state: &InputState) {
         if let Some(action) = self.rules.by_input.get(input) {
-            (self.dispatch)(action, dispatcher);
+            self.triggered_actions.push(action);
         }
     }
 
-    fn dispatch_state_actions(&self, state: &InputState, dispatcher: &EventDispatcher) {
+    fn trigger_state_actions(&mut self, state: &InputState) {
         for ca in &self.rules.others {
             if let Some(action) = ca.may_trigger(state) {
-                (self.dispatch)(action, dispatcher);
+                self.triggered_actions.push(action);
             }
         }
+    }
+
+    pub fn triggered_actions(&self) -> &[Action] {
+        &self.triggered_actions
+    }
+
+    fn clear_actions(&mut self) {
+        self.triggered_actions.clear();
     }
 }
 
@@ -216,48 +228,27 @@ impl WhenParse {
         match split.next() {
             Some("Key") => {
                 split.next().and_then(|state| {
-                    split.next().and_then(|k| key_from_str(k)).and_then(|key| {
-                        match state {
-                            "Pressed" => Some(Input(Key(Pressed, key))),
-                            "Released" => Some(Input(Key(Released, key))),
-                            "Held" => Some(Condition(KeyHeld(key))),
-                            _ => None
-                        }
+                    split.next().and_then(|k| key_from_str(k)).and_then(|key| match state {
+                        "Pressed" => Some(Input(Key(Pressed, key))),
+                        "Released" => Some(Input(Key(Released, key))),
+                        "Held" => Some(Condition(KeyHeld(key))),
+                        _ => None,
                     })
                 })
             }
             Some("MouseButton") => {
                 split.next().and_then(|state| {
-                    split.next().and_then(|b| mouse_button_from_str(b)).and_then(|button| {
-                        match state {
+                    split.next()
+                        .and_then(|b| mouse_button_from_str(b))
+                        .and_then(|button| match state {
                             "Pressed" => Some(Input(MouseButton(Pressed, button))),
                             "Released" => Some(Input(MouseButton(Released, button))),
                             "Held" => Some(Condition(MouseButtonHeld(button))),
-                            _ => None
-                        }
-                    })
+                            _ => None,
+                        })
                 })
             }
-            _ => None
-        }
-    }
-
-    pub fn to_string(&self) -> String {
-        use self::WhenParse::*;
-        use self::Input::*;
-        use self::Condition::*;
-        use glutin::ElementState::*;
-
-        match self {
-            &Input(Key(Pressed, key)) => "Key.Pressed.".to_string() + key_to_str(key),
-            &Input(Key(Released, key)) => "Key.Released.".to_string() + key_to_str(key),
-            &Condition(KeyHeld(key)) => "Key.Held.".to_string() + key_to_str(key),
-            &Input(MouseButton(Pressed, button)) =>
-                "MouseButton.Pressed.".to_string() + mouse_button_to_str(button),
-            &Input(MouseButton(Released, button)) =>
-                "MouseButton.Released.".to_string() + mouse_button_to_str(button),
-            &Condition(MouseButtonHeld(button)) =>
-                "MouseButton.Held.".to_string() + mouse_button_to_str(button),
+            _ => None,
         }
     }
 }
