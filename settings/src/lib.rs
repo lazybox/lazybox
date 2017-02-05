@@ -6,6 +6,7 @@ mod value;
 pub use self::value::*;
 
 use std::{ops, fmt};
+use std::path::Path;
 use yaml_rust::Yaml;
 
 pub struct Settings {
@@ -13,15 +14,15 @@ pub struct Settings {
 }
 
 impl Settings {
-    pub fn new(defaults_path: &str) -> Result<Self, Error> {
-        Self::from_yaml(Self::read_yaml(defaults_path))
+    pub fn new<P: AsRef<Path>>(defaults_path: P) -> Result<Self, Error> {
+        Self::from_yaml(Self::read_yaml(defaults_path.as_ref()))
     }
 
-    pub fn override_with(&mut self, path: &str) -> Result<(), Error> {
-        self.override_yaml(Self::read_yaml(path))
+    pub fn override_with<P: AsRef<Path>>(&mut self, path: P) -> Result<(), Error> {
+        self.override_yaml(Self::read_yaml(path.as_ref()))
     }
 
-    fn read_yaml(path: &str) -> Yaml {
+    fn read_yaml(path: &Path) -> Yaml {
         use std::fs::File;
         use std::io::prelude::*;
         use yaml_rust::YamlLoader;
