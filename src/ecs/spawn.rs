@@ -3,15 +3,15 @@ use ecs::entity::{Entity, EntityRef, Accessor};
 use ecs::state::Commit;
 
 /// An entity to be spawn
-pub struct SpawnRequest<'a> {
+pub struct SpawnRequest<'a, Cx: Send + 'a> {
     entity: Entity,
-    commit: Commit<'a>,
+    commit: Commit<'a, Cx>,
 }
 
-impl<'a> SpawnRequest<'a> {
+impl<'a, Cx: Send + 'a> SpawnRequest<'a, Cx> {
     /// Constructs a new SpawnRequest with the given `Entity`.
     pub(crate) fn new(entity: Entity,
-                      commit: Commit<'a>)
+                      commit: Commit<'a, Cx>)
                       -> Self {
         SpawnRequest {
             entity: entity,
@@ -44,13 +44,13 @@ impl<'a> SpawnRequest<'a> {
 pub trait Prototype: Sized {
     type Batch: Batch<Prototype = Self>;
 
-    fn spawn_later_with<'a>(self, spawn: SpawnRequest<'a>) where Self: Sized;
+    fn spawn_later_with<'a, Cx: Send>(self, spawn: SpawnRequest<'a, Cx>) where Self: Sized;
 
-    fn batch<'a>(commit: Commit<'a>) -> Self::Batch where Self: Sized;
+    fn batch<'a, Cx: Send>(commit: Commit<'a, Cx>) -> Self::Batch where Self: Sized;
 }
 
 pub trait Batch {
     type Prototype: Prototype;
 
-    fn spawn_later<'a>(&self, prototype: Self::Prototype);
+    fn spawn_later<'a, Cx: Send>(&self, prototype: Self::Prototype);
 }

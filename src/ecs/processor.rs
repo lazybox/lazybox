@@ -5,40 +5,40 @@ use daggy::{self, Dag, Walker};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use parking_lot::Mutex;
 use rayon;
-use context::Context;
 use fnv::FnvHashMap;
+use ecs::Context;
 
 pub type ComponentTypes = [ComponentType];
 
-pub trait Model {
-    fn from_state(state: &State, commit: Commit) -> Self;
+pub trait Model<Cx: Context> {
+    fn from_state(state: &State<Cx>, commit: Commit<Cx>) -> Self;
 
     fn writes() -> &'static ComponentTypes;
     fn reads() -> &'static ComponentTypes;
 }
 
-pub trait Processor: Send + Any {
+pub trait Processor<Cx: Context>: Send + Any {
     fn writes(&self) -> &'static ComponentTypes;
     fn reads(&self) -> &'static ComponentTypes;
 
-    fn update(&mut self, _state: &State, _commit: Commit, _context: &Context, _delta: f32) {}
-    fn fixed_update(&mut self, _state: &State, _commit: Commit, _context: &Context) {}
+    fn update(&mut self, _state: &State<Cx>, _commit: Commit<Cx>, _context: &Cx, _delta: f32) {}
+    fn fixed_update(&mut self, _state: &State<Cx>, _commit: Commit<Cx>, _context: &Cx) {}
 }
 
 type ProcessorIndex = usize;
-type TakeableProcessor = Mutex<Option<Box<Processor>>>;
+type TakeableProcessor<Cx> = Mutex<Option<Box<Processor<Cx>>>>;
 
-struct Processors {
-    processors: Vec<TakeableProcessor>,
+struct Processors<Cx: Context> {
+    processors: Vec<TakeableProcessor<Cx>>,
 }
 
-impl Processors {
+impl<Cx: Context> Processors<Cx> {
     pub fn new() -> Self {
         Processors { processors: Vec::new() }
     }
 
-    pub fn push<F>(&mut self, processor: Box<Processor>, mut handler: F) -> ProcessorIndex
-        where F: FnMut(ProcessorIndex, &Processor)
+    pub fn push<F>(&mut self, processor: Box<Processor<Cx>>, mut handler: F) -> ProcessorIndex
+        where F: FnMut(ProcessorIndex, &Processor<Cx>)
     {
         let index = self.processors.len();
         handler(index, &*processor);
@@ -47,12 +47,12 @@ impl Processors {
         index
     }
 
-    pub fn take(&self, index: ProcessorIndex) -> Option<Box<Processor>> {
+    pub fn take(&self, index: ProcessorIndex) -> Option<Box<Processor<Cx>>> {
         let mut processor_opt = self.processors[index].lock();
         processor_opt.take()
     }
 
-    pub fn put(&self, index: ProcessorIndex, processor: Box<Processor>) {
+    pub fn put(&self, index: ProcessorIndex, processor: Box<Processor<Cx>>) {
         let mut processor_opt = self.processors[index].lock();
         *processor_opt = Some(processor)
     }
@@ -218,13 +218,13 @@ pub struct ActionGraph {
 }
 
 impl ActionGraph {
-    fn par_for_each_mut<F>(&self,
-                           processors: &Processors,
-                           state: &State,
-                           commit: Commit,
-                           cx: &Context,
+    fn par_for_each_mut<F, Cx: Context>(&self,
+                           processors: &Processors<Cx>,
+                           state: &State<Cx>,
+                           commit: Commit<Cx>,
+                           cx: &Cx,
                            f: F)
-        where F: Fn(&State, Commit, &Context, &mut Processor) + Sync + Send
+        where F: Fn(&State<Cx>, Commit<Cx>, &Cx, &mut Processor<Cx>) + Sync + Send
     {
         let f = &f;
         rayon::scope(|scope| {
@@ -236,15 +236,15 @@ impl ActionGraph {
         });
     }
 
-    fn run_process_mut<'a: 's, 's, F: 'a>(&'a self,
-                                          processors: &'a Processors,
+    fn run_process_mut<'a: 's, 's, F: 'a, Cx: Context>(&'a self,
+                                          processors: &'a Processors<Cx>,
                                           scope: &rayon::Scope<'s>,
                                           node: NodeIndex,
-                                          state: &'a State,
-                                          commit: Commit<'a>,
-                                          cx: &'a Context,
+                                          state: &'a State<Cx>,
+                                          commit: Commit<'a, Cx>,
+                                          cx: &'a Cx,
                                           f: &'a F)
-        where F: Fn(&'a State, Commit<'a>, &'a Context, &mut Processor) + Sync + Send
+        where F: Fn(&'a State<Cx>, Commit<'a, Cx>, &'a Cx, &mut Processor<Cx>) + Sync + Send
     {
         let slot = &self.execution_dag[node];
         let mut processor = processors.take(slot.processor).unwrap();
@@ -272,13 +272,13 @@ pub enum UpdateType {
     Both,
 }
 
-pub struct SchedulerBuilder {
-    processors: Processors,
+pub struct SchedulerBuilder<Cx: Context> {
+    processors: Processors<Cx>,
     updates: ActionGraphBuilder,
     fixed_updates: ActionGraphBuilder,
 }
 
-impl SchedulerBuilder {
+impl<Cx: Context> SchedulerBuilder<Cx> {
     pub fn new() -> Self {
         SchedulerBuilder {
             processors: Processors::new(),
@@ -287,7 +287,7 @@ impl SchedulerBuilder {
         }
     }
 
-    pub fn register<P: Processor>(&mut self, processor: P, update_type: UpdateType) -> &mut Self {
+    pub fn register<P: Processor<Cx>>(&mut self, processor: P, update_type: UpdateType) -> &mut Self {
         {
             let &mut SchedulerBuilder { ref mut processors, ref mut updates, ref mut fixed_updates } = self;
             processors.push(Box::new(processor), |index, processor| {
@@ -308,7 +308,7 @@ impl SchedulerBuilder {
         self
     }
 
-    pub fn build(mut self) -> Scheduler {
+    pub fn build(mut self) -> Scheduler<Cx> {
         self.processors.shrink_to_fit();
 
         Scheduler {
@@ -319,14 +319,14 @@ impl SchedulerBuilder {
     }
 }
 
-pub struct Scheduler {
-    processors: Processors,
+pub struct Scheduler<Cx: Context> {
+    processors: Processors<Cx>,
     updates: ActionGraph,
     fixed_updates: ActionGraph,
 }
 
-impl Scheduler {
-    pub fn update(&mut self, state: &mut State, context: &mut Context, delta: f32) {
+impl<Cx: Context> Scheduler<Cx> {
+    pub fn update(&mut self, state: &mut State<Cx>, context: &mut Cx, delta: f32) {
         let mut update = state.update();
 
         update.commit(context, |state, commit, context| {
@@ -336,7 +336,7 @@ impl Scheduler {
         });
     }
 
-    pub fn fixed_update(&mut self, state: &mut State, context: &mut Context) {
+    pub fn fixed_update(&mut self, state: &mut State<Cx>, context: &mut Cx) {
         let mut update = state.update();
 
         update.commit(context, |state, commit, context| {
