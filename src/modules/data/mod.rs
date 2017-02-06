@@ -9,7 +9,6 @@ use self::storages::{Storage, StorageHandler, Handler};
 use rayon;
 use std::fmt::Debug;
 use std::any::Any;
-use ::context::Context;
 
 pub trait DataComponent: Any + Clone + Debug + Send + Sync {
     type Storage: Storage;
@@ -53,8 +52,8 @@ impl DataModule {
     }
 }
 
-impl Module for DataModule {
-    fn commit(&mut self, args: &CommitArgs, _context: &mut Context) {
+impl<Cx: Send> Module<Cx> for DataModule {
+    fn commit(&mut self, args: &CommitArgs, _context: &mut Cx) {
         rayon::scope(|scope| {
             for (_, handler) in &mut self.handlers {
                 scope.spawn(move |_| handler.commit(args));

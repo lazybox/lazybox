@@ -12,17 +12,15 @@ use ecs::group::Groups;
 use self::update_queue::{UpdateQueues, UpdateQueue, UpdateQueueReader};
 use rayon;
 
-use ::context::Context;
-
-pub struct State {
+pub struct State<Cx: Send> {
     entities: Entities,
-    modules: Modules,
+    modules: Modules<Cx>,
     groups: Groups,
     update_queues: UpdateQueues,
 }
 
-impl State {
-    pub fn new(modules: Modules,
+impl<Cx: Send> State<Cx> {
+    pub fn new(modules: Modules<Cx>,
                groups: Groups,
                update_queues: UpdateQueues)
                -> Self {
@@ -68,28 +66,29 @@ impl State {
     }
 
     pub fn read<C: Component>(&self) -> StorageReadGuard<<C::Module as HasComponent<C>>::Storage>
-        where C::Module: Module
+        where C::Module: Module<Cx>
     {
         self.module::<C::Module>().read()
     }
 
     fn write<C: Component>(&self) -> StorageWriteGuard<<C::Module as HasComponent<C>>::Storage>
-        where C::Module: Module
+        where C::Module: Module<Cx>
     {
         self.module::<C::Module>().write()
     }
 
-    pub fn module<M: Module>(&self) -> &M {
+    pub fn module<M: Module<Cx>>(&self) -> &M {
         self.modules
             .get::<M>()
             .expect("the requested module doesn't exists")
     }
 
-    pub fn update(&mut self) -> Update {
+
+    pub fn update(&mut self) -> Update<Cx> {
         Update { state: self }
     }
 
-    fn commit(&mut self, cx: &mut Context) {
+    fn commit(&mut self, cx: &mut Cx) {
         let world_removes = self.entities.push_removes();
 
         let &mut State { ref mut update_queues,
@@ -111,13 +110,13 @@ impl State {
     }
 }
 
-pub struct Update<'a> {
-    state: &'a mut State,
+pub struct Update<'a, Cx: Send + 'a> {
+    state: &'a mut State<Cx>,
 }
 
-impl<'a> Update<'a> {
-    pub fn commit<F>(&mut self, context: &mut Context, f: F)
-        where F: FnOnce(&State, Commit, &mut Context)
+impl<'a, Cx: Send + 'a> Update<'a, Cx> {
+    pub fn commit<F>(&mut self, context: &mut Cx, f: F)
+        where F: FnOnce(&State<Cx>, Commit<Cx>, &mut Cx)
     {
         {
             let state = &*self.state;
@@ -127,14 +126,13 @@ impl<'a> Update<'a> {
     }
 }
 
-#[derive(Copy, Clone)]
-pub struct Commit<'a> {
-    state: &'a State,
+pub struct Commit<'a, Cx: Send + 'a> {
+    state: &'a State<Cx>,
 }
 
-impl<'a> Commit<'a> {
+impl<'a, Cx: Send + 'a> Commit<'a, Cx> {
     #[inline]
-    pub fn spawn_later(self) -> SpawnRequest<'a> {
+    pub fn spawn_later(self) -> SpawnRequest<'a, Cx> {
         let entity = self.state.spawn_later();
         SpawnRequest::new(entity, self)
     }
@@ -173,12 +171,22 @@ impl<'a> Commit<'a> {
 
     #[inline]
     pub fn write<C: Component>(&self) -> StorageWriteGuard<<C::Module as HasComponent<C>>::Storage>
-        where C::Module: Module
+        where C::Module: Module<Cx>
     {
 
         self.state.write::<C>()
     }
 }
+
+impl<'a, Cx: Send + 'a> Clone for Commit<'a, Cx> {
+    #[inline]
+    fn clone(&self) -> Self {
+        Commit { state: self.state }
+    }
+}
+
+impl<'a, Cx: Send + 'a> Copy for Commit<'a, Cx> {}
+
 
 pub struct CommitArgs<'a> {
     update_queues: &'a UpdateQueues,

@@ -4,3 +4,6 @@ pub mod state;
 pub mod spawn;
 pub mod module;
 pub mod group;
+pub mod processor;
+
+pub trait Context: Sync + Send {}
