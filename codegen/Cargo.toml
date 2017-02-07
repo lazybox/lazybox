@@ -1,0 +1,14 @@
+[package]
+name = "lazybox_codegen"
+version = "0.1.0"
+authors = ["Thomas Koehler <basta.t.k+git@gmail.com>"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = "^0.11"
+quote = "^0.3"
+
+[dev_dependencies]
+lazybox = { path = "../" }

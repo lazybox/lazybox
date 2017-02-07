@@ -1,4 +1,13 @@
 [workspace]
+members = [
+  "assets/",
+  "codegen/",
+  "events/",
+  "frameclock/",
+  "graphics/",
+  "inputs/",
+  "settings/",
+]
 
 [package]
 name = "lazybox"
