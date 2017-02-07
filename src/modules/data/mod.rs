@@ -1,4 +1,4 @@
-mod storages;
+pub mod storages;
 
 use ecs::state::CommitArgs;
 use ecs::module::{Module, HasComponent};

@@ -1,5 +1,5 @@
 mod builder;
-mod update_queue;
+pub mod update_queue;
 
 pub use self::builder::StateBuilder;
 pub use self::update_queue::Monitors as UpdateMonitors;
@@ -141,11 +141,6 @@ impl<'a, Cx: Send + 'a> Commit<'a, Cx> {
     pub fn spawn_later_with<P: Prototype>(self, prototype: P) {
         let request = self.spawn_later();
         prototype.spawn_later_with(request);
-    }
-
-    #[inline]
-    pub fn spawn_in_batch<P: Prototype>(self) -> P::Batch {
-        P::batch(self)
     }
 
     #[inline]
