@@ -42,15 +42,5 @@ impl<'a, Cx: Send + 'a> SpawnRequest<'a, Cx> {
 }
 
 pub trait Prototype: Sized {
-    type Batch: Batch<Prototype = Self>;
-
     fn spawn_later_with<'a, Cx: Send>(self, spawn: SpawnRequest<'a, Cx>) where Self: Sized;
-
-    fn batch<'a, Cx: Send>(commit: Commit<'a, Cx>) -> Self::Batch where Self: Sized;
-}
-
-pub trait Batch {
-    type Prototype: Prototype;
-
-    fn spawn_later<'a, Cx: Send>(&self, prototype: Self::Prototype);
 }

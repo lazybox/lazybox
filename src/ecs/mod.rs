@@ -6,4 +6,6 @@ pub mod module;
 pub mod group;
 pub mod processor;
 
+pub use self::spawn::SpawnRequest;
+
 pub trait Context: Sync + Send {}
