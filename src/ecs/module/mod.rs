@@ -59,7 +59,6 @@ pub trait HasComponent<C: ?Sized + Component> {
     fn write(&self) -> StorageWriteGuard<Self::Storage>;
 }
 
-
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub struct ModuleType(TypeId);
 
