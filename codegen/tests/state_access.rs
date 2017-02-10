@@ -23,9 +23,9 @@ impl lazybox::modules::data::DataComponent for Armor {
     type Storage = lazybox::modules::data::storages::PackedStorage<Self>;
 }
 
-#[derive(Model)]
-#[name = "Model"]
-pub struct _Model {
+#[derive(StateAccess)]
+#[name = "Access"]
+pub struct AccessInfo {
     #[read] armor: Armor,
     #[write] health: Health,
 }

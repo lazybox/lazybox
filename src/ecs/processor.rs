@@ -10,7 +10,7 @@ use ecs::Context;
 
 pub type ComponentTypes = [ComponentType];
 
-pub trait Model<'a, Cx: Context> {
+pub trait StateAccess<'a, Cx: Context> {
     fn from_state(state: &'a State<Cx>) -> Self;
 
     fn writes() -> Vec<ComponentType>;

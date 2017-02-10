@@ -8,7 +8,7 @@ extern crate quote;
 use std::collections::HashSet;
 use proc_macro::TokenStream;
 
-#[proc_macro_derive(Prototype)]
+#[proc_macro_derive(Prototype, attributes(batch))]
 pub fn prototype(input: TokenStream) -> TokenStream {
     let s = input.to_string();
     let ast = syn::parse_derive_input(&s).unwrap();
@@ -16,11 +16,11 @@ pub fn prototype(input: TokenStream) -> TokenStream {
     gen.parse().unwrap()
 }
 
-#[proc_macro_derive(Model)]
+#[proc_macro_derive(StateAccess, attributes(name, read, write))]
 pub fn model(input: TokenStream) -> TokenStream {
     let s = input.to_string();
     let ast = syn::parse_derive_input(&s).unwrap();
-    let gen = expand_model(&ast);
+    let gen = expand_state_access(&ast);
     gen.parse().unwrap()
 }
 
@@ -81,7 +81,7 @@ fn expand_prototype(ast: &syn::DeriveInput) -> quote::Tokens {
     }
 }
 
-fn expand_model(ast: &syn::DeriveInput) -> quote::Tokens {
+fn expand_state_access(ast: &syn::DeriveInput) -> quote::Tokens {
     let fields = match ast.body {
         syn::Body::Struct(syn::VariantData::Struct(ref fields)) => fields,
         _ => panic!("expected regular struct")
@@ -142,7 +142,7 @@ fn expand_model(ast: &syn::DeriveInput) -> quote::Tokens {
             #guards
         }
 
-        impl<'a, Cx: ::lazybox::ecs::Context> ::lazybox::ecs::processor::Model<'a, Cx> for #name<'a> {
+        impl<'a, Cx: ::lazybox::ecs::Context> ::lazybox::ecs::processor::StateAccess<'a, Cx> for #name<'a> {
             fn from_state(state: &'a ::lazybox::ecs::state::State<Cx>) -> Self {
                 #name {
                     #(#read_idents: state.read::<#read_types>(),)*
