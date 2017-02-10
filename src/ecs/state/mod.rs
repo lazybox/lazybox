@@ -71,7 +71,7 @@ impl<Cx: Send> State<Cx> {
         self.module::<C::Module>().read()
     }
 
-    fn write<C: Component>(&self) -> StorageWriteGuard<<C::Module as HasComponent<C>>::Storage>
+    pub fn write<C: Component>(&self) -> StorageWriteGuard<<C::Module as HasComponent<C>>::Storage>
         where C::Module: Module<Cx>
     {
         self.module::<C::Module>().write()
@@ -162,14 +162,6 @@ impl<'a, Cx: Send + 'a> Commit<'a, Cx> {
     #[inline]
     pub fn detach_later<C: Component>(self, entity: Accessor) {
         self.state.detach_later::<C>(entity);
-    }
-
-    #[inline]
-    pub fn write<C: Component>(&self) -> StorageWriteGuard<<C::Module as HasComponent<C>>::Storage>
-        where C::Module: Module<Cx>
-    {
-
-        self.state.write::<C>()
     }
 }
 

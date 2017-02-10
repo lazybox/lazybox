@@ -5,13 +5,22 @@ extern crate syn;
 #[macro_use]
 extern crate quote;
 
+use std::collections::HashSet;
 use proc_macro::TokenStream;
 
-#[proc_macro_derive(Prototype)]
+#[proc_macro_derive(Prototype, attributes(batch))]
 pub fn prototype(input: TokenStream) -> TokenStream {
     let s = input.to_string();
     let ast = syn::parse_derive_input(&s).unwrap();
     let gen = expand_prototype(&ast);
+    gen.parse().unwrap()
+}
+
+#[proc_macro_derive(StateAccess, attributes(name, read, write))]
+pub fn model(input: TokenStream) -> TokenStream {
+    let s = input.to_string();
+    let ast = syn::parse_derive_input(&s).unwrap();
+    let gen = expand_state_access(&ast);
     gen.parse().unwrap()
 }
 
@@ -67,6 +76,86 @@ fn expand_prototype(ast: &syn::DeriveInput) -> quote::Tokens {
                     ::lazybox::ecs::entity::Accessor::new_unchecked(entity.id())
                 };
                 #attaches
+            }
+        }
+    }
+}
+
+fn expand_state_access(ast: &syn::DeriveInput) -> quote::Tokens {
+    let fields = match ast.body {
+        syn::Body::Struct(syn::VariantData::Struct(ref fields)) => fields,
+        _ => panic!("expected regular struct")
+    };
+
+    let name: syn::Ident = match ast.attrs.iter().find(|&a| a.name() == "name") {
+        None => panic!("expected 'name' attribute"),
+        Some(ref a) => match a.value {
+            syn::MetaItem::NameValue(_, syn::Lit::Str(ref s, _)) => (s as &str).into(),
+            _ => panic!("malformed 'name' attribute")
+        }
+    };
+
+    let mut components = HashSet::new();
+    let mut read_idents = Vec::new();
+    let mut read_types = Vec::new();
+    let mut write_idents = Vec::new();
+    let mut write_types = Vec::new();
+
+    for f in fields {
+        if !components.insert(&f.ty) {
+            panic!("cannot refer to the same component multiple times");
+        }
+        if f.attrs.len() != 1 {
+            panic!("expected exactly one field attribute");
+        }
+        match f.attrs[0].name() {
+            "read" => {
+                read_idents.push(&f.ident);
+                read_types.push(&f.ty);
+            },
+            "write" => {
+                write_idents.push(&f.ident);
+                write_types.push(&f.ty);
+            }
+            _ => panic!("expected 'read' or 'write' field attribute")
+        }
+    }
+
+    let read_guards = read_idents.iter().zip(read_types.iter())
+        .fold(quote! {}, |tokens, (&ident, &component)| quote! {
+            #tokens
+            #ident: ::lazybox::ecs::module::StorageReadGuard<'a, <<#component as ::lazybox::ecs::module::Component>::Module as ::lazybox::ecs::module::HasComponent<#component>>::Storage>,
+        });
+
+    let guards = write_idents.iter().zip(write_types.iter())
+        .fold(read_guards, |tokens, (&ident, &component)| quote! {
+            #tokens
+            #ident: ::lazybox::ecs::module::StorageWriteGuard<'a, <<#component as ::lazybox::ecs::module::Component>::Module as ::lazybox::ecs::module::HasComponent<#component>>::Storage>,
+        });
+
+    let read_idents = &read_idents[..];
+    let read_types = &read_types[..];
+    let write_idents = &write_idents[..];
+    let write_types = &write_types[..];
+    quote! {
+        pub struct #name<'a> {
+            #guards
+        }
+
+        impl<'a, Cx: ::lazybox::ecs::Context> ::lazybox::ecs::processor::StateAccess<'a, Cx> for #name<'a> {
+            fn from_state(state: &'a ::lazybox::ecs::state::State<Cx>) -> Self {
+                #name {
+                    #(#read_idents: state.read::<#read_types>(),)*
+                    #(#write_idents: state.write::<#write_types>(),)*
+                }
+            }
+
+            fn reads() -> Vec<::lazybox::ecs::module::ComponentType> {
+                vec![#(::lazybox::ecs::module::ComponentType::of::<#read_types>()),*]
+            }
+
+            fn writes() -> Vec<::lazybox::ecs::module::ComponentType> {
+                vec![#(::lazybox::ecs::module::ComponentType::of::<#write_types>()),*]
             }
         }
     }

@@ -10,11 +10,11 @@ use ecs::Context;
 
 pub type ComponentTypes = [ComponentType];
 
-pub trait Model<Cx: Context> {
-    fn from_state(state: &State<Cx>, commit: Commit<Cx>) -> Self;
+pub trait StateAccess<'a, Cx: Context> {
+    fn from_state(state: &'a State<Cx>) -> Self;
 
-    fn writes() -> &'static ComponentTypes;
-    fn reads() -> &'static ComponentTypes;
+    fn writes() -> Vec<ComponentType>;
+    fn reads() -> Vec<ComponentType>;
 }
 
 pub trait Processor<Cx: Context>: Send + Any {
