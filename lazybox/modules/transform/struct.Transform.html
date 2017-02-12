@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Transform` struct in crate `lazybox`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Transform">
+
+    <title>lazybox::modules::transform::Transform - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>lazybox</a>::<wbr><a href='../index.html'>modules</a>::<wbr><a href='index.html'>transform</a></p><script>window.sidebarCurrent = {name: 'Transform', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>lazybox</a>::<wbr><a href='../index.html'>modules</a>::<wbr><a href='index.html'>transform</a>::<wbr><a class='struct' href=''>Transform</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/lazybox/modules/transform/dynamic.rs.html#12-16' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Transform {
+    pub position: <a class='struct' href='../../../cgmath/point/struct.Point2.html' title='cgmath::point::Point2'>Point2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;,
+    pub rotation: <a class='struct' href='../../../cgmath/angle/struct.Rad.html' title='cgmath::angle::Rad'>Rad</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;,
+    pub scale: <a class='struct' href='../../../cgmath/vector/struct.Vector2.html' title='cgmath::vector::Vector2'>Vector2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;,
+}</pre><h2 class='fields'>Fields</h2><span id='structfield.position' class='structfield'>
+                           <span id='position.v' class='invisible'>
+                           <code>position: <a class='struct' href='../../../cgmath/point/struct.Point2.html' title='cgmath::point::Point2'>Point2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.rotation' class='structfield'>
+                           <span id='rotation.v' class='invisible'>
+                           <code>rotation: <a class='struct' href='../../../cgmath/angle/struct.Rad.html' title='cgmath::angle::Rad'>Rad</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.scale' class='structfield'>
+                           <span id='scale.v' class='invisible'>
+                           <code>scale: <a class='struct' href='../../../cgmath/vector/struct.Vector2.html' title='cgmath::vector::Vector2'>Vector2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code>
+                           </span></span><span class='stab '></span><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../../lazybox/modules/transform/struct.Transform.html' title='lazybox::modules::transform::Transform'>Transform</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/lazybox/modules/transform/dynamic.rs.html#18-34' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.one' class='method'><span id='one.v' class='invisible'><code>fn <a href='#method.one' class='fnname'>one</a>() -&gt; Self</code></span></h4>
+<h4 id='method.basis' class='method'><span id='basis.v' class='invisible'><code>fn <a href='#method.basis' class='fnname'>basis</a>(&amp;self) -&gt; <a class='struct' href='../../../cgmath/rotation/struct.Basis2.html' title='cgmath::rotation::Basis2'>Basis2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code></span></h4>
+<h4 id='method.scale_vector' class='method'><span id='scale_vector.v' class='invisible'><code>fn <a href='#method.scale_vector' class='fnname'>scale_vector</a>(&amp;self, v: <a class='struct' href='../../../cgmath/vector/struct.Vector2.html' title='cgmath::vector::Vector2'>Vector2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;) -&gt; <a class='struct' href='../../../cgmath/vector/struct.Vector2.html' title='cgmath::vector::Vector2'>Vector2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code></span></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../../../lazybox/modules/transform/struct.Transform.html' title='lazybox::modules::transform::Transform'>Transform</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/lazybox/modules/transform/dynamic.rs.html#11' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../../lazybox/modules/transform/struct.Transform.html' title='lazybox::modules::transform::Transform'>Transform</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../../../lazybox/modules/transform/struct.Transform.html' title='lazybox::modules::transform::Transform'>Transform</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../../lazybox/modules/transform/struct.Transform.html' title='lazybox::modules::transform::Transform'>Transform</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/lazybox/modules/transform/dynamic.rs.html#11' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../../../lazybox/modules/transform/struct.Transform.html' title='lazybox::modules::transform::Transform'>Transform</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/lazybox/modules/transform/dynamic.rs.html#11' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../../lazybox/modules/transform/struct.Transform.html' title='lazybox::modules::transform::Transform'>Transform</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/lazybox/modules/transform/dynamic.rs.html#11' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../../lazybox/modules/transform/struct.Transform.html' title='lazybox::modules::transform::Transform'>Transform</a></code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../../lazybox/ecs/module/component/trait.Template.html' title='lazybox::ecs::module::component::Template'>Template</a> for <a class='struct' href='../../../lazybox/modules/transform/struct.Transform.html' title='lazybox::modules::transform::Transform'>Transform</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/lazybox/modules/transform/dynamic.rs.html#36' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../../approx/trait.ApproxEq.html' title='approx::ApproxEq'>ApproxEq</a> for <a class='struct' href='../../../lazybox/modules/transform/struct.Transform.html' title='lazybox::modules::transform::Transform'>Transform</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/lazybox/modules/transform/dynamic.rs.html#38-73' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Epsilon' class='type'><span id='Epsilon.t' class='invisible'><code>type <a href='../../../approx/trait.ApproxEq.html#associatedtype.Epsilon' class='type'>Epsilon</a> = <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a></code></span></h4>
+<div class='docblock'><p>Used for specifying relative comparisons.</p>
+</div><h4 id='method.default_epsilon' class='method'><span id='default_epsilon.v' class='invisible'><code>fn <a href='../../../approx/trait.ApproxEq.html#tymethod.default_epsilon' class='fnname'>default_epsilon</a>() -&gt; Self::<a class='trait' href='../../../approx/trait.ApproxEq.html' title='approx::ApproxEq'>Epsilon</a></code></span></h4>
+<div class='docblock'><p>The default tolerance to use when testing values that are close together. <a href="../../../approx/trait.ApproxEq.html#tymethod.default_epsilon">Read more</a></p>
+</div><h4 id='method.default_max_relative' class='method'><span id='default_max_relative.v' class='invisible'><code>fn <a href='../../../approx/trait.ApproxEq.html#tymethod.default_max_relative' class='fnname'>default_max_relative</a>() -&gt; Self::<a class='trait' href='../../../approx/trait.ApproxEq.html' title='approx::ApproxEq'>Epsilon</a></code></span></h4>
+<div class='docblock'><p>The default relative tolerance for testing values that are far-apart. <a href="../../../approx/trait.ApproxEq.html#tymethod.default_max_relative">Read more</a></p>
+</div><h4 id='method.default_max_ulps' class='method'><span id='default_max_ulps.v' class='invisible'><code>fn <a href='../../../approx/trait.ApproxEq.html#tymethod.default_max_ulps' class='fnname'>default_max_ulps</a>() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></span></h4>
+<div class='docblock'><p>The default ULPs to tolerate when testing values that are far-apart. <a href="../../../approx/trait.ApproxEq.html#tymethod.default_max_ulps">Read more</a></p>
+</div><h4 id='method.relative_eq' class='method'><span id='relative_eq.v' class='invisible'><code>fn <a href='../../../approx/trait.ApproxEq.html#tymethod.relative_eq' class='fnname'>relative_eq</a>(&amp;self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; other: &amp;Self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; epsilon: Self::<a class='trait' href='../../../approx/trait.ApproxEq.html' title='approx::ApproxEq'>Epsilon</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; max_relative: Self::<a class='trait' href='../../../approx/trait.ApproxEq.html' title='approx::ApproxEq'>Epsilon</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>A test for equality that uses a relative comparison if the values are far apart.</p>
+</div><h4 id='method.ulps_eq' class='method'><span id='ulps_eq.v' class='invisible'><code>fn <a href='../../../approx/trait.ApproxEq.html#tymethod.ulps_eq' class='fnname'>ulps_eq</a>(&amp;self, other: &amp;Self, epsilon: Self::<a class='trait' href='../../../approx/trait.ApproxEq.html' title='approx::ApproxEq'>Epsilon</a>, max_ulps: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>A test for equality that uses units in the last place (ULP) if the values are far apart.</p>
+</div><h4 id='method.relative_ne' class='method'><span id='relative_ne.v' class='invisible'><code>fn <a href='../../../approx/trait.ApproxEq.html#method.relative_ne' class='fnname'>relative_ne</a>(&amp;self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; other: &amp;Self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; epsilon: Self::<a class='trait' href='../../../approx/trait.ApproxEq.html' title='approx::ApproxEq'>Epsilon</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; max_relative: Self::<a class='trait' href='../../../approx/trait.ApproxEq.html' title='approx::ApproxEq'>Epsilon</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>The inverse of <code>ApproxEq::relative_eq</code>.</p>
+</div><h4 id='method.ulps_ne' class='method'><span id='ulps_ne.v' class='invisible'><code>fn <a href='../../../approx/trait.ApproxEq.html#method.ulps_ne' class='fnname'>ulps_ne</a>(&amp;self, other: &amp;Self, epsilon: Self::<a class='trait' href='../../../approx/trait.ApproxEq.html' title='approx::ApproxEq'>Epsilon</a>, max_ulps: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>The inverse of <code>ApproxEq::ulps_eq</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../../lazybox/ecs/module/component/trait.Component.html' title='lazybox::ecs::module::component::Component'>Component</a> for <a class='struct' href='../../../lazybox/modules/transform/struct.Transform.html' title='lazybox::modules::transform::Transform'>Transform</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/lazybox/ecs/module/mod.rs.html#171-174' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Module' class='type'><span id='Module.t' class='invisible'><code>type <a href='../../../lazybox/ecs/module/component/trait.Component.html#associatedtype.Module' class='type'>Module</a> = <a class='struct' href='../../../lazybox/modules/transform/struct.TransformModule.html' title='lazybox::modules::transform::TransformModule'>TransformModule</a></code></span></h4>
+<h4 id='associatedtype.Template' class='type'><span id='Template.t' class='invisible'><code>type <a href='../../../lazybox/ecs/module/component/trait.Component.html#associatedtype.Template' class='type'>Template</a> = <a class='struct' href='../../../lazybox/modules/transform/struct.TransformTemplate.html' title='lazybox::modules::transform::TransformTemplate'>TransformTemplate</a></code></span></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "lazybox";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

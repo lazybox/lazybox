@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["POSITION_TOLERANCE",""],["SCALE_TOLERANCE",""]],"enum":[["CacheReadErr","Returned from `Cache::rect_for`."],["CacheWriteErr","Returned from `Cache::cache_queued`."]],"struct":[["GlyphCache",""]],"type":[["GlyphChannel",""],["GlyphFormat",""],["GlyphSurface",""]]});

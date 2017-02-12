@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Handler` trait in crate `wayland_client`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Handler">
+
+    <title>wayland_client::protocol::wl_data_source::Handler - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>wayland_client</a>::<wbr><a href='../index.html'>protocol</a>::<wbr><a href='index.html'>wl_data_source</a></p><script>window.sidebarCurrent = {name: 'Handler', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../../index.html'>wayland_client</a>::<wbr><a href='../index.html'>protocol</a>::<wbr><a href='index.html'>wl_data_source</a>::<wbr><a class='trait' href=''>Handler</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/wayland_client/home/travis/build/lazybox/lazybox/target/debug/build/wayland-client-0bd58f00e900cc20/out/wayland_api.rs.html#1101-1216' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait Handler {
+    fn <a href='#method.target' class='fnname'>target</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_data_source/struct.WlDataSource.html' title='wayland_client::protocol::wl_data_source::WlDataSource'>WlDataSource</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mime_type: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;) { ... }
+    fn <a href='#method.send' class='fnname'>send</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_data_source/struct.WlDataSource.html' title='wayland_client::protocol::wl_data_source::WlDataSource'>WlDataSource</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mime_type: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fd: <a class='type' href='https://doc.rust-lang.org/nightly/std/sys/imp/ext/io/type.RawFd.html' title='std::sys::imp::ext::io::RawFd'>RawFd</a>) { ... }
+    fn <a href='#method.cancelled' class='fnname'>cancelled</a>(&amp;mut self, evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>, proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_data_source/struct.WlDataSource.html' title='wayland_client::protocol::wl_data_source::WlDataSource'>WlDataSource</a>) { ... }
+    fn <a href='#method.dnd_drop_performed' class='fnname'>dnd_drop_performed</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_data_source/struct.WlDataSource.html' title='wayland_client::protocol::wl_data_source::WlDataSource'>WlDataSource</a>) { ... }
+    fn <a href='#method.dnd_finished' class='fnname'>dnd_finished</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_data_source/struct.WlDataSource.html' title='wayland_client::protocol::wl_data_source::WlDataSource'>WlDataSource</a>) { ... }
+    fn <a href='#method.action' class='fnname'>action</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_data_source/struct.WlDataSource.html' title='wayland_client::protocol::wl_data_source::WlDataSource'>WlDataSource</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dnd_action: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) { ... }
+}</pre>
+            <h2 id='provided-methods'>Provided Methods</h2>
+            <div class='methods'>
+        <h3 id='method.target' class='method'><span id='target.v' class='invisible'><code>fn <a href='#method.target' class='fnname'>target</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_data_source/struct.WlDataSource.html' title='wayland_client::protocol::wl_data_source::WlDataSource'>WlDataSource</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mime_type: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;)</code></span></h3><div class='docblock'><p>a target accepts an offered mime type</p>
+
+<p>Sent when a target accepts pointer_focus or motion events.  If
+a target does not accept any of the offered types, type is NULL.</p>
+
+<p>Used for feedback during drag-and-drop.</p>
+</div><h3 id='method.send' class='method'><span id='send.v' class='invisible'><code>fn <a href='#method.send' class='fnname'>send</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_data_source/struct.WlDataSource.html' title='wayland_client::protocol::wl_data_source::WlDataSource'>WlDataSource</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mime_type: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fd: <a class='type' href='https://doc.rust-lang.org/nightly/std/sys/imp/ext/io/type.RawFd.html' title='std::sys::imp::ext::io::RawFd'>RawFd</a>)</code></span></h3><div class='docblock'><p>send the data</p>
+
+<p>Request for data from the client.  Send the data as the
+specified mime type over the passed file descriptor, then
+close it.</p>
+</div><h3 id='method.cancelled' class='method'><span id='cancelled.v' class='invisible'><code>fn <a href='#method.cancelled' class='fnname'>cancelled</a>(&amp;mut self, evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>, proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_data_source/struct.WlDataSource.html' title='wayland_client::protocol::wl_data_source::WlDataSource'>WlDataSource</a>)</code></span></h3><div class='docblock'><p>selection was cancelled</p>
+
+<p>This data source is no longer valid. There are several reasons why
+this could happen:</p>
+
+<ul>
+<li>The data source has been replaced by another data source.</li>
+<li>The drag-and-drop operation was performed, but the drop destination
+did not accept any of the mime types offered through
+wl_data_source.target.</li>
+<li>The drag-and-drop operation was performed, but the drop destination
+did not select any of the actions present in the mask offered through
+wl_data_source.action.</li>
+<li>The drag-and-drop operation was performed but didn&#39;t happen over a
+surface.</li>
+<li>The compositor cancelled the drag-and-drop operation (e.g. compositor
+dependent timeouts to avoid stale drag-and-drop transfers).</li>
+</ul>
+
+<p>The client should clean up and destroy this data source.</p>
+
+<p>For objects of version 2 or older, wl_data_source.cancelled will
+only be emitted if the data source was replaced by another data
+source.</p>
+</div><h3 id='method.dnd_drop_performed' class='method'><span id='dnd_drop_performed.v' class='invisible'><code>fn <a href='#method.dnd_drop_performed' class='fnname'>dnd_drop_performed</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_data_source/struct.WlDataSource.html' title='wayland_client::protocol::wl_data_source::WlDataSource'>WlDataSource</a>)</code></span></h3><div class='docblock'><p>the drag-and-drop operation physically finished</p>
+
+<p>The user performed the drop action. This event does not indicate
+acceptance, wl_data_source.cancelled may still be emitted afterwards
+if the drop destination does not accept any mime type.</p>
+
+<p>However, this event might however not be received if the compositor
+cancelled the drag-and-drop operation before this event could happen.</p>
+
+<p>Note that the data_source may still be used in the future and should
+not be destroyed here.</p>
+</div><h3 id='method.dnd_finished' class='method'><span id='dnd_finished.v' class='invisible'><code>fn <a href='#method.dnd_finished' class='fnname'>dnd_finished</a>(&amp;mut self, evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>, proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_data_source/struct.WlDataSource.html' title='wayland_client::protocol::wl_data_source::WlDataSource'>WlDataSource</a>)</code></span></h3><div class='docblock'><p>the drag-and-drop operation concluded</p>
+
+<p>The drop destination finished interoperating with this data
+source, so the client is now free to destroy this data source and
+free all associated data.</p>
+
+<p>If the action used to perform the operation was &quot;move&quot;, the
+source can now delete the transferred data.</p>
+</div><h3 id='method.action' class='method'><span id='action.v' class='invisible'><code>fn <a href='#method.action' class='fnname'>action</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_data_source/struct.WlDataSource.html' title='wayland_client::protocol::wl_data_source::WlDataSource'>WlDataSource</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dnd_action: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>)</code></span></h3><div class='docblock'><p>notify the selected action</p>
+
+<p>This event indicates the action selected by the compositor after
+matching the source/destination side actions. Only one action (or
+none) will be offered here.</p>
+
+<p>This event can be emitted multiple times during the drag-and-drop
+operation, mainly in response to destination side changes through
+wl_data_offer.set_actions, and as the data device enters/leaves
+surfaces.</p>
+
+<p>It is only possible to receive this event after
+wl_data_source.dnd_drop_performed if the drag-and-drop operation
+ended in an &quot;ask&quot; action, in which case the final wl_data_source.action
+event will happen immediately before wl_data_source.dnd_finished.</p>
+
+<p>Compositors may also change the selected action on the fly, mainly
+in response to keyboard modifier changes during the drag-and-drop
+operation.</p>
+
+<p>The most recent action received is always the valid one. The chosen
+action may change alongside negotiation (e.g. an &quot;ask&quot; action can turn
+into a &quot;move&quot; operation), so the effects of the final action must
+always be applied in wl_data_offer.dnd_finished.</p>
+
+<p>Clients can trigger cursor surface changes from this point, so
+they reflect the current action.</p>
+</div></div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    </ul><script type="text/javascript" async
+                         src="../../../implementors/wayland_client/protocol/wl_data_source/trait.Handler.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "wayland_client";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

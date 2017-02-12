@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Buffer` trait in crate `gfx_core`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Buffer">
+
+    <title>gfx_core::command::Buffer - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>gfx_core</a>::<wbr><a href='index.html'>command</a></p><script>window.sidebarCurrent = {name: 'Buffer', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>gfx_core</a>::<wbr><a href='index.html'>command</a>::<wbr><a class='trait' href=''>Buffer</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/gfx_core/command.rs.html#38-82' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait Buffer&lt;R:&nbsp;<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>Resources</a>&gt; {
+    fn <a href='#tymethod.reset' class='fnname'>reset</a>(&amp;mut self);
+    fn <a href='#tymethod.bind_pipeline_state' class='fnname'>bind_pipeline_state</a>(&amp;mut self, _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>PipelineStateObject</a>);
+    fn <a href='#tymethod.bind_vertex_buffers' class='fnname'>bind_vertex_buffers</a>(&amp;mut self, _: <a class='struct' href='../../gfx_core/pso/struct.VertexBufferSet.html' title='gfx_core::pso::VertexBufferSet'>VertexBufferSet</a>&lt;R&gt;);
+    fn <a href='#tymethod.bind_constant_buffers' class='fnname'>bind_constant_buffers</a>(&amp;mut self, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../../gfx_core/pso/struct.ConstantBufferParam.html' title='gfx_core::pso::ConstantBufferParam'>ConstantBufferParam</a>&lt;R&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>);
+    fn <a href='#tymethod.bind_global_constant' class='fnname'>bind_global_constant</a>(&amp;mut self, _: <a class='type' href='../../gfx_core/shade/type.Location.html' title='gfx_core::shade::Location'>Location</a>, _: <a class='enum' href='../../gfx_core/shade/enum.UniformValue.html' title='gfx_core::shade::UniformValue'>UniformValue</a>);
+    fn <a href='#tymethod.bind_resource_views' class='fnname'>bind_resource_views</a>(&amp;mut self, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../../gfx_core/pso/struct.ResourceViewParam.html' title='gfx_core::pso::ResourceViewParam'>ResourceViewParam</a>&lt;R&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>);
+    fn <a href='#tymethod.bind_unordered_views' class='fnname'>bind_unordered_views</a>(&amp;mut self, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../../gfx_core/pso/struct.UnorderedViewParam.html' title='gfx_core::pso::UnorderedViewParam'>UnorderedViewParam</a>&lt;R&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>);
+    fn <a href='#tymethod.bind_samplers' class='fnname'>bind_samplers</a>(&amp;mut self, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../../gfx_core/pso/struct.SamplerParam.html' title='gfx_core::pso::SamplerParam'>SamplerParam</a>&lt;R&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>);
+    fn <a href='#tymethod.bind_pixel_targets' class='fnname'>bind_pixel_targets</a>(&amp;mut self, _: <a class='struct' href='../../gfx_core/pso/struct.PixelTargetSet.html' title='gfx_core::pso::PixelTargetSet'>PixelTargetSet</a>&lt;R&gt;);
+    fn <a href='#tymethod.bind_index' class='fnname'>bind_index</a>(&amp;mut self, _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>Buffer</a>, _: <a class='enum' href='../../gfx_core/enum.IndexType.html' title='gfx_core::IndexType'>IndexType</a>);
+    fn <a href='#tymethod.set_scissor' class='fnname'>set_scissor</a>(&amp;mut self, _: <a class='struct' href='../../gfx_core/target/struct.Rect.html' title='gfx_core::target::Rect'>Rect</a>);
+    fn <a href='#tymethod.set_ref_values' class='fnname'>set_ref_values</a>(&amp;mut self, _: <a class='struct' href='../../gfx_core/state/struct.RefValues.html' title='gfx_core::state::RefValues'>RefValues</a>);
+    fn <a href='#tymethod.copy_buffer' class='fnname'>copy_buffer</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; src: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>Buffer</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dst: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>Buffer</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; src_offset_bytes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dst_offset_bytes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; size_bytes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>);
+    fn <a href='#tymethod.update_buffer' class='fnname'>update_buffer</a>(&amp;mut self, _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>Buffer</a>, data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, offset: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>);
+    fn <a href='#tymethod.update_texture' class='fnname'>update_texture</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>Texture</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='enum' href='../../gfx_core/texture/enum.Kind.html' title='gfx_core::texture::Kind'>Kind</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../../gfx_core/texture/enum.CubeFace.html' title='gfx_core::texture::CubeFace'>CubeFace</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='type' href='../../gfx_core/texture/type.RawImageInfo.html' title='gfx_core::texture::RawImageInfo'>RawImageInfo</a>);
+    fn <a href='#tymethod.generate_mipmap' class='fnname'>generate_mipmap</a>(&amp;mut self, _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>ShaderResourceView</a>);
+    fn <a href='#tymethod.clear_color' class='fnname'>clear_color</a>(&amp;mut self, _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>RenderTargetView</a>, _: <a class='enum' href='../../gfx_core/command/enum.ClearColor.html' title='gfx_core::command::ClearColor'>ClearColor</a>);
+    fn <a href='#tymethod.clear_depth_stencil' class='fnname'>clear_depth_stencil</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>DepthStencilView</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../../gfx_core/target/type.Depth.html' title='gfx_core::target::Depth'>Depth</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../../gfx_core/target/type.Stencil.html' title='gfx_core::target::Stencil'>Stencil</a>&gt;);
+    fn <a href='#tymethod.call_draw' class='fnname'>call_draw</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='type' href='../../gfx_core/type.VertexCount.html' title='gfx_core::VertexCount'>VertexCount</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='type' href='../../gfx_core/type.VertexCount.html' title='gfx_core::VertexCount'>VertexCount</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../../gfx_core/command/type.InstanceParams.html' title='gfx_core::command::InstanceParams'>InstanceParams</a>&gt;);
+    fn <a href='#tymethod.call_draw_indexed' class='fnname'>call_draw_indexed</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='type' href='../../gfx_core/type.VertexCount.html' title='gfx_core::VertexCount'>VertexCount</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='type' href='../../gfx_core/type.VertexCount.html' title='gfx_core::VertexCount'>VertexCount</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='type' href='../../gfx_core/type.VertexCount.html' title='gfx_core::VertexCount'>VertexCount</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../../gfx_core/command/type.InstanceParams.html' title='gfx_core::command::InstanceParams'>InstanceParams</a>&gt;);
+}</pre><div class='docblock'><p>An interface of the abstract command buffer. It collects commands in an
+efficient API-specific manner, to be ready for execution on the device.</p>
+</div>
+            <h2 id='required-methods'>Required Methods</h2>
+            <div class='methods'>
+        <h3 id='tymethod.reset' class='method'><span id='reset.v' class='invisible'><code>fn <a href='#tymethod.reset' class='fnname'>reset</a>(&amp;mut self)</code></span></h3><div class='docblock'><p>Reset the command buffer contents, retain the allocated storage</p>
+</div><h3 id='tymethod.bind_pipeline_state' class='method'><span id='bind_pipeline_state.v' class='invisible'><code>fn <a href='#tymethod.bind_pipeline_state' class='fnname'>bind_pipeline_state</a>(&amp;mut self, _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>PipelineStateObject</a>)</code></span></h3><div class='docblock'><p>Bind a pipeline state object</p>
+</div><h3 id='tymethod.bind_vertex_buffers' class='method'><span id='bind_vertex_buffers.v' class='invisible'><code>fn <a href='#tymethod.bind_vertex_buffers' class='fnname'>bind_vertex_buffers</a>(&amp;mut self, _: <a class='struct' href='../../gfx_core/pso/struct.VertexBufferSet.html' title='gfx_core::pso::VertexBufferSet'>VertexBufferSet</a>&lt;R&gt;)</code></span></h3><div class='docblock'><p>Bind a complete set of vertex buffers</p>
+</div><h3 id='tymethod.bind_constant_buffers' class='method'><span id='bind_constant_buffers.v' class='invisible'><code>fn <a href='#tymethod.bind_constant_buffers' class='fnname'>bind_constant_buffers</a>(&amp;mut self, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../../gfx_core/pso/struct.ConstantBufferParam.html' title='gfx_core::pso::ConstantBufferParam'>ConstantBufferParam</a>&lt;R&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></span></h3><div class='docblock'><p>Bind a complete set of constant buffers</p>
+</div><h3 id='tymethod.bind_global_constant' class='method'><span id='bind_global_constant.v' class='invisible'><code>fn <a href='#tymethod.bind_global_constant' class='fnname'>bind_global_constant</a>(&amp;mut self, _: <a class='type' href='../../gfx_core/shade/type.Location.html' title='gfx_core::shade::Location'>Location</a>, _: <a class='enum' href='../../gfx_core/shade/enum.UniformValue.html' title='gfx_core::shade::UniformValue'>UniformValue</a>)</code></span></h3><div class='docblock'><p>Bind a global constant</p>
+</div><h3 id='tymethod.bind_resource_views' class='method'><span id='bind_resource_views.v' class='invisible'><code>fn <a href='#tymethod.bind_resource_views' class='fnname'>bind_resource_views</a>(&amp;mut self, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../../gfx_core/pso/struct.ResourceViewParam.html' title='gfx_core::pso::ResourceViewParam'>ResourceViewParam</a>&lt;R&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></span></h3><div class='docblock'><p>Bind a complete set of shader resource views</p>
+</div><h3 id='tymethod.bind_unordered_views' class='method'><span id='bind_unordered_views.v' class='invisible'><code>fn <a href='#tymethod.bind_unordered_views' class='fnname'>bind_unordered_views</a>(&amp;mut self, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../../gfx_core/pso/struct.UnorderedViewParam.html' title='gfx_core::pso::UnorderedViewParam'>UnorderedViewParam</a>&lt;R&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></span></h3><div class='docblock'><p>Bind a complete set of unordered access views</p>
+</div><h3 id='tymethod.bind_samplers' class='method'><span id='bind_samplers.v' class='invisible'><code>fn <a href='#tymethod.bind_samplers' class='fnname'>bind_samplers</a>(&amp;mut self, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../../gfx_core/pso/struct.SamplerParam.html' title='gfx_core::pso::SamplerParam'>SamplerParam</a>&lt;R&gt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></span></h3><div class='docblock'><p>Bind a complete set of samplers</p>
+</div><h3 id='tymethod.bind_pixel_targets' class='method'><span id='bind_pixel_targets.v' class='invisible'><code>fn <a href='#tymethod.bind_pixel_targets' class='fnname'>bind_pixel_targets</a>(&amp;mut self, _: <a class='struct' href='../../gfx_core/pso/struct.PixelTargetSet.html' title='gfx_core::pso::PixelTargetSet'>PixelTargetSet</a>&lt;R&gt;)</code></span></h3><div class='docblock'><p>Bind a complete set of pixel targets, including multiple
+colors views and an optional depth/stencil view.</p>
+</div><h3 id='tymethod.bind_index' class='method'><span id='bind_index.v' class='invisible'><code>fn <a href='#tymethod.bind_index' class='fnname'>bind_index</a>(&amp;mut self, _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>Buffer</a>, _: <a class='enum' href='../../gfx_core/enum.IndexType.html' title='gfx_core::IndexType'>IndexType</a>)</code></span></h3><div class='docblock'><p>Bind an index buffer</p>
+</div><h3 id='tymethod.set_scissor' class='method'><span id='set_scissor.v' class='invisible'><code>fn <a href='#tymethod.set_scissor' class='fnname'>set_scissor</a>(&amp;mut self, _: <a class='struct' href='../../gfx_core/target/struct.Rect.html' title='gfx_core::target::Rect'>Rect</a>)</code></span></h3><div class='docblock'><p>Set scissor rectangle</p>
+</div><h3 id='tymethod.set_ref_values' class='method'><span id='set_ref_values.v' class='invisible'><code>fn <a href='#tymethod.set_ref_values' class='fnname'>set_ref_values</a>(&amp;mut self, _: <a class='struct' href='../../gfx_core/state/struct.RefValues.html' title='gfx_core::state::RefValues'>RefValues</a>)</code></span></h3><div class='docblock'><p>Set reference values for the blending and stencil front/back</p>
+</div><h3 id='tymethod.copy_buffer' class='method'><span id='copy_buffer.v' class='invisible'><code>fn <a href='#tymethod.copy_buffer' class='fnname'>copy_buffer</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; src: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>Buffer</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dst: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>Buffer</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; src_offset_bytes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dst_offset_bytes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; size_bytes: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></span></h3><div class='docblock'><p>Copy part of a buffer to another</p>
+</div><h3 id='tymethod.update_buffer' class='method'><span id='update_buffer.v' class='invisible'><code>fn <a href='#tymethod.update_buffer' class='fnname'>update_buffer</a>(&amp;mut self, _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>Buffer</a>, data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, offset: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></span></h3><div class='docblock'><p>Update a vertex/index/uniform buffer</p>
+</div><h3 id='tymethod.update_texture' class='method'><span id='update_texture.v' class='invisible'><code>fn <a href='#tymethod.update_texture' class='fnname'>update_texture</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>Texture</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='enum' href='../../gfx_core/texture/enum.Kind.html' title='gfx_core::texture::Kind'>Kind</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../../gfx_core/texture/enum.CubeFace.html' title='gfx_core::texture::CubeFace'>CubeFace</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='type' href='../../gfx_core/texture/type.RawImageInfo.html' title='gfx_core::texture::RawImageInfo'>RawImageInfo</a>)</code></span></h3><div class='docblock'><p>Update a texture</p>
+</div><h3 id='tymethod.generate_mipmap' class='method'><span id='generate_mipmap.v' class='invisible'><code>fn <a href='#tymethod.generate_mipmap' class='fnname'>generate_mipmap</a>(&amp;mut self, _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>ShaderResourceView</a>)</code></span></h3><h3 id='tymethod.clear_color' class='method'><span id='clear_color.v' class='invisible'><code>fn <a href='#tymethod.clear_color' class='fnname'>clear_color</a>(&amp;mut self, _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>RenderTargetView</a>, _: <a class='enum' href='../../gfx_core/command/enum.ClearColor.html' title='gfx_core::command::ClearColor'>ClearColor</a>)</code></span></h3><div class='docblock'><p>Clear color target</p>
+</div><h3 id='tymethod.clear_depth_stencil' class='method'><span id='clear_depth_stencil.v' class='invisible'><code>fn <a href='#tymethod.clear_depth_stencil' class='fnname'>clear_depth_stencil</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: R::<a class='trait' href='../../gfx_core/trait.Resources.html' title='gfx_core::Resources'>DepthStencilView</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../../gfx_core/target/type.Depth.html' title='gfx_core::target::Depth'>Depth</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../../gfx_core/target/type.Stencil.html' title='gfx_core::target::Stencil'>Stencil</a>&gt;)</code></span></h3><h3 id='tymethod.call_draw' class='method'><span id='call_draw.v' class='invisible'><code>fn <a href='#tymethod.call_draw' class='fnname'>call_draw</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='type' href='../../gfx_core/type.VertexCount.html' title='gfx_core::VertexCount'>VertexCount</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='type' href='../../gfx_core/type.VertexCount.html' title='gfx_core::VertexCount'>VertexCount</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../../gfx_core/command/type.InstanceParams.html' title='gfx_core::command::InstanceParams'>InstanceParams</a>&gt;)</code></span></h3><div class='docblock'><p>Draw a primitive</p>
+</div><h3 id='tymethod.call_draw_indexed' class='method'><span id='call_draw_indexed.v' class='invisible'><code>fn <a href='#tymethod.call_draw_indexed' class='fnname'>call_draw_indexed</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='type' href='../../gfx_core/type.VertexCount.html' title='gfx_core::VertexCount'>VertexCount</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='type' href='../../gfx_core/type.VertexCount.html' title='gfx_core::VertexCount'>VertexCount</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='type' href='../../gfx_core/type.VertexCount.html' title='gfx_core::VertexCount'>VertexCount</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../../gfx_core/command/type.InstanceParams.html' title='gfx_core::command::InstanceParams'>InstanceParams</a>&gt;)</code></span></h3><div class='docblock'><p>Draw a primitive with index buffer</p>
+</div></div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><code>impl Buffer&lt;<a class='enum' href='../../gfx_core/dummy/enum.DummyResources.html' title='gfx_core::dummy::DummyResources'>DummyResources</a>&gt; for <a class='struct' href='../../gfx_core/dummy/struct.DummyCommandBuffer.html' title='gfx_core::dummy::DummyCommandBuffer'>DummyCommandBuffer</a></code></li>
+</ul><script type="text/javascript" async
+                         src="../../implementors/gfx_core/command/trait.Buffer.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "gfx_core";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

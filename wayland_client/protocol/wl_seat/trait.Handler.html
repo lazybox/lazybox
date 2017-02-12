@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Handler` trait in crate `wayland_client`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Handler">
+
+    <title>wayland_client::protocol::wl_seat::Handler - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>wayland_client</a>::<wbr><a href='../index.html'>protocol</a>::<wbr><a href='index.html'>wl_seat</a></p><script>window.sidebarCurrent = {name: 'Handler', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../../index.html'>wayland_client</a>::<wbr><a href='../index.html'>protocol</a>::<wbr><a href='index.html'>wl_seat</a>::<wbr><a class='trait' href=''>Handler</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/wayland_client/home/travis/build/lazybox/lazybox/target/debug/build/wayland-client-0bd58f00e900cc20/out/wayland_api.rs.html#2557-2606' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait Handler {
+    fn <a href='#method.capabilities' class='fnname'>capabilities</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_seat/struct.WlSeat.html' title='wayland_client::protocol::wl_seat::WlSeat'>WlSeat</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; capabilities: <a class='struct' href='../../../wayland_client/protocol/wl_seat/struct.Capability.html' title='wayland_client::protocol::wl_seat::Capability'>Capability</a>) { ... }
+    fn <a href='#method.name' class='fnname'>name</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_seat/struct.WlSeat.html' title='wayland_client::protocol::wl_seat::WlSeat'>WlSeat</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>) { ... }
+}</pre>
+            <h2 id='provided-methods'>Provided Methods</h2>
+            <div class='methods'>
+        <h3 id='method.capabilities' class='method'><span id='capabilities.v' class='invisible'><code>fn <a href='#method.capabilities' class='fnname'>capabilities</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_seat/struct.WlSeat.html' title='wayland_client::protocol::wl_seat::WlSeat'>WlSeat</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; capabilities: <a class='struct' href='../../../wayland_client/protocol/wl_seat/struct.Capability.html' title='wayland_client::protocol::wl_seat::Capability'>Capability</a>)</code></span></h3><div class='docblock'><p>seat capabilities changed</p>
+
+<p>This is emitted whenever a seat gains or loses the pointer,
+keyboard or touch capabilities.  The argument is a capability
+enum containing the complete set of capabilities this seat has.</p>
+
+<p>When the pointer capability is added, a client may create a
+wl_pointer object using the wl_seat.get_pointer request. This object
+will receive pointer events until the capability is removed in the
+future.</p>
+
+<p>When the pointer capability is removed, a client should destroy the
+wl_pointer objects associated with the seat where the capability was
+removed, using the wl_pointer.release request. No further pointer
+events will be received on these objects.</p>
+
+<p>In some compositors, if a seat regains the pointer capability and a
+client has a previously obtained wl_pointer object of version 4 or
+less, that object may start sending pointer events again. This
+behavior is considered a misinterpretation of the intended behavior
+and must not be relied upon by the client. wl_pointer objects of
+version 5 or later must not send events if created before the most
+recent event notifying the client of an added pointer capability.</p>
+
+<p>The above behavior also applies to wl_keyboard and wl_touch with the
+keyboard and touch capabilities, respectively.</p>
+</div><h3 id='method.name' class='method'><span id='name.v' class='invisible'><code>fn <a href='#method.name' class='fnname'>name</a>(&amp;mut self, evqh: &amp;mut <a class='struct' href='../../../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>, proxy: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_seat/struct.WlSeat.html' title='wayland_client::protocol::wl_seat::WlSeat'>WlSeat</a>, name: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>)</code></span></h3><div class='docblock'><p>unique identifier for this seat</p>
+
+<p>In a multiseat configuration this can be used by the client to help
+identify which physical devices the seat represents. Based on
+the seat configuration used by the compositor.</p>
+</div></div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    </ul><script type="text/javascript" async
+                         src="../../../implementors/wayland_client/protocol/wl_seat/trait.Handler.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "wayland_client";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `VertexBufferCommon` struct in crate `gfx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, VertexBufferCommon">
+
+    <title>gfx::pso::buffer::VertexBufferCommon - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>gfx</a>::<wbr><a href='../index.html'>pso</a>::<wbr><a href='index.html'>buffer</a></p><script>window.sidebarCurrent = {name: 'VertexBufferCommon', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>gfx</a>::<wbr><a href='../index.html'>pso</a>::<wbr><a href='index.html'>buffer</a>::<wbr><a class='struct' href=''>VertexBufferCommon</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/gfx/pso/buffer.rs.html#36' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct VertexBufferCommon&lt;T, I&gt;(_, _);</pre><div class='docblock'><p>Service struct to simplify the implementations of <code>VertexBuffer</code> and <code>InstanceBuffer</code>.</p>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a, T:&nbsp;<a class='trait' href='../../../gfx/pso/buffer/trait.Structure.html' title='gfx::pso::buffer::Structure'>Structure</a>&lt;<a class='struct' href='../../../gfx/format/struct.Format.html' title='gfx::format::Format'>Format</a>&gt;, I:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a>&gt; <a class='trait' href='../../../gfx/pso/trait.DataLink.html' title='gfx::pso::DataLink'>DataLink</a>&lt;'a&gt; for <a class='struct' href='../../../gfx/pso/buffer/struct.VertexBufferCommon.html' title='gfx::pso::buffer::VertexBufferCommon'>VertexBufferCommon</a>&lt;T, I&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/gfx/pso/buffer.rs.html#72-99' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Init' class='type'><span id='Init.t' class='invisible'><code>type <a href='../../../gfx/pso/trait.DataLink.html#associatedtype.Init' class='type'>Init</a> = <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a></code></span></h4>
+<div class='docblock'><p>The assotiated &quot;init&quot; type - a member of the PSO &quot;init&quot; struct.</p>
+</div><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataLink.html#tymethod.new' class='fnname'>new</a>() -&gt; Self</code></span></h4>
+<div class='docblock'><p>Create a new empty data link.</p>
+</div><h4 id='method.is_active' class='method'><span id='is_active.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataLink.html#tymethod.is_active' class='fnname'>is_active</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>Check if this link is actually used by the shader.</p>
+</div><h4 id='method.link_vertex_buffer' class='method'><span id='link_vertex_buffer.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataLink.html#method.link_vertex_buffer' class='fnname'>link_vertex_buffer</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; index: <a class='type' href='../../../gfx/pso/buffer/type.BufferIndex.html' title='gfx::pso::buffer::BufferIndex'>BufferIndex</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;Self::<a class='trait' href='../../../gfx/pso/trait.DataLink.html' title='gfx::pso::DataLink'>Init</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../../gfx_core/pso/struct.VertexBufferDesc.html' title='gfx_core::pso::VertexBufferDesc'>VertexBufferDesc</a>&gt;</code></span></h4>
+<div class='docblock'><p>Attempt to link with a vertex buffer containing multiple attributes.</p>
+</div><h4 id='method.link_input' class='method'><span id='link_input.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataLink.html#method.link_input' class='fnname'>link_input</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; at: &amp;<a class='struct' href='../../../gfx/shade/core/struct.AttributeVar.html' title='gfx::shade::core::AttributeVar'>AttributeVar</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;Self::<a class='trait' href='../../../gfx/pso/trait.DataLink.html' title='gfx::pso::DataLink'>Init</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='type' href='../../../gfx_core/pso/type.AttributeDesc.html' title='gfx_core::pso::AttributeDesc'>AttributeDesc</a>, <a class='struct' href='../../../gfx/format/struct.Format.html' title='gfx::format::Format'>Format</a>&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Attempt to link with a vertex attribute.</p>
+</div><h4 id='method.link_constant_buffer' class='method'><span id='link_constant_buffer.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataLink.html#method.link_constant_buffer' class='fnname'>link_constant_buffer</a>&lt;'b&gt;(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;'b <a class='struct' href='../../../gfx/shade/core/struct.ConstantBufferVar.html' title='gfx::shade::core::ConstantBufferVar'>ConstantBufferVar</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;Self::<a class='trait' href='../../../gfx/pso/trait.DataLink.html' title='gfx::pso::DataLink'>Init</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='type' href='../../../gfx_core/pso/type.ConstantBufferDesc.html' title='gfx_core::pso::ConstantBufferDesc'>ConstantBufferDesc</a>, <a class='enum' href='../../../gfx/pso/enum.ElementError.html' title='gfx::pso::ElementError'>ElementError</a>&lt;&amp;'b <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Attempt to link with a constant buffer.</p>
+</div><h4 id='method.link_global_constant' class='method'><span id='link_global_constant.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataLink.html#method.link_global_constant' class='fnname'>link_global_constant</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;<a class='struct' href='../../../gfx/shade/core/struct.ConstVar.html' title='gfx::shade::core::ConstVar'>ConstVar</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;Self::<a class='trait' href='../../../gfx/pso/trait.DataLink.html' title='gfx::pso::DataLink'>Init</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='enum' href='../../../gfx/shade/core/enum.UniformValue.html' title='gfx::shade::core::UniformValue'>UniformValue</a>&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Attempt to link with a global constant.</p>
+</div><h4 id='method.link_output' class='method'><span id='link_output.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataLink.html#method.link_output' class='fnname'>link_output</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;<a class='struct' href='../../../gfx/shade/core/struct.OutputVar.html' title='gfx::shade::core::OutputVar'>OutputVar</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;Self::<a class='trait' href='../../../gfx/pso/trait.DataLink.html' title='gfx::pso::DataLink'>Init</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='type' href='../../../gfx_core/pso/type.ColorTargetDesc.html' title='gfx_core::pso::ColorTargetDesc'>ColorTargetDesc</a>, <a class='struct' href='../../../gfx/format/struct.Format.html' title='gfx::format::Format'>Format</a>&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Attempt to link with an output render target (RTV).</p>
+</div><h4 id='method.link_depth_stencil' class='method'><span id='link_depth_stencil.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataLink.html#method.link_depth_stencil' class='fnname'>link_depth_stencil</a>(&amp;mut self, _: &amp;Self::<a class='trait' href='../../../gfx/pso/trait.DataLink.html' title='gfx::pso::DataLink'>Init</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../../../gfx_core/pso/type.DepthStencilDesc.html' title='gfx_core::pso::DepthStencilDesc'>DepthStencilDesc</a>&gt;</code></span></h4>
+<div class='docblock'><p>Attempt to link with a depth-stencil target (DSV).</p>
+</div><h4 id='method.link_resource_view' class='method'><span id='link_resource_view.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataLink.html#method.link_resource_view' class='fnname'>link_resource_view</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;<a class='struct' href='../../../gfx/shade/core/struct.TextureVar.html' title='gfx::shade::core::TextureVar'>TextureVar</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;Self::<a class='trait' href='../../../gfx/pso/trait.DataLink.html' title='gfx::pso::DataLink'>Init</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='type' href='../../../gfx_core/pso/type.ResourceViewDesc.html' title='gfx_core::pso::ResourceViewDesc'>ResourceViewDesc</a>, <a class='struct' href='../../../gfx/format/struct.Format.html' title='gfx::format::Format'>Format</a>&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Attempt to link with a shader resource (SRV).</p>
+</div><h4 id='method.link_unordered_view' class='method'><span id='link_unordered_view.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataLink.html#method.link_unordered_view' class='fnname'>link_unordered_view</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;<a class='struct' href='../../../gfx/shade/core/struct.UnorderedVar.html' title='gfx::shade::core::UnorderedVar'>UnorderedVar</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;Self::<a class='trait' href='../../../gfx/pso/trait.DataLink.html' title='gfx::pso::DataLink'>Init</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='type' href='../../../gfx_core/pso/type.UnorderedViewDesc.html' title='gfx_core::pso::UnorderedViewDesc'>UnorderedViewDesc</a>, <a class='struct' href='../../../gfx/format/struct.Format.html' title='gfx::format::Format'>Format</a>&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Attempt to link with an unordered access (UAV).</p>
+</div><h4 id='method.link_sampler' class='method'><span id='link_sampler.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataLink.html#method.link_sampler' class='fnname'>link_sampler</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;<a class='struct' href='../../../gfx/shade/core/struct.SamplerVar.html' title='gfx::shade::core::SamplerVar'>SamplerVar</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _: &amp;Self::<a class='trait' href='../../../gfx/pso/trait.DataLink.html' title='gfx::pso::DataLink'>Init</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../../../gfx_core/pso/type.SamplerDesc.html' title='gfx_core::pso::SamplerDesc'>SamplerDesc</a>&gt;</code></span></h4>
+<div class='docblock'><p>Attempt to link with a sampler.</p>
+</div><h4 id='method.link_scissor' class='method'><span id='link_scissor.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataLink.html#method.link_scissor' class='fnname'>link_scissor</a>(&amp;mut self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>Attempt to enable scissor test.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class='trait' href='../../../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a>, T, I&gt; <a class='trait' href='../../../gfx/pso/trait.DataBind.html' title='gfx::pso::DataBind'>DataBind</a>&lt;R&gt; for <a class='struct' href='../../../gfx/pso/buffer/struct.VertexBufferCommon.html' title='gfx::pso::buffer::VertexBufferCommon'>VertexBufferCommon</a>&lt;T, I&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/gfx/pso/buffer.rs.html#101-110' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Data' class='type'><span id='Data.t' class='invisible'><code>type <a href='../../../gfx/pso/trait.DataBind.html#associatedtype.Data' class='type'>Data</a> = <a class='struct' href='../../../gfx/handle/struct.Buffer.html' title='gfx::handle::Buffer'>Buffer</a>&lt;R, T&gt;</code></span></h4>
+<div class='docblock'><p>The associated &quot;data&quot; type - a member of the PSO &quot;data&quot; struct.</p>
+</div><h4 id='method.bind_to' class='method'><span id='bind_to.v' class='invisible'><code>fn <a href='../../../gfx/pso/trait.DataBind.html#tymethod.bind_to' class='fnname'>bind_to</a>(&amp;self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out: &amp;mut <a class='struct' href='../../../gfx/pso/struct.RawDataSet.html' title='gfx::pso::RawDataSet'>RawDataSet</a>&lt;R&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data: &amp;Self::<a class='trait' href='../../../gfx/pso/trait.DataBind.html' title='gfx::pso::DataBind'>Data</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; man: &amp;mut <a class='struct' href='../../../gfx/handle/struct.Manager.html' title='gfx::handle::Manager'>Manager</a>&lt;R&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; access: &amp;mut AccessInfo&lt;R&gt;)</code></span></h4>
+<div class='docblock'><p>Dump the given data into the raw data set.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "gfx";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

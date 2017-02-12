@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Iter",""],["IterMut",""],["Packed","A `Storage` that hold its values in a contiguous vector."]]});

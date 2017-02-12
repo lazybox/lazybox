@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["camera",""],["color","All colors are linear RGBA"],["combined","Combined renderers"],["layer",""],["lights",""],["specialized","Specialized renderers"],["sprites",""],["texture",""],["types","type aliases"]],"struct":[["Frame",""],["Graphics",""]]});

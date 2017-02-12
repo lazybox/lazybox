@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Device` trait in crate `gfx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Device">
+
+    <title>gfx::Device - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>gfx</a></p><script>window.sidebarCurrent = {name: 'Device', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>gfx</a>::<wbr><a class='trait' href=''>Device</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/gfx_core/lib.rs.html#189-220' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait Device {
+    type <a href='#associatedtype.Resources' class='type'>Resources</a>: <a class='trait' href='../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a>;
+    type <a href='#associatedtype.CommandBuffer' class='type'>CommandBuffer</a>: <a class='trait' href='../gfx/trait.CommandBuffer.html' title='gfx::CommandBuffer'>Buffer</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;;
+    fn <a href='#tymethod.get_capabilities' class='fnname'>get_capabilities</a>(&amp;self) -&gt; &amp;<a class='struct' href='../gfx_core/struct.Capabilities.html' title='gfx_core::Capabilities'>Capabilities</a>;
+    fn <a href='#tymethod.pin_submitted_resources' class='fnname'>pin_submitted_resources</a>(&amp;mut self, &amp;<a class='struct' href='../gfx/handle/struct.Manager.html' title='gfx::handle::Manager'>Manager</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;);
+    fn <a href='#tymethod.submit' class='fnname'>submit</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp;mut Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>CommandBuffer</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; access: &amp;<a class='struct' href='../gfx_core/pso/struct.AccessInfo.html' title='gfx_core::pso::AccessInfo'>AccessInfo</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;);
+    fn <a href='#tymethod.fenced_submit' class='fnname'>fenced_submit</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp;mut Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>CommandBuffer</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; access: &amp;<a class='struct' href='../gfx_core/pso/struct.AccessInfo.html' title='gfx_core::pso::AccessInfo'>AccessInfo</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; after: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gfx/handle/struct.Fence.html' title='gfx::handle::Fence'>Fence</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='struct' href='../gfx/handle/struct.Fence.html' title='gfx::handle::Fence'>Fence</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;;
+    fn <a href='#tymethod.wait_fence' class='fnname'>wait_fence</a>(&amp;mut self, &amp;<a class='struct' href='../gfx/handle/struct.Fence.html' title='gfx::handle::Fence'>Fence</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;);
+    fn <a href='#tymethod.cleanup' class='fnname'>cleanup</a>(&amp;mut self);
+}</pre><div class='docblock'><p>A <code>Device</code> is responsible for submitting <code>CommandBuffer</code>s to the GPU.</p>
+</div>
+            <h2 id='associated-types'>Associated Types</h2>
+            <div class='methods'>
+        <h3 id='associatedtype.Resources' class='method'><span id='Resources.t' class='invisible'><code>type <a href='#associatedtype.Resources' class='type'>Resources</a>: <a class='trait' href='../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a></code></span></h3><div class='docblock'><p>Associated <code>Resources</code> type.</p>
+</div><h3 id='associatedtype.CommandBuffer' class='method'><span id='CommandBuffer.t' class='invisible'><code>type <a href='#associatedtype.CommandBuffer' class='type'>CommandBuffer</a>: <a class='trait' href='../gfx/trait.CommandBuffer.html' title='gfx::CommandBuffer'>Buffer</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;</code></span></h3><div class='docblock'><p>Associated <code>CommandBuffer</code> type. Every <code>Device</code> type can only work with one <code>CommandBuffer</code>
+type.</p>
+</div></div>
+            <h2 id='required-methods'>Required Methods</h2>
+            <div class='methods'>
+        <h3 id='tymethod.get_capabilities' class='method'><span id='get_capabilities.v' class='invisible'><code>fn <a href='#tymethod.get_capabilities' class='fnname'>get_capabilities</a>(&amp;self) -&gt; &amp;<a class='struct' href='../gfx_core/struct.Capabilities.html' title='gfx_core::Capabilities'>Capabilities</a></code></span></h3><div class='docblock'><p>Returns the capabilities of this <code>Ðevice</code>.</p>
+</div><h3 id='tymethod.pin_submitted_resources' class='method'><span id='pin_submitted_resources.v' class='invisible'><code>fn <a href='#tymethod.pin_submitted_resources' class='fnname'>pin_submitted_resources</a>(&amp;mut self, &amp;<a class='struct' href='../gfx/handle/struct.Manager.html' title='gfx::handle::Manager'>Manager</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;)</code></span></h3><div class='docblock'><p>Pin everything from this handle manager to live for a frame.</p>
+</div><h3 id='tymethod.submit' class='method'><span id='submit.v' class='invisible'><code>fn <a href='#tymethod.submit' class='fnname'>submit</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp;mut Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>CommandBuffer</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; access: &amp;<a class='struct' href='../gfx_core/pso/struct.AccessInfo.html' title='gfx_core::pso::AccessInfo'>AccessInfo</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;)</code></span></h3><div class='docblock'><p>Submits a <code>CommandBuffer</code> to the GPU for execution.</p>
+</div><h3 id='tymethod.fenced_submit' class='method'><span id='fenced_submit.v' class='invisible'><code>fn <a href='#tymethod.fenced_submit' class='fnname'>fenced_submit</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp;mut Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>CommandBuffer</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; access: &amp;<a class='struct' href='../gfx_core/pso/struct.AccessInfo.html' title='gfx_core::pso::AccessInfo'>AccessInfo</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; after: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../gfx/handle/struct.Fence.html' title='gfx::handle::Fence'>Fence</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='struct' href='../gfx/handle/struct.Fence.html' title='gfx::handle::Fence'>Fence</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;</code></span></h3><div class='docblock'><p>Submits a <code>CommandBuffer</code> to the GPU for execution.
+returns a fence that is signaled after the GPU has executed all commands</p>
+</div><h3 id='tymethod.wait_fence' class='method'><span id='wait_fence.v' class='invisible'><code>fn <a href='#tymethod.wait_fence' class='fnname'>wait_fence</a>(&amp;mut self, &amp;<a class='struct' href='../gfx/handle/struct.Fence.html' title='gfx::handle::Fence'>Fence</a>&lt;Self::<a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Resources</a>&gt;)</code></span></h3><div class='docblock'><p>Stalls the current thread until the fence is satisfied</p>
+</div><h3 id='tymethod.cleanup' class='method'><span id='cleanup.v' class='invisible'><code>fn <a href='#tymethod.cleanup' class='fnname'>cleanup</a>(&amp;mut self)</code></span></h3><div class='docblock'><p>Cleanup unused resources. This should be called between frames.</p>
+</div></div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><code>impl Device for <a class='struct' href='../gfx_core/dummy/struct.DummyDevice.html' title='gfx_core::dummy::DummyDevice'>DummyDevice</a></code></li>
+</ul><script type="text/javascript" async
+                         src="../implementors/gfx_core/trait.Device.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "gfx";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

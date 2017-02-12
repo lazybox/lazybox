@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["convert","A function for converting a `glutin::Event` to a `conrod::event::Input`."],["map_key","Maps Glutin's key to a conrod `Key`."],["map_mouse","Maps Glutin's mouse button to Piston's mouse button."]]});

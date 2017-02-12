@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Encoder` struct in crate `gfx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Encoder">
+
+    <title>gfx::Encoder - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>gfx</a></p><script>window.sidebarCurrent = {name: 'Encoder', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>gfx</a>::<wbr><a class='struct' href=''>Encoder</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/gfx/encoder.rs.html#144-149' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Encoder&lt;R:&nbsp;<a class='trait' href='../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a>, C&gt; { /* fields omitted */ }</pre><div class='docblock'><p>Graphics Command Encoder</p>
+
+<h1 id='overview' class='section-header'><a href='#overview'>Overview</a></h1>
+<p>The <code>Encoder</code> is a wrapper structure around a <code>CommandBuffer</code>. It is responsible for sending
+commands to the <code>CommandBuffer</code>. </p>
+
+<h1 id='construction--handling' class='section-header'><a href='#construction--handling'>Construction &amp; Handling</a></h1>
+<p>The <code>Encoder</code> implements <code>From&lt;CommandBuffer&gt;</code>, which is how it is constructed. There is no
+cross-API way to create a <code>CommandBuffer</code>, however, an API back-end should expose a function to
+create one in its <code>Factory</code> type. See the specific back-end for details on how to construct a
+<code>CommandBuffer</code>.</p>
+
+<p>The encoder exposes multiple functions that add commands to its internal <code>CommandBuffer</code>. To 
+submit these commands to the GPU so they can be rendered, call <code>flush</code>. </p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class='trait' href='../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a>, C:&nbsp;<a class='trait' href='../gfx/trait.CommandBuffer.html' title='gfx::CommandBuffer'>Buffer</a>&lt;R&gt;&gt; <a class='struct' href='../gfx/struct.Encoder.html' title='gfx::Encoder'>Encoder</a>&lt;R, C&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gfx/encoder.rs.html#162-370' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.flush' class='method'><span id='flush.v' class='invisible'><code>fn <a href='#method.flush' class='fnname'>flush</a>&lt;D&gt;(&amp;mut self, device: &amp;mut D) <span class='where fmt-newline'>where D: <a class='trait' href='../gfx/traits/trait.Device.html' title='gfx::traits::Device'>Device</a>&lt;Resources=R, CommandBuffer=C&gt;</span></code></span></h4>
+<div class='docblock'><p>Submits the commands in this <code>Encoder</code>&#39;s internal <code>CommandBuffer</code> to the GPU, so they can
+be executed. </p>
+
+<p>Calling <code>flush</code> before swapping buffers is critical as without it the commands of the
+internal ´CommandBuffer´ will not be sent to the GPU, and as a result they will not be
+processed. Calling flush too often however will result in a performance hit. It is
+generally recommended to call flush once per frame, when all draw calls have been made. </p>
+</div><h4 id='method.copy_buffer' class='method'><span id='copy_buffer.v' class='invisible'><code>fn <a href='#method.copy_buffer' class='fnname'>copy_buffer</a>&lt;T:&nbsp;<a class='trait' href='../gfx/traits/trait.Pod.html' title='gfx::traits::Pod'>Pod</a>&gt;(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; src: &amp;<a class='struct' href='../gfx/handle/struct.Buffer.html' title='gfx::handle::Buffer'>Buffer</a>&lt;R, T&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dst: &amp;<a class='struct' href='../gfx/handle/struct.Buffer.html' title='gfx::handle::Buffer'>Buffer</a>&lt;R, T&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; src_offset: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dst_offset: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; size: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, CopyError&gt;</code></span></h4>
+<div class='docblock'><p>Copy part of a buffer to another</p>
+</div><h4 id='method.update_buffer' class='method'><span id='update_buffer.v' class='invisible'><code>fn <a href='#method.update_buffer' class='fnname'>update_buffer</a>&lt;T:&nbsp;<a class='trait' href='../gfx/traits/trait.Pod.html' title='gfx::traits::Pod'>Pod</a>&gt;(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; buf: &amp;<a class='struct' href='../gfx/handle/struct.Buffer.html' title='gfx::handle::Buffer'>Buffer</a>&lt;R, T&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a>T<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; offset_elements: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='enum' href='../gfx/enum.UpdateError.html' title='gfx::UpdateError'>UpdateError</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Update a buffer with a slice of data.</p>
+</div><h4 id='method.update_constant_buffer' class='method'><span id='update_constant_buffer.v' class='invisible'><code>fn <a href='#method.update_constant_buffer' class='fnname'>update_constant_buffer</a>&lt;T:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a>&gt;(&amp;mut self, buf: &amp;<a class='struct' href='../gfx/handle/struct.Buffer.html' title='gfx::handle::Buffer'>Buffer</a>&lt;R, T&gt;, data: &amp;T)</code></span></h4>
+<div class='docblock'><p>Update a buffer with a single structure.</p>
+</div><h4 id='method.update_texture' class='method'><span id='update_texture.v' class='invisible'><code>fn <a href='#method.update_texture' class='fnname'>update_texture</a>&lt;S, T&gt;(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tex: &amp;<a class='struct' href='../gfx/handle/struct.Texture.html' title='gfx::handle::Texture'>Texture</a>&lt;R, T::<a class='trait' href='../gfx/format/trait.Formatted.html' title='gfx::format::Formatted'>Surface</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; face: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../gfx/texture/enum.CubeFace.html' title='gfx::texture::CubeFace'>CubeFace</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; img: <a class='type' href='../gfx/texture/type.NewImageInfo.html' title='gfx::texture::NewImageInfo'>NewImageInfo</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; data: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a>S::<a class='trait' href='../gfx/format/trait.SurfaceTyped.html' title='gfx::format::SurfaceTyped'>DataType</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='enum' href='../gfx/enum.UpdateError.html' title='gfx::UpdateError'>UpdateError</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='type' href='../gfx/texture/type.Size.html' title='gfx::texture::Size'>Size</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a>&gt;&gt; <span class='where fmt-newline'>where S: <a class='trait' href='../gfx/format/trait.SurfaceTyped.html' title='gfx::format::SurfaceTyped'>SurfaceTyped</a>, S::<a class='trait' href='../gfx/format/trait.SurfaceTyped.html' title='gfx::format::SurfaceTyped'>DataType</a>: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a>, T: <a class='trait' href='../gfx/format/trait.Formatted.html' title='gfx::format::Formatted'>Formatted</a>&lt;Surface=S&gt;</span></code></span></h4>
+<div class='docblock'><p>Update the contents of a texture.</p>
+</div><h4 id='method.clear' class='method'><span id='clear.v' class='invisible'><code>fn <a href='#method.clear' class='fnname'>clear</a>&lt;T:&nbsp;<a class='trait' href='../gfx/format/trait.RenderFormat.html' title='gfx::format::RenderFormat'>RenderFormat</a>&gt;(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; view: &amp;<a class='struct' href='../gfx/handle/struct.RenderTargetView.html' title='gfx::handle::RenderTargetView'>RenderTargetView</a>&lt;R, T&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; value: T::<a class='trait' href='../gfx/format/trait.Formatted.html' title='gfx::format::Formatted'>View</a>) <span class='where fmt-newline'>where T::<a class='trait' href='../gfx/format/trait.Formatted.html' title='gfx::format::Formatted'>View</a>: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='enum' href='../gfx_core/command/enum.ClearColor.html' title='gfx_core::command::ClearColor'>ClearColor</a>&gt;</span></code></span></h4>
+<div class='docblock'><p>Clears the supplied <code>RenderTargetView</code> to the supplied <code>ClearColor</code>.</p>
+</div><h4 id='method.clear_depth' class='method'><span id='clear_depth.v' class='invisible'><code>fn <a href='#method.clear_depth' class='fnname'>clear_depth</a>&lt;T:&nbsp;<a class='trait' href='../gfx/format/trait.DepthFormat.html' title='gfx::format::DepthFormat'>DepthFormat</a>&gt;(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; view: &amp;<a class='struct' href='../gfx/handle/struct.DepthStencilView.html' title='gfx::handle::DepthStencilView'>DepthStencilView</a>&lt;R, T&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; depth: <a class='type' href='../draw_state/target/type.Depth.html' title='draw_state::target::Depth'>Depth</a>)</code></span></h4>
+<div class='docblock'><p>Clear a depth view with a specified value.</p>
+</div><h4 id='method.clear_stencil' class='method'><span id='clear_stencil.v' class='invisible'><code>fn <a href='#method.clear_stencil' class='fnname'>clear_stencil</a>&lt;T:&nbsp;<a class='trait' href='../gfx/format/trait.StencilFormat.html' title='gfx::format::StencilFormat'>StencilFormat</a>&gt;(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; view: &amp;<a class='struct' href='../gfx/handle/struct.DepthStencilView.html' title='gfx::handle::DepthStencilView'>DepthStencilView</a>&lt;R, T&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stencil: <a class='type' href='../draw_state/target/type.Stencil.html' title='draw_state::target::Stencil'>Stencil</a>)</code></span></h4>
+<div class='docblock'><p>Clear a stencil view with a specified value.</p>
+</div><h4 id='method.draw' class='method'><span id='draw.v' class='invisible'><code>fn <a href='#method.draw' class='fnname'>draw</a>&lt;D:&nbsp;<a class='trait' href='../gfx/pso/trait.PipelineData.html' title='gfx::pso::PipelineData'>PipelineData</a>&lt;R&gt;&gt;(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; slice: &amp;<a class='struct' href='../gfx/struct.Slice.html' title='gfx::Slice'>Slice</a>&lt;R&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pipeline: &amp;<a class='struct' href='../gfx/pso/struct.PipelineState.html' title='gfx::pso::PipelineState'>PipelineState</a>&lt;R, D::<a class='trait' href='../gfx/pso/trait.PipelineData.html' title='gfx::pso::PipelineData'>Meta</a>&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; user_data: &amp;D)</code></span></h4>
+<div class='docblock'><p>Draws a <code>slice::Slice</code> using a pipeline state object, and its matching <code>Data</code> structure.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class='trait' href='../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a>, C&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html' title='core::convert::From'>From</a>&lt;C&gt; for <a class='struct' href='../gfx/struct.Encoder.html' title='gfx::Encoder'>Encoder</a>&lt;R, C&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gfx/encoder.rs.html#151-160' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from' class='method'><span id='from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(combuf: C) -&gt; <a class='struct' href='../gfx/struct.Encoder.html' title='gfx::Encoder'>Encoder</a>&lt;R, C&gt;</code></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "gfx";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

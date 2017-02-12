@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Entities` struct in crate `lazybox`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Entities">
+
+    <title>lazybox::ecs::entity::Entities - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>lazybox</a>::<wbr><a href='../index.html'>ecs</a>::<wbr><a href='index.html'>entity</a></p><script>window.sidebarCurrent = {name: 'Entities', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>lazybox</a>::<wbr><a href='../index.html'>ecs</a>::<wbr><a href='index.html'>entity</a>::<wbr><a class='struct' href=''>Entities</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/lazybox/ecs/entity/mod.rs.html#135-139' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Entities { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../../lazybox/ecs/entity/struct.Entities.html' title='lazybox::ecs::entity::Entities'>Entities</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/lazybox/ecs/entity/mod.rs.html#141-240' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; Self</code></span></h4>
+<h4 id='method.create' class='method'><span id='create.v' class='invisible'><code>fn <a href='#method.create' class='fnname'>create</a>(&amp;self) -&gt; <a class='struct' href='../../../lazybox/ecs/entity/struct.Entity.html' title='lazybox::ecs::entity::Entity'>Entity</a></code></span></h4>
+<div class='docblock'><p>Creates an entity</p>
+
+<p>The entity is not considered alive until <code>spawn</code> is called</p>
+</div><h4 id='method.spawn_later' class='method'><span id='spawn_later.v' class='invisible'><code>fn <a href='#method.spawn_later' class='fnname'>spawn_later</a>(&amp;self, entity: <a class='struct' href='../../../lazybox/ecs/entity/struct.Entity.html' title='lazybox::ecs::entity::Entity'>Entity</a>) -&gt; <a class='struct' href='../../../lazybox/ecs/entity/struct.EntityRef.html' title='lazybox::ecs::entity::EntityRef'>EntityRef</a></code></span></h4>
+<div class='docblock'><p>Spawns an entity when the state will be commited.</p>
+</div><h4 id='method.spawn' class='method'><span id='spawn.v' class='invisible'><code>fn <a href='#method.spawn' class='fnname'>spawn</a>(&amp;mut self, entity: <a class='struct' href='../../../lazybox/ecs/entity/struct.Entity.html' title='lazybox::ecs::entity::Entity'>Entity</a>) -&gt; <a class='struct' href='../../../lazybox/ecs/entity/struct.EntityRef.html' title='lazybox::ecs::entity::EntityRef'>EntityRef</a></code></span></h4>
+<div class='docblock'><p>Spawns an entity making it alive</p>
+</div><h4 id='method.remove_later' class='method'><span id='remove_later.v' class='invisible'><code>fn <a href='#method.remove_later' class='fnname'>remove_later</a>&lt;'a&gt;(&amp;self, accessor: <a class='struct' href='../../../lazybox/ecs/entity/struct.Accessor.html' title='lazybox::ecs::entity::Accessor'>Accessor</a>&lt;'a&gt;)</code></span></h4>
+<div class='docblock'><p>Schedule the removal of an entity.</p>
+
+<p>The entity will be removed at the next state commit</p>
+</div><h4 id='method.iter' class='method'><span id='iter.v' class='invisible'><code>fn <a href='#method.iter' class='fnname'>iter</a>(&amp;self) -&gt; <a class='struct' href='../../../lazybox/ecs/entity/struct.Iter.html' title='lazybox::ecs::entity::Iter'>Iter</a></code></span></h4>
+<div class='docblock'><p>Creates a new entity iterator</p>
+</div><h4 id='method.entity_ref' class='method'><span id='entity_ref.v' class='invisible'><code>fn <a href='#method.entity_ref' class='fnname'>entity_ref</a>&lt;'a&gt;(&amp;self, accessor: <a class='struct' href='../../../lazybox/ecs/entity/struct.Accessor.html' title='lazybox::ecs::entity::Accessor'>Accessor</a>&lt;'a&gt;) -&gt; <a class='struct' href='../../../lazybox/ecs/entity/struct.EntityRef.html' title='lazybox::ecs::entity::EntityRef'>EntityRef</a></code></span></h4>
+<div class='docblock'><p>Creates an entity reference</p>
+</div><h4 id='method.upgrade' class='method'><span id='upgrade.v' class='invisible'><code>fn <a href='#method.upgrade' class='fnname'>upgrade</a>(&amp;self, entity_ref: <a class='struct' href='../../../lazybox/ecs/entity/struct.EntityRef.html' title='lazybox::ecs::entity::EntityRef'>EntityRef</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../../lazybox/ecs/entity/struct.Accessor.html' title='lazybox::ecs::entity::Accessor'>Accessor</a>&gt;</code></span></h4>
+<div class='docblock'><p>Uprades an <code>EntityRef</code> to an <code>Accessor</code></p>
+
+<p>Returns None if the <code>Entity</code> has been killed</p>
+</div><h4 id='method.push_removes' class='method'><span id='push_removes.v' class='invisible'><code>fn <a href='#method.push_removes' class='fnname'>push_removes</a>(&amp;mut self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../../lazybox/ecs/entity/struct.Entity.html' title='lazybox::ecs::entity::Entity'>Entity</a>&gt;</code></span></h4>
+<div class='docblock'><p>Removes all killed entities and returns them.</p>
+
+<p>The entities returned might be recycled in the future and need
+to be used with care.</p>
+</div><h4 id='method.commit' class='method'><span id='commit.v' class='invisible'><code>fn <a href='#method.commit' class='fnname'>commit</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>Commit the entities changes.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "lazybox";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["SpawnRequest","An entity to be spawn"]],"trait":[["Prototype",""]]});

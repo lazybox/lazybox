@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `shade` mod in crate `gfx_core`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, shade">
+
+    <title>gfx_core::shade - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>gfx_core</a></p><script>window.sidebarCurrent = {name: 'shade', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>gfx_core</a>::<wbr><a class='mod' href=''>shade</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/gfx_core/shade.rs.html#15-538' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Shader handling.</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.AttributeVar.html'
+                                  title='gfx_core::shade::AttributeVar'>AttributeVar</a></td>
+                           <td class='docblock-short'>
+                                <p>Vertex information that a shader takes as input.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ConstVar.html'
+                                  title='gfx_core::shade::ConstVar'>ConstVar</a></td>
+                           <td class='docblock-short'>
+                                <p>A constant in the shader - a bit of data that doesn&#39;t vary</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ConstantBufferVar.html'
+                                  title='gfx_core::shade::ConstantBufferVar'>ConstantBufferVar</a></td>
+                           <td class='docblock-short'>
+                                <p>A constant buffer.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.OutputVar.html'
+                                  title='gfx_core::shade::OutputVar'>OutputVar</a></td>
+                           <td class='docblock-short'>
+                                <p>Target output variable.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Program.html'
+                                  title='gfx_core::shade::Program'>Program</a></td>
+                           <td class='docblock-short'>
+                                <p>A program</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ProgramInfo.html'
+                                  title='gfx_core::shade::ProgramInfo'>ProgramInfo</a></td>
+                           <td class='docblock-short'>
+                                <p>Metadata about a program.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.SamplerType.html'
+                                  title='gfx_core::shade::SamplerType'>SamplerType</a></td>
+                           <td class='docblock-short'>
+                                <p>A type of the sampler variable.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.SamplerVar.html'
+                                  title='gfx_core::shade::SamplerVar'>SamplerVar</a></td>
+                           <td class='docblock-short'>
+                                <p>Sampler shader parameter.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.TextureVar.html'
+                                  title='gfx_core::shade::TextureVar'>TextureVar</a></td>
+                           <td class='docblock-short'>
+                                <p>Texture shader parameter.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.UnorderedVar.html'
+                                  title='gfx_core::shade::UnorderedVar'>UnorderedVar</a></td>
+                           <td class='docblock-short'>
+                                <p>Unordered access shader parameter.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Usage.html'
+                                  title='gfx_core::shade::Usage'>Usage</a></td>
+                           <td class='docblock-short'>
+                                <p>Parameter usage flags.</p>
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.BaseType.html'
+                                  title='gfx_core::shade::BaseType'>BaseType</a></td>
+                           <td class='docblock-short'>
+                                <p>Base type of this shader parameter.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.CompatibilityError.html'
+                                  title='gfx_core::shade::CompatibilityError'>CompatibilityError</a></td>
+                           <td class='docblock-short'>
+                                <p>Error type for trying to store a UniformValue in a ConstVar.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.ContainerType.html'
+                                  title='gfx_core::shade::ContainerType'>ContainerType</a></td>
+                           <td class='docblock-short'>
+                                <p>Number of components this parameter represents.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.CreateShaderError.html'
+                                  title='gfx_core::shade::CreateShaderError'>CreateShaderError</a></td>
+                           <td class='docblock-short'>
+                                <p>An error type for creating shaders.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.IsArray.html'
+                                  title='gfx_core::shade::IsArray'>IsArray</a></td>
+                           <td class='docblock-short'>
+                                <p>Whether the sampler samples an array texture.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.IsComparison.html'
+                                  title='gfx_core::shade::IsComparison'>IsComparison</a></td>
+                           <td class='docblock-short'>
+                                <p>Whether the sampler compares the depth value upon sampling.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.IsMultiSample.html'
+                                  title='gfx_core::shade::IsMultiSample'>IsMultiSample</a></td>
+                           <td class='docblock-short'>
+                                <p>Whether the sampler samples a multisample texture.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.IsRect.html'
+                                  title='gfx_core::shade::IsRect'>IsRect</a></td>
+                           <td class='docblock-short'>
+                                <p>Whether the sampler samples a rectangle texture.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.MatrixFormat.html'
+                                  title='gfx_core::shade::MatrixFormat'>MatrixFormat</a></td>
+                           <td class='docblock-short'>
+                                <p>Whether the matrix is column or row major.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Stage.html'
+                                  title='gfx_core::shade::Stage'>Stage</a></td>
+                           <td class='docblock-short'>
+                                <p>Which program stage this shader represents.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.TextureType.html'
+                                  title='gfx_core::shade::TextureType'>TextureType</a></td>
+                           <td class='docblock-short'>
+                                <p>A type of the texture variable.
+This has to match the actual data we bind to the shader.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.UniformValue.html'
+                                  title='gfx_core::shade::UniformValue'>UniformValue</a></td>
+                           <td class='docblock-short'>
+                                <p>A value that can be uploaded to the device as a uniform.</p>
+                           </td>
+                       </tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.DOMAIN.html'
+                                  title='gfx_core::shade::DOMAIN'>DOMAIN</a></td>
+                           <td class='docblock-short'>
+                                <p>Used by the pixel shader</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.GEOMETRY.html'
+                                  title='gfx_core::shade::GEOMETRY'>GEOMETRY</a></td>
+                           <td class='docblock-short'>
+                                <p>Used by the geometry shader</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.HULL.html'
+                                  title='gfx_core::shade::HULL'>HULL</a></td>
+                           <td class='docblock-short'>
+                                <p>Used by the hull shader</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.PIXEL.html'
+                                  title='gfx_core::shade::PIXEL'>PIXEL</a></td>
+                           <td class='docblock-short'>
+                                <p>Used by the pixel shader</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.STAGES.html'
+                                  title='gfx_core::shade::STAGES'>STAGES</a></td>
+                           <td class='docblock-short'>
+                                <p>A constant static array of all shader stages.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.VERTEX.html'
+                                  title='gfx_core::shade::VERTEX'>VERTEX</a></td>
+                           <td class='docblock-short'>
+                                <p>Used by the vertex shader</p>
+                           </td>
+                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.BaseTyped.html'
+                                  title='gfx_core::shade::BaseTyped'>BaseTyped</a></td>
+                           <td class='docblock-short'>
+                                <p>A trait that statically links simple data types to
+base types of the shader constants.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.Formatted.html'
+                                  title='gfx_core::shade::Formatted'>Formatted</a></td>
+                           <td class='docblock-short'>
+                                <p>A trait that statically links simple data types to
+constant formats.</p>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.ConstFormat.html'
+                                  title='gfx_core::shade::ConstFormat'>ConstFormat</a></td>
+                           <td class='docblock-short'>
+                                <p>Format of a shader constant.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.CreateProgramError.html'
+                                  title='gfx_core::shade::CreateProgramError'>CreateProgramError</a></td>
+                           <td class='docblock-short'>
+                                <p>An error type for creating programs.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Dimension.html'
+                                  title='gfx_core::shade::Dimension'>Dimension</a></td>
+                           <td class='docblock-short'>
+                                <p>Number of components in a container type (vectors/matrices)</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Location.html'
+                                  title='gfx_core::shade::Location'>Location</a></td>
+                           <td class='docblock-short'>
+                                <p>Location of a parameter in the program.</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "gfx_core";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

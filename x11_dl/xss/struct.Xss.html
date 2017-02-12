@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Xss` struct in crate `x11_dl`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Xss">
+
+    <title>x11_dl::xss::Xss - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>x11_dl</a>::<wbr><a href='index.html'>xss</a></p><script>window.sidebarCurrent = {name: 'Xss', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>x11_dl</a>::<wbr><a href='index.html'>xss</a>::<wbr><a class='struct' href=''>Xss</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/x11_dl/link.rs.html#27-33' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Xss {
+    pub XScreenSaverQueryExtension: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>) -&gt; <a class='type' href='../../x11_dl/xlib/type.Bool.html' title='x11_dl::xlib::Bool'>Bool</a>,
+    pub XScreenSaverQueryVersion: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>) -&gt; <a class='type' href='../../x11_dl/xlib/type.Status.html' title='x11_dl::xlib::Status'>Status</a>,
+    pub XScreenSaverAllocInfo: unsafe extern fn() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../../x11_dl/xss/struct.XScreenSaverInfo.html' title='x11_dl::xss::XScreenSaverInfo'>XScreenSaverInfo</a>,
+    pub XScreenSaverQueryInfo: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='../../x11_dl/xlib/type.Drawable.html' title='x11_dl::xlib::Drawable'>Drawable</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../../x11_dl/xss/struct.XScreenSaverInfo.html' title='x11_dl::xss::XScreenSaverInfo'>XScreenSaverInfo</a>) -&gt; <a class='type' href='../../x11_dl/xlib/type.Status.html' title='x11_dl::xlib::Status'>Status</a>,
+    pub XScreenSaverSelectInput: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='../../x11_dl/xlib/type.Drawable.html' title='x11_dl::xlib::Drawable'>Drawable</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_ulong.html' title='std::os::raw::c_ulong'>c_ulong</a>),
+    pub XScreenSaverSetAttributes: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='../../x11_dl/xlib/type.Drawable.html' title='x11_dl::xlib::Drawable'>Drawable</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_uint.html' title='std::os::raw::c_uint'>c_uint</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_uint.html' title='std::os::raw::c_uint'>c_uint</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_uint.html' title='std::os::raw::c_uint'>c_uint</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_uint.html' title='std::os::raw::c_uint'>c_uint</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../../x11_dl/xlib/struct.Visual.html' title='x11_dl::xlib::Visual'>Visual</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_ulong.html' title='std::os::raw::c_ulong'>c_ulong</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../../x11_dl/xlib/struct.XSetWindowAttributes.html' title='x11_dl::xlib::XSetWindowAttributes'>XSetWindowAttributes</a>),
+    pub XScreenSaverUnsetAttributes: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='../../x11_dl/xlib/type.Drawable.html' title='x11_dl::xlib::Drawable'>Drawable</a>),
+    pub XScreenSaverRegister: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='type' href='../../x11_dl/xlib/type.XID.html' title='x11_dl::xlib::XID'>XID</a>, _: <a class='type' href='../../x11_dl/xlib/type.Atom.html' title='x11_dl::xlib::Atom'>Atom</a>) -&gt; <a class='type' href='../../x11_dl/xlib/type.Status.html' title='x11_dl::xlib::Status'>Status</a>,
+    pub XScreenSaverUnregister: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>) -&gt; <a class='type' href='../../x11_dl/xlib/type.Status.html' title='x11_dl::xlib::Status'>Status</a>,
+    pub XScreenSaverGetRegistered: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.XID.html' title='x11_dl::xlib::XID'>XID</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Atom.html' title='x11_dl::xlib::Atom'>Atom</a>) -&gt; <a class='type' href='../../x11_dl/xlib/type.Status.html' title='x11_dl::xlib::Status'>Status</a>,
+    pub XScreenSaverSuspend: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='../../x11_dl/xlib/type.Bool.html' title='x11_dl::xlib::Bool'>Bool</a>),
+    // some fields omitted
+}</pre><h2 class='fields'>Fields</h2><span id='structfield.XScreenSaverQueryExtension' class='structfield'>
+                           <span id='XScreenSaverQueryExtension.v' class='invisible'>
+                           <code>XScreenSaverQueryExtension: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>) -&gt; <a class='type' href='../../x11_dl/xlib/type.Bool.html' title='x11_dl::xlib::Bool'>Bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.XScreenSaverQueryVersion' class='structfield'>
+                           <span id='XScreenSaverQueryVersion.v' class='invisible'>
+                           <code>XScreenSaverQueryVersion: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>) -&gt; <a class='type' href='../../x11_dl/xlib/type.Status.html' title='x11_dl::xlib::Status'>Status</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.XScreenSaverAllocInfo' class='structfield'>
+                           <span id='XScreenSaverAllocInfo.v' class='invisible'>
+                           <code>XScreenSaverAllocInfo: unsafe extern fn() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../../x11_dl/xss/struct.XScreenSaverInfo.html' title='x11_dl::xss::XScreenSaverInfo'>XScreenSaverInfo</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.XScreenSaverQueryInfo' class='structfield'>
+                           <span id='XScreenSaverQueryInfo.v' class='invisible'>
+                           <code>XScreenSaverQueryInfo: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='../../x11_dl/xlib/type.Drawable.html' title='x11_dl::xlib::Drawable'>Drawable</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../../x11_dl/xss/struct.XScreenSaverInfo.html' title='x11_dl::xss::XScreenSaverInfo'>XScreenSaverInfo</a>) -&gt; <a class='type' href='../../x11_dl/xlib/type.Status.html' title='x11_dl::xlib::Status'>Status</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.XScreenSaverSelectInput' class='structfield'>
+                           <span id='XScreenSaverSelectInput.v' class='invisible'>
+                           <code>XScreenSaverSelectInput: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='../../x11_dl/xlib/type.Drawable.html' title='x11_dl::xlib::Drawable'>Drawable</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_ulong.html' title='std::os::raw::c_ulong'>c_ulong</a>)</code>
+                           </span></span><span class='stab '></span><span id='structfield.XScreenSaverSetAttributes' class='structfield'>
+                           <span id='XScreenSaverSetAttributes.v' class='invisible'>
+                           <code>XScreenSaverSetAttributes: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='../../x11_dl/xlib/type.Drawable.html' title='x11_dl::xlib::Drawable'>Drawable</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_uint.html' title='std::os::raw::c_uint'>c_uint</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_uint.html' title='std::os::raw::c_uint'>c_uint</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_uint.html' title='std::os::raw::c_uint'>c_uint</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_uint.html' title='std::os::raw::c_uint'>c_uint</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../../x11_dl/xlib/struct.Visual.html' title='x11_dl::xlib::Visual'>Visual</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_ulong.html' title='std::os::raw::c_ulong'>c_ulong</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='struct' href='../../x11_dl/xlib/struct.XSetWindowAttributes.html' title='x11_dl::xlib::XSetWindowAttributes'>XSetWindowAttributes</a>)</code>
+                           </span></span><span class='stab '></span><span id='structfield.XScreenSaverUnsetAttributes' class='structfield'>
+                           <span id='XScreenSaverUnsetAttributes.v' class='invisible'>
+                           <code>XScreenSaverUnsetAttributes: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='../../x11_dl/xlib/type.Drawable.html' title='x11_dl::xlib::Drawable'>Drawable</a>)</code>
+                           </span></span><span class='stab '></span><span id='structfield.XScreenSaverRegister' class='structfield'>
+                           <span id='XScreenSaverRegister.v' class='invisible'>
+                           <code>XScreenSaverRegister: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='type' href='../../x11_dl/xlib/type.XID.html' title='x11_dl::xlib::XID'>XID</a>, _: <a class='type' href='../../x11_dl/xlib/type.Atom.html' title='x11_dl::xlib::Atom'>Atom</a>) -&gt; <a class='type' href='../../x11_dl/xlib/type.Status.html' title='x11_dl::xlib::Status'>Status</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.XScreenSaverUnregister' class='structfield'>
+                           <span id='XScreenSaverUnregister.v' class='invisible'>
+                           <code>XScreenSaverUnregister: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>) -&gt; <a class='type' href='../../x11_dl/xlib/type.Status.html' title='x11_dl::xlib::Status'>Status</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.XScreenSaverGetRegistered' class='structfield'>
+                           <span id='XScreenSaverGetRegistered.v' class='invisible'>
+                           <code>XScreenSaverGetRegistered: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='https://doc.rust-lang.org/nightly/std/os/raw/type.c_int.html' title='std::os::raw::c_int'>c_int</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.XID.html' title='x11_dl::xlib::XID'>XID</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Atom.html' title='x11_dl::xlib::Atom'>Atom</a>) -&gt; <a class='type' href='../../x11_dl/xlib/type.Status.html' title='x11_dl::xlib::Status'>Status</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.XScreenSaverSuspend' class='structfield'>
+                           <span id='XScreenSaverSuspend.v' class='invisible'>
+                           <code>XScreenSaverSuspend: unsafe extern fn(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='type' href='../../x11_dl/xlib/type.Display.html' title='x11_dl::xlib::Display'>Display</a>, _: <a class='type' href='../../x11_dl/xlib/type.Bool.html' title='x11_dl::xlib::Bool'>Bool</a>)</code>
+                           </span></span><span class='stab '></span><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../x11_dl/xss/struct.Xss.html' title='x11_dl::xss::Xss'>Xss</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/x11_dl/link.rs.html#38-65' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.open' class='method'><span id='open.v' class='invisible'><code>fn <a href='#method.open' class='fnname'>open</a>() -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../../x11_dl/xss/struct.Xss.html' title='x11_dl::xss::Xss'>Xss</a>, <a class='struct' href='../../x11_dl/error/struct.OpenError.html' title='x11_dl::error::OpenError'>OpenError</a>&gt;</code></span></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../../x11_dl/xss/struct.Xss.html' title='x11_dl::xss::Xss'>Xss</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/x11_dl/link.rs.html#35' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../../x11_dl/xss/struct.Xss.html' title='x11_dl::xss::Xss'>Xss</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/x11_dl/link.rs.html#36' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "x11_dl";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

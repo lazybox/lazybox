@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Formatted` trait in crate `gfx_core`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Formatted">
+
+    <title>gfx_core::format::Formatted - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>gfx_core</a>::<wbr><a href='index.html'>format</a></p><script>window.sidebarCurrent = {name: 'Formatted', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>gfx_core</a>::<wbr><a href='index.html'>format</a>::<wbr><a class='trait' href=''>Formatted</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/gfx_core/format.rs.html#220-233' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait Formatted {
+    type <a href='#associatedtype.Surface' class='type'>Surface</a>: <a class='trait' href='../../gfx_core/format/trait.SurfaceTyped.html' title='gfx_core::format::SurfaceTyped'>SurfaceTyped</a>;
+    type <a href='#associatedtype.Channel' class='type'>Channel</a>: <a class='trait' href='../../gfx_core/format/trait.ChannelTyped.html' title='gfx_core::format::ChannelTyped'>ChannelTyped</a>;
+    type <a href='#associatedtype.View' class='type'>View</a>;
+    fn <a href='#method.get_format' class='fnname'>get_format</a>() -&gt; <a class='struct' href='../../gfx_core/format/struct.Format.html' title='gfx_core::format::Format'>Format</a> { ... }
+}</pre><div class='docblock'><p>Compile-time full format trait.</p>
+</div>
+            <h2 id='associated-types'>Associated Types</h2>
+            <div class='methods'>
+        <h3 id='associatedtype.Surface' class='method'><span id='Surface.t' class='invisible'><code>type <a href='#associatedtype.Surface' class='type'>Surface</a>: <a class='trait' href='../../gfx_core/format/trait.SurfaceTyped.html' title='gfx_core::format::SurfaceTyped'>SurfaceTyped</a></code></span></h3><div class='docblock'><p>Associated surface type.</p>
+</div><h3 id='associatedtype.Channel' class='method'><span id='Channel.t' class='invisible'><code>type <a href='#associatedtype.Channel' class='type'>Channel</a>: <a class='trait' href='../../gfx_core/format/trait.ChannelTyped.html' title='gfx_core::format::ChannelTyped'>ChannelTyped</a></code></span></h3><div class='docblock'><p>Associated channel type.</p>
+</div><h3 id='associatedtype.View' class='method'><span id='View.t' class='invisible'><code>type <a href='#associatedtype.View' class='type'>View</a></code></span></h3><div class='docblock'><p>Shader view type of this format.</p>
+</div></div>
+            <h2 id='provided-methods'>Provided Methods</h2>
+            <div class='methods'>
+        <h3 id='method.get_format' class='method'><span id='get_format.v' class='invisible'><code>fn <a href='#method.get_format' class='fnname'>get_format</a>() -&gt; <a class='struct' href='../../gfx_core/format/struct.Format.html' title='gfx_core::format::Format'>Format</a></code></span></h3><div class='docblock'><p>Return the run-time value of the type.</p>
+</div></div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R4_G4.html' title='gfx_core::format::R4_G4'>R4_G4</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R4_G4_B4_A4.html' title='gfx_core::format::R4_G4_B4_A4'>R4_G4_B4_A4</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R5_G5_B5_A1.html' title='gfx_core::format::R5_G5_B5_A1'>R5_G5_B5_A1</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R5_G6_B5.html' title='gfx_core::format::R5_G6_B5'>R5_G6_B5</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8.html' title='gfx_core::format::R8'>R8</a>, <a class='enum' href='../../gfx_core/format/enum.Int.html' title='gfx_core::format::Int'>Int</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8.html' title='gfx_core::format::R8'>R8</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8.html' title='gfx_core::format::R8'>R8</a>, <a class='enum' href='../../gfx_core/format/enum.Inorm.html' title='gfx_core::format::Inorm'>Inorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8.html' title='gfx_core::format::R8'>R8</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8_G8.html' title='gfx_core::format::R8_G8'>R8_G8</a>, <a class='enum' href='../../gfx_core/format/enum.Int.html' title='gfx_core::format::Int'>Int</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8_G8.html' title='gfx_core::format::R8_G8'>R8_G8</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8_G8.html' title='gfx_core::format::R8_G8'>R8_G8</a>, <a class='enum' href='../../gfx_core/format/enum.Inorm.html' title='gfx_core::format::Inorm'>Inorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8_G8.html' title='gfx_core::format::R8_G8'>R8_G8</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8_G8_B8_A8.html' title='gfx_core::format::R8_G8_B8_A8'>R8_G8_B8_A8</a>, <a class='enum' href='../../gfx_core/format/enum.Int.html' title='gfx_core::format::Int'>Int</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8_G8_B8_A8.html' title='gfx_core::format::R8_G8_B8_A8'>R8_G8_B8_A8</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8_G8_B8_A8.html' title='gfx_core::format::R8_G8_B8_A8'>R8_G8_B8_A8</a>, <a class='enum' href='../../gfx_core/format/enum.Inorm.html' title='gfx_core::format::Inorm'>Inorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8_G8_B8_A8.html' title='gfx_core::format::R8_G8_B8_A8'>R8_G8_B8_A8</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R8_G8_B8_A8.html' title='gfx_core::format::R8_G8_B8_A8'>R8_G8_B8_A8</a>, <a class='enum' href='../../gfx_core/format/enum.Srgb.html' title='gfx_core::format::Srgb'>Srgb</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R10_G10_B10_A2.html' title='gfx_core::format::R10_G10_B10_A2'>R10_G10_B10_A2</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R10_G10_B10_A2.html' title='gfx_core::format::R10_G10_B10_A2'>R10_G10_B10_A2</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R11_G11_B10.html' title='gfx_core::format::R11_G11_B10'>R11_G11_B10</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R11_G11_B10.html' title='gfx_core::format::R11_G11_B10'>R11_G11_B10</a>, <a class='enum' href='../../gfx_core/format/enum.Float.html' title='gfx_core::format::Float'>Float</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16.html' title='gfx_core::format::R16'>R16</a>, <a class='enum' href='../../gfx_core/format/enum.Int.html' title='gfx_core::format::Int'>Int</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16.html' title='gfx_core::format::R16'>R16</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16.html' title='gfx_core::format::R16'>R16</a>, <a class='enum' href='../../gfx_core/format/enum.Inorm.html' title='gfx_core::format::Inorm'>Inorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16.html' title='gfx_core::format::R16'>R16</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16.html' title='gfx_core::format::R16'>R16</a>, <a class='enum' href='../../gfx_core/format/enum.Float.html' title='gfx_core::format::Float'>Float</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16.html' title='gfx_core::format::R16_G16'>R16_G16</a>, <a class='enum' href='../../gfx_core/format/enum.Int.html' title='gfx_core::format::Int'>Int</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16.html' title='gfx_core::format::R16_G16'>R16_G16</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16.html' title='gfx_core::format::R16_G16'>R16_G16</a>, <a class='enum' href='../../gfx_core/format/enum.Inorm.html' title='gfx_core::format::Inorm'>Inorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16.html' title='gfx_core::format::R16_G16'>R16_G16</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16.html' title='gfx_core::format::R16_G16'>R16_G16</a>, <a class='enum' href='../../gfx_core/format/enum.Float.html' title='gfx_core::format::Float'>Float</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16_B16.html' title='gfx_core::format::R16_G16_B16'>R16_G16_B16</a>, <a class='enum' href='../../gfx_core/format/enum.Int.html' title='gfx_core::format::Int'>Int</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16_B16.html' title='gfx_core::format::R16_G16_B16'>R16_G16_B16</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16_B16.html' title='gfx_core::format::R16_G16_B16'>R16_G16_B16</a>, <a class='enum' href='../../gfx_core/format/enum.Inorm.html' title='gfx_core::format::Inorm'>Inorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16_B16.html' title='gfx_core::format::R16_G16_B16'>R16_G16_B16</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16_B16.html' title='gfx_core::format::R16_G16_B16'>R16_G16_B16</a>, <a class='enum' href='../../gfx_core/format/enum.Float.html' title='gfx_core::format::Float'>Float</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16_B16_A16.html' title='gfx_core::format::R16_G16_B16_A16'>R16_G16_B16_A16</a>, <a class='enum' href='../../gfx_core/format/enum.Int.html' title='gfx_core::format::Int'>Int</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16_B16_A16.html' title='gfx_core::format::R16_G16_B16_A16'>R16_G16_B16_A16</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16_B16_A16.html' title='gfx_core::format::R16_G16_B16_A16'>R16_G16_B16_A16</a>, <a class='enum' href='../../gfx_core/format/enum.Inorm.html' title='gfx_core::format::Inorm'>Inorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16_B16_A16.html' title='gfx_core::format::R16_G16_B16_A16'>R16_G16_B16_A16</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R16_G16_B16_A16.html' title='gfx_core::format::R16_G16_B16_A16'>R16_G16_B16_A16</a>, <a class='enum' href='../../gfx_core/format/enum.Float.html' title='gfx_core::format::Float'>Float</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R32.html' title='gfx_core::format::R32'>R32</a>, <a class='enum' href='../../gfx_core/format/enum.Int.html' title='gfx_core::format::Int'>Int</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R32.html' title='gfx_core::format::R32'>R32</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R32.html' title='gfx_core::format::R32'>R32</a>, <a class='enum' href='../../gfx_core/format/enum.Float.html' title='gfx_core::format::Float'>Float</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R32_G32.html' title='gfx_core::format::R32_G32'>R32_G32</a>, <a class='enum' href='../../gfx_core/format/enum.Int.html' title='gfx_core::format::Int'>Int</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R32_G32.html' title='gfx_core::format::R32_G32'>R32_G32</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R32_G32.html' title='gfx_core::format::R32_G32'>R32_G32</a>, <a class='enum' href='../../gfx_core/format/enum.Float.html' title='gfx_core::format::Float'>Float</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R32_G32_B32.html' title='gfx_core::format::R32_G32_B32'>R32_G32_B32</a>, <a class='enum' href='../../gfx_core/format/enum.Int.html' title='gfx_core::format::Int'>Int</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R32_G32_B32.html' title='gfx_core::format::R32_G32_B32'>R32_G32_B32</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R32_G32_B32.html' title='gfx_core::format::R32_G32_B32'>R32_G32_B32</a>, <a class='enum' href='../../gfx_core/format/enum.Float.html' title='gfx_core::format::Float'>Float</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R32_G32_B32_A32.html' title='gfx_core::format::R32_G32_B32_A32'>R32_G32_B32_A32</a>, <a class='enum' href='../../gfx_core/format/enum.Int.html' title='gfx_core::format::Int'>Int</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R32_G32_B32_A32.html' title='gfx_core::format::R32_G32_B32_A32'>R32_G32_B32_A32</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.R32_G32_B32_A32.html' title='gfx_core::format::R32_G32_B32_A32'>R32_G32_B32_A32</a>, <a class='enum' href='../../gfx_core/format/enum.Float.html' title='gfx_core::format::Float'>Float</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.B8_G8_R8_A8.html' title='gfx_core::format::B8_G8_R8_A8'>B8_G8_R8_A8</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.D16.html' title='gfx_core::format::D16'>D16</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.D24.html' title='gfx_core::format::D24'>D24</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.D24_S8.html' title='gfx_core::format::D24_S8'>D24_S8</a>, <a class='enum' href='../../gfx_core/format/enum.Unorm.html' title='gfx_core::format::Unorm'>Unorm</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.D24_S8.html' title='gfx_core::format::D24_S8'>D24_S8</a>, <a class='enum' href='../../gfx_core/format/enum.Uint.html' title='gfx_core::format::Uint'>Uint</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../../gfx_core/format/enum.D32.html' title='gfx_core::format::D32'>D32</a>, <a class='enum' href='../../gfx_core/format/enum.Float.html' title='gfx_core::format::Float'>Float</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec1.html' title='gfx_core::format::Vec1'>Vec1</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec2.html' title='gfx_core::format::Vec2'>Vec2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec4.html' title='gfx_core::format::Vec4'>Vec4</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec1.html' title='gfx_core::format::Vec1'>Vec1</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i8.html'>i8</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec2.html' title='gfx_core::format::Vec2'>Vec2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i8.html'>i8</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec4.html' title='gfx_core::format::Vec4'>Vec4</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i8.html'>i8</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec1.html' title='gfx_core::format::Vec1'>Vec1</a>&lt;<a class='struct' href='../../gfx_core/format/struct.U8Norm.html' title='gfx_core::format::U8Norm'>U8Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec2.html' title='gfx_core::format::Vec2'>Vec2</a>&lt;<a class='struct' href='../../gfx_core/format/struct.U8Norm.html' title='gfx_core::format::U8Norm'>U8Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec4.html' title='gfx_core::format::Vec4'>Vec4</a>&lt;<a class='struct' href='../../gfx_core/format/struct.U8Norm.html' title='gfx_core::format::U8Norm'>U8Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec1.html' title='gfx_core::format::Vec1'>Vec1</a>&lt;<a class='struct' href='../../gfx_core/format/struct.I8Norm.html' title='gfx_core::format::I8Norm'>I8Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec2.html' title='gfx_core::format::Vec2'>Vec2</a>&lt;<a class='struct' href='../../gfx_core/format/struct.I8Norm.html' title='gfx_core::format::I8Norm'>I8Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec4.html' title='gfx_core::format::Vec4'>Vec4</a>&lt;<a class='struct' href='../../gfx_core/format/struct.I8Norm.html' title='gfx_core::format::I8Norm'>I8Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec1.html' title='gfx_core::format::Vec1'>Vec1</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec2.html' title='gfx_core::format::Vec2'>Vec2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec3.html' title='gfx_core::format::Vec3'>Vec3</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec4.html' title='gfx_core::format::Vec4'>Vec4</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec1.html' title='gfx_core::format::Vec1'>Vec1</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec2.html' title='gfx_core::format::Vec2'>Vec2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec3.html' title='gfx_core::format::Vec3'>Vec3</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec4.html' title='gfx_core::format::Vec4'>Vec4</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i16.html'>i16</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec1.html' title='gfx_core::format::Vec1'>Vec1</a>&lt;<a class='struct' href='../../gfx_core/format/struct.U16Norm.html' title='gfx_core::format::U16Norm'>U16Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec2.html' title='gfx_core::format::Vec2'>Vec2</a>&lt;<a class='struct' href='../../gfx_core/format/struct.U16Norm.html' title='gfx_core::format::U16Norm'>U16Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec3.html' title='gfx_core::format::Vec3'>Vec3</a>&lt;<a class='struct' href='../../gfx_core/format/struct.U16Norm.html' title='gfx_core::format::U16Norm'>U16Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec4.html' title='gfx_core::format::Vec4'>Vec4</a>&lt;<a class='struct' href='../../gfx_core/format/struct.U16Norm.html' title='gfx_core::format::U16Norm'>U16Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec1.html' title='gfx_core::format::Vec1'>Vec1</a>&lt;<a class='struct' href='../../gfx_core/format/struct.I16Norm.html' title='gfx_core::format::I16Norm'>I16Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec2.html' title='gfx_core::format::Vec2'>Vec2</a>&lt;<a class='struct' href='../../gfx_core/format/struct.I16Norm.html' title='gfx_core::format::I16Norm'>I16Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec3.html' title='gfx_core::format::Vec3'>Vec3</a>&lt;<a class='struct' href='../../gfx_core/format/struct.I16Norm.html' title='gfx_core::format::I16Norm'>I16Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec4.html' title='gfx_core::format::Vec4'>Vec4</a>&lt;<a class='struct' href='../../gfx_core/format/struct.I16Norm.html' title='gfx_core::format::I16Norm'>I16Norm</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec1.html' title='gfx_core::format::Vec1'>Vec1</a>&lt;<a class='struct' href='../../gfx_core/format/struct.F16.html' title='gfx_core::format::F16'>F16</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec2.html' title='gfx_core::format::Vec2'>Vec2</a>&lt;<a class='struct' href='../../gfx_core/format/struct.F16.html' title='gfx_core::format::F16'>F16</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec3.html' title='gfx_core::format::Vec3'>Vec3</a>&lt;<a class='struct' href='../../gfx_core/format/struct.F16.html' title='gfx_core::format::F16'>F16</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec4.html' title='gfx_core::format::Vec4'>Vec4</a>&lt;<a class='struct' href='../../gfx_core/format/struct.F16.html' title='gfx_core::format::F16'>F16</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec1.html' title='gfx_core::format::Vec1'>Vec1</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec2.html' title='gfx_core::format::Vec2'>Vec2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec3.html' title='gfx_core::format::Vec3'>Vec3</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec4.html' title='gfx_core::format::Vec4'>Vec4</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec1.html' title='gfx_core::format::Vec1'>Vec1</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec2.html' title='gfx_core::format::Vec2'>Vec2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec3.html' title='gfx_core::format::Vec3'>Vec3</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec4.html' title='gfx_core::format::Vec4'>Vec4</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec1.html' title='gfx_core::format::Vec1'>Vec1</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec2.html' title='gfx_core::format::Vec2'>Vec2</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec3.html' title='gfx_core::format::Vec3'>Vec3</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code></li>
+<li><code>impl Formatted for <a class='type' href='../../gfx_core/format/type.Vec4.html' title='gfx_core::format::Vec4'>Vec4</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f32.html'>f32</a>&gt;</code></li>
+</ul><script type="text/javascript" async
+                         src="../../implementors/gfx_core/format/trait.Formatted.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "gfx_core";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `format` mod in crate `gfx_core`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, format">
+
+    <title>gfx_core::format - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>gfx_core</a></p><script>window.sidebarCurrent = {name: 'format', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>gfx_core</a>::<wbr><a class='mod' href=''>format</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/gfx_core/format.rs.html#15-422' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Universal format specification.
+Applicable to textures, views, and vertex buffers.</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.F16.html'
+                                  title='gfx_core::format::F16'>F16</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Format.html'
+                                  title='gfx_core::format::Format'>Format</a></td>
+                           <td class='docblock-short'>
+                                <p>Complete run-time surface format.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.I16Norm.html'
+                                  title='gfx_core::format::I16Norm'>I16Norm</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.I8Norm.html'
+                                  title='gfx_core::format::I8Norm'>I8Norm</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Swizzle.html'
+                                  title='gfx_core::format::Swizzle'>Swizzle</a></td>
+                           <td class='docblock-short'>
+                                <p>Channel swizzle configuration for the resource views.
+Note: It&#39;s not currently mirrored at compile-time,
+thus providing less safety and convenience.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.U16Norm.html'
+                                  title='gfx_core::format::U16Norm'>U16Norm</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.U8Norm.html'
+                                  title='gfx_core::format::U8Norm'>U8Norm</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.B8_G8_R8_A8.html'
+                                  title='gfx_core::format::B8_G8_R8_A8'>B8_G8_R8_A8</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.ChannelSource.html'
+                                  title='gfx_core::format::ChannelSource'>ChannelSource</a></td>
+                           <td class='docblock-short'>
+                                <p>Source channel in a swizzle configuration. Some may redirect onto
+different physical channels, some may be hardcoded to 0 or 1.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.ChannelType.html'
+                                  title='gfx_core::format::ChannelType'>ChannelType</a></td>
+                           <td class='docblock-short'>
+                                <p>Type of a surface channel. This is how we interpret the
+storage allocated with <code>SurfaceType</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.D16.html'
+                                  title='gfx_core::format::D16'>D16</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.D24.html'
+                                  title='gfx_core::format::D24'>D24</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.D24_S8.html'
+                                  title='gfx_core::format::D24_S8'>D24_S8</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.D32.html'
+                                  title='gfx_core::format::D32'>D32</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Float.html'
+                                  title='gfx_core::format::Float'>Float</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Inorm.html'
+                                  title='gfx_core::format::Inorm'>Inorm</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Int.html'
+                                  title='gfx_core::format::Int'>Int</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R10_G10_B10_A2.html'
+                                  title='gfx_core::format::R10_G10_B10_A2'>R10_G10_B10_A2</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R11_G11_B10.html'
+                                  title='gfx_core::format::R11_G11_B10'>R11_G11_B10</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R16.html'
+                                  title='gfx_core::format::R16'>R16</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R16_G16.html'
+                                  title='gfx_core::format::R16_G16'>R16_G16</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R16_G16_B16.html'
+                                  title='gfx_core::format::R16_G16_B16'>R16_G16_B16</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R16_G16_B16_A16.html'
+                                  title='gfx_core::format::R16_G16_B16_A16'>R16_G16_B16_A16</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R32.html'
+                                  title='gfx_core::format::R32'>R32</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R32_G32.html'
+                                  title='gfx_core::format::R32_G32'>R32_G32</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R32_G32_B32.html'
+                                  title='gfx_core::format::R32_G32_B32'>R32_G32_B32</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R32_G32_B32_A32.html'
+                                  title='gfx_core::format::R32_G32_B32_A32'>R32_G32_B32_A32</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R4_G4.html'
+                                  title='gfx_core::format::R4_G4'>R4_G4</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R4_G4_B4_A4.html'
+                                  title='gfx_core::format::R4_G4_B4_A4'>R4_G4_B4_A4</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R5_G5_B5_A1.html'
+                                  title='gfx_core::format::R5_G5_B5_A1'>R5_G5_B5_A1</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R5_G6_B5.html'
+                                  title='gfx_core::format::R5_G6_B5'>R5_G6_B5</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R8.html'
+                                  title='gfx_core::format::R8'>R8</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R8_G8.html'
+                                  title='gfx_core::format::R8_G8'>R8_G8</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.R8_G8_B8_A8.html'
+                                  title='gfx_core::format::R8_G8_B8_A8'>R8_G8_B8_A8</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Srgb.html'
+                                  title='gfx_core::format::Srgb'>Srgb</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.SurfaceType.html'
+                                  title='gfx_core::format::SurfaceType'>SurfaceType</a></td>
+                           <td class='docblock-short'>
+                                <p>Type of the allocated texture surface. It is supposed to only
+carry information about the number of bits per each channel.
+The actual types are up to the views to decide and interpret.
+The actual components are up to the swizzle to define.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Uint.html'
+                                  title='gfx_core::format::Uint'>Uint</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Unorm.html'
+                                  title='gfx_core::format::Unorm'>Unorm</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.BlendChannel.html'
+                                  title='gfx_core::format::BlendChannel'>BlendChannel</a></td>
+                           <td class='docblock-short'>
+                                <p>An ability of a channel type to be used for blended render targets.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.BlendFormat.html'
+                                  title='gfx_core::format::BlendFormat'>BlendFormat</a></td>
+                           <td class='docblock-short'>
+                                <p>Ability to be used for blended render targets.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.BufferFormat.html'
+                                  title='gfx_core::format::BufferFormat'>BufferFormat</a></td>
+                           <td class='docblock-short'>
+                                <p>Ability to be used for vertex buffers.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.BufferSurface.html'
+                                  title='gfx_core::format::BufferSurface'>BufferSurface</a></td>
+                           <td class='docblock-short'>
+                                <p>An ability of a surface type to be used for vertex buffers.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.ChannelTyped.html'
+                                  title='gfx_core::format::ChannelTyped'>ChannelTyped</a></td>
+                           <td class='docblock-short'>
+                                <p>Compile-time channel type trait.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.DepthFormat.html'
+                                  title='gfx_core::format::DepthFormat'>DepthFormat</a></td>
+                           <td class='docblock-short'>
+                                <p>Ability to be used for depth targets.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.DepthStencilFormat.html'
+                                  title='gfx_core::format::DepthStencilFormat'>DepthStencilFormat</a></td>
+                           <td class='docblock-short'>
+                                <p>Ability to be used for depth+stencil targets.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.DepthSurface.html'
+                                  title='gfx_core::format::DepthSurface'>DepthSurface</a></td>
+                           <td class='docblock-short'>
+                                <p>An ability of a surface type to be used for depth targets.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.Formatted.html'
+                                  title='gfx_core::format::Formatted'>Formatted</a></td>
+                           <td class='docblock-short'>
+                                <p>Compile-time full format trait.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.RenderChannel.html'
+                                  title='gfx_core::format::RenderChannel'>RenderChannel</a></td>
+                           <td class='docblock-short'>
+                                <p>An ability of a channel type to be used for render targets.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.RenderFormat.html'
+                                  title='gfx_core::format::RenderFormat'>RenderFormat</a></td>
+                           <td class='docblock-short'>
+                                <p>Ability to be used for render targets.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.RenderSurface.html'
+                                  title='gfx_core::format::RenderSurface'>RenderSurface</a></td>
+                           <td class='docblock-short'>
+                                <p>An ability of a surface type to be used for render targets.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.StencilFormat.html'
+                                  title='gfx_core::format::StencilFormat'>StencilFormat</a></td>
+                           <td class='docblock-short'>
+                                <p>Ability to be used for vertex buffers.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.StencilSurface.html'
+                                  title='gfx_core::format::StencilSurface'>StencilSurface</a></td>
+                           <td class='docblock-short'>
+                                <p>An ability of a surface type to be used for stencil targets.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.SurfaceTyped.html'
+                                  title='gfx_core::format::SurfaceTyped'>SurfaceTyped</a></td>
+                           <td class='docblock-short'>
+                                <p>Compile-time surface type trait.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.TextureChannel.html'
+                                  title='gfx_core::format::TextureChannel'>TextureChannel</a></td>
+                           <td class='docblock-short'>
+                                <p>An ability of a channel type to be used for textures.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.TextureFormat.html'
+                                  title='gfx_core::format::TextureFormat'>TextureFormat</a></td>
+                           <td class='docblock-short'>
+                                <p>Ability to be used for textures.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.TextureSurface.html'
+                                  title='gfx_core::format::TextureSurface'>TextureSurface</a></td>
+                           <td class='docblock-short'>
+                                <p>An ability of a surface type to be used for textures.</p>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Bgra8.html'
+                                  title='gfx_core::format::Bgra8'>Bgra8</a></td>
+                           <td class='docblock-short'>
+                                <p>Standard 8bits BGRA format.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Depth.html'
+                                  title='gfx_core::format::Depth'>Depth</a></td>
+                           <td class='docblock-short'>
+                                <p>Standard 24-bit depth format.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Depth32F.html'
+                                  title='gfx_core::format::Depth32F'>Depth32F</a></td>
+                           <td class='docblock-short'>
+                                <p>Standard 32-bit floating-point depth format.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.DepthStencil.html'
+                                  title='gfx_core::format::DepthStencil'>DepthStencil</a></td>
+                           <td class='docblock-short'>
+                                <p>Standard 24-bit depth format with 8-bit stencil.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Rgb10a2F.html'
+                                  title='gfx_core::format::Rgb10a2F'>Rgb10a2F</a></td>
+                           <td class='docblock-short'>
+                                <p>Standard HDR floating-point format with 10 bits for RGB components
+and 2 bits for the alpha.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Rgba16F.html'
+                                  title='gfx_core::format::Rgba16F'>Rgba16F</a></td>
+                           <td class='docblock-short'>
+                                <p>Standard 16-bit floating-point RGBA format.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Rgba32F.html'
+                                  title='gfx_core::format::Rgba32F'>Rgba32F</a></td>
+                           <td class='docblock-short'>
+                                <p>Standard 32-bit floating-point RGBA format.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Rgba8.html'
+                                  title='gfx_core::format::Rgba8'>Rgba8</a></td>
+                           <td class='docblock-short'>
+                                <p>Standard 8bits RGBA format.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Srgba8.html'
+                                  title='gfx_core::format::Srgba8'>Srgba8</a></td>
+                           <td class='docblock-short'>
+                                <p>Standard 8bit gamma transforming RGB format.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Vec1.html'
+                                  title='gfx_core::format::Vec1'>Vec1</a></td>
+                           <td class='docblock-short'>
+                                <p>Abstracted 1-element container for macro internal use</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Vec2.html'
+                                  title='gfx_core::format::Vec2'>Vec2</a></td>
+                           <td class='docblock-short'>
+                                <p>Abstracted 2-element container for macro internal use</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Vec3.html'
+                                  title='gfx_core::format::Vec3'>Vec3</a></td>
+                           <td class='docblock-short'>
+                                <p>Abstracted 3-element container for macro internal use</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Vec4.html'
+                                  title='gfx_core::format::Vec4'>Vec4</a></td>
+                           <td class='docblock-short'>
+                                <p>Abstracted 4-element container for macro internal use</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "gfx_core";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

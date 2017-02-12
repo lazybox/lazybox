@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["iter",""]],"struct":[["Accessor","An entity accessor. It is the key to access and modify entity components"],["Entities",""],["Entity","Represents an unique entity in the world. There is no data associated to it."],["EntityRef","A reference that keeps track of a particular entity"],["Iter","An Iterator other entities."]]});

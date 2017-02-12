@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["CreationError","Error creating a buffer."],["Role","Role of the memory buffer."]],"struct":[["Info","An information block that is immutable and associated to each buffer."],["Raw","Untyped buffer"]]});

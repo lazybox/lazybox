@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Inputs` struct in crate `lazybox_inputs`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Inputs">
+
+    <title>lazybox_inputs::Inputs - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>lazybox_inputs</a></p><script>window.sidebarCurrent = {name: 'Inputs', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>lazybox_inputs</a>::<wbr><a class='struct' href=''>Inputs</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/lazybox_inputs/lib.rs.html#25-28' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Inputs { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../lazybox_inputs/struct.Inputs.html' title='lazybox_inputs::Inputs'>Inputs</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/lazybox_inputs/lib.rs.html#30-100' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(interaction: <a class='struct' href='../lazybox_inputs/interaction/struct.InteractionBuilder.html' title='lazybox_inputs::interaction::InteractionBuilder'>InteractionBuilder</a>) -&gt; Self</code></span></h4>
+<h4 id='method.state' class='method'><span id='state.v' class='invisible'><code>fn <a href='#method.state' class='fnname'>state</a>(&amp;self) -&gt; &amp;<a class='struct' href='../lazybox_inputs/state/struct.InputState.html' title='lazybox_inputs::state::InputState'>InputState</a></code></span></h4>
+<h4 id='method.interaction_mut' class='method'><span id='interaction_mut.v' class='invisible'><code>fn <a href='#method.interaction_mut' class='fnname'>interaction_mut</a>(&amp;mut self) -&gt; &amp;mut <a class='struct' href='../lazybox_inputs/interaction/struct.Interaction.html' title='lazybox_inputs::interaction::Interaction'>Interaction</a></code></span></h4>
+<h4 id='method.triggered_actions' class='method'><span id='triggered_actions.v' class='invisible'><code>fn <a href='#method.triggered_actions' class='fnname'>triggered_actions</a>(&amp;self, interface_name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='type' href='../lazybox_inputs/interaction/type.Action.html' title='lazybox_inputs::interaction::Action'>Action</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>&gt;</code></span></h4>
+<h4 id='method.load_interaction_profile' class='method'><span id='load_interaction_profile.v' class='invisible'><code>fn <a href='#method.load_interaction_profile' class='fnname'>load_interaction_profile</a>(&amp;mut self, path: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../lazybox_inputs/error/type.Result.html' title='lazybox_inputs::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h4>
+<h4 id='method.handle_event' class='method'><span id='handle_event.v' class='invisible'><code>fn <a href='#method.handle_event' class='fnname'>handle_event</a>(&amp;mut self, event: &amp;<a class='enum' href='../glutin/events/enum.Event.html' title='glutin::events::Event'>Event</a>)</code></span></h4>
+<h4 id='method.trigger_state_actions' class='method'><span id='trigger_state_actions.v' class='invisible'><code>fn <a href='#method.trigger_state_actions' class='fnname'>trigger_state_actions</a>(&amp;mut self)</code></span></h4>
+<h4 id='method.clear_actions' class='method'><span id='clear_actions.v' class='invisible'><code>fn <a href='#method.clear_actions' class='fnname'>clear_actions</a>(&amp;mut self)</code></span></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "lazybox_inputs";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

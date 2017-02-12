@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `SurfaceTyped` trait in crate `gfx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, SurfaceTyped">
+
+    <title>gfx::format::SurfaceTyped - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>gfx</a>::<wbr><a href='index.html'>format</a></p><script>window.sidebarCurrent = {name: 'SurfaceTyped', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>gfx</a>::<wbr><a href='index.html'>format</a>::<wbr><a class='trait' href=''>SurfaceTyped</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/gfx_core/format.rs.html#187-192' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait SurfaceTyped {
+    type <a href='#associatedtype.DataType' class='type'>DataType</a>: <a class='trait' href='../../gfx/traits/trait.Pod.html' title='gfx::traits::Pod'>Pod</a>;
+    fn <a href='#tymethod.get_surface_type' class='fnname'>get_surface_type</a>() -&gt; <a class='enum' href='../../gfx/format/enum.SurfaceType.html' title='gfx::format::SurfaceType'>SurfaceType</a>;
+}</pre><div class='docblock'><p>Compile-time surface type trait.</p>
+</div>
+            <h2 id='associated-types'>Associated Types</h2>
+            <div class='methods'>
+        <h3 id='associatedtype.DataType' class='method'><span id='DataType.t' class='invisible'><code>type <a href='#associatedtype.DataType' class='type'>DataType</a>: <a class='trait' href='../../gfx/traits/trait.Pod.html' title='gfx::traits::Pod'>Pod</a></code></span></h3><div class='docblock'><p>The corresponding data type to be passed from CPU.</p>
+</div></div>
+            <h2 id='required-methods'>Required Methods</h2>
+            <div class='methods'>
+        <h3 id='tymethod.get_surface_type' class='method'><span id='get_surface_type.v' class='invisible'><code>fn <a href='#tymethod.get_surface_type' class='fnname'>get_surface_type</a>() -&gt; <a class='enum' href='../../gfx/format/enum.SurfaceType.html' title='gfx::format::SurfaceType'>SurfaceType</a></code></span></h3><div class='docblock'><p>Return the run-time value of the type.</p>
+</div></div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R4_G4.html' title='gfx::format::R4_G4'>R4_G4</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R4_G4_B4_A4.html' title='gfx::format::R4_G4_B4_A4'>R4_G4_B4_A4</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R5_G5_B5_A1.html' title='gfx::format::R5_G5_B5_A1'>R5_G5_B5_A1</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R5_G6_B5.html' title='gfx::format::R5_G6_B5'>R5_G6_B5</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R8.html' title='gfx::format::R8'>R8</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R8_G8.html' title='gfx::format::R8_G8'>R8_G8</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R8_G8_B8_A8.html' title='gfx::format::R8_G8_B8_A8'>R8_G8_B8_A8</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R10_G10_B10_A2.html' title='gfx::format::R10_G10_B10_A2'>R10_G10_B10_A2</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R11_G11_B10.html' title='gfx::format::R11_G11_B10'>R11_G11_B10</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R16.html' title='gfx::format::R16'>R16</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R16_G16.html' title='gfx::format::R16_G16'>R16_G16</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R16_G16_B16.html' title='gfx::format::R16_G16_B16'>R16_G16_B16</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R16_G16_B16_A16.html' title='gfx::format::R16_G16_B16_A16'>R16_G16_B16_A16</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R32.html' title='gfx::format::R32'>R32</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R32_G32.html' title='gfx::format::R32_G32'>R32_G32</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R32_G32_B32.html' title='gfx::format::R32_G32_B32'>R32_G32_B32</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.R32_G32_B32_A32.html' title='gfx::format::R32_G32_B32_A32'>R32_G32_B32_A32</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.B8_G8_R8_A8.html' title='gfx::format::B8_G8_R8_A8'>B8_G8_R8_A8</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.D16.html' title='gfx::format::D16'>D16</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.D24.html' title='gfx::format::D24'>D24</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.D24_S8.html' title='gfx::format::D24_S8'>D24_S8</a></code></li>
+<li><code>impl SurfaceTyped for <a class='enum' href='../../gfx/format/enum.D32.html' title='gfx::format::D32'>D32</a></code></li>
+</ul><script type="text/javascript" async
+                         src="../../implementors/gfx_core/format/trait.SurfaceTyped.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "gfx";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

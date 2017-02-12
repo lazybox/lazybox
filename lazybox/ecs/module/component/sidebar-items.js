@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["storage",""]],"struct":[["ComponentType",""]],"trait":[["Component",""],["Template",""]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["VERTEX_BUFFER_SIZE",""],["VERTEX_BUFFER_TRIANGLES",""]],"mod":[["triangulation","Methods for converting shapes into triangles, inspired from piston graphics."]],"struct":[["Render",""],["Renderer",""]],"type":[["Triangle",""]]});

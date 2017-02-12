@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Slice` struct in crate `gfx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Slice">
+
+    <title>gfx::Slice - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>gfx</a></p><script>window.sidebarCurrent = {name: 'Slice', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>gfx</a>::<wbr><a class='struct' href=''>Slice</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/gfx/slice.rs.html#59-74' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Slice&lt;R:&nbsp;<a class='trait' href='../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a>&gt; {
+    pub start: <a class='type' href='../gfx/type.VertexCount.html' title='gfx::VertexCount'>VertexCount</a>,
+    pub end: <a class='type' href='../gfx/type.VertexCount.html' title='gfx::VertexCount'>VertexCount</a>,
+    pub base_vertex: <a class='type' href='../gfx/type.VertexCount.html' title='gfx::VertexCount'>VertexCount</a>,
+    pub instances: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../gfx/type.InstanceParams.html' title='gfx::InstanceParams'>InstanceParams</a>&gt;,
+    pub buffer: <a class='enum' href='../gfx/enum.IndexBuffer.html' title='gfx::IndexBuffer'>IndexBuffer</a>&lt;R&gt;,
+}</pre><div class='docblock'><p>A <code>Slice</code> dictates in which and in what order vertices get processed. It is required for
+processing a PSO.</p>
+
+<h1 id='overview' class='section-header'><a href='#overview'>Overview</a></h1>
+<p>A <code>Slice</code> object in essence dictates in what order the vertices in a <code>VertexBuffer</code> get
+processed. To do this, it contains an internal index-buffer. This <code>Buffer</code> is a list of
+indices into this <code>VertexBuffer</code> (vertex-index). A vertex-index of 0 represents the first
+vertex in the <code>VertexBuffer</code>, a vertex-index of 1 represents the second, 2 represents the
+third, and so on. The vertex-indices in the index-buffer are read in order; every vertex-index
+tells the pipeline which vertex to process next. </p>
+
+<p>Because the same index can re-appear multiple times, duplicate-vertices can be avoided. For
+instance, if you want to draw a square, you need two triangles, and thus six vertices. Because
+the same index can reappear multiple times, this means we can instead use 4 vertices, and 6
+vertex-indices.</p>
+
+<p>This index-buffer has a few variants. See the <code>IndexBuffer</code> documentation for a detailed
+description.</p>
+
+<p>The <code>start</code> and <code>end</code> fields say where in the index-buffer to start and stop reading.
+Setting <code>start</code> to 0, and <code>end</code> to the length of the index-buffer, will cause the entire
+index-buffer to be processed. The <code>base_vertex</code> dictates the index of the first vertex
+in the <code>VertexBuffer</code>. This essentially moves the the start of the <code>VertexBuffer</code>, to the
+vertex with this index.</p>
+
+<h1 id='constuction--handling' class='section-header'><a href='#constuction--handling'>Constuction &amp; Handling</a></h1>
+<p>The <code>Slice</code> structure can be constructed automatically when using a <code>Factory</code> to create a
+vertex buffer. If needed, it can also be created manually.</p>
+
+<p>A <code>Slice</code> is required to process a PSO, as it contains the needed information on in what order
+to draw which vertices. As such, every <code>draw</code> call on an <code>Encoder</code> requires a <code>Slice</code>.</p>
+</div><h2 class='fields'>Fields</h2><span id='structfield.start' class='structfield'>
+                           <span id='start.v' class='invisible'>
+                           <code>start: <a class='type' href='../gfx/type.VertexCount.html' title='gfx::VertexCount'>VertexCount</a></code>
+                           </span></span><span class='stab '></span><div class='docblock'><p>The start index of the index-buffer. Processing will start at this location in the
+index-buffer. </p>
+</div><span id='structfield.end' class='structfield'>
+                           <span id='end.v' class='invisible'>
+                           <code>end: <a class='type' href='../gfx/type.VertexCount.html' title='gfx::VertexCount'>VertexCount</a></code>
+                           </span></span><span class='stab '></span><div class='docblock'><p>The end index in the index-buffer. Processing will stop at this location (exclusive) in
+the index buffer.</p>
+</div><span id='structfield.base_vertex' class='structfield'>
+                           <span id='base_vertex.v' class='invisible'>
+                           <code>base_vertex: <a class='type' href='../gfx/type.VertexCount.html' title='gfx::VertexCount'>VertexCount</a></code>
+                           </span></span><span class='stab '></span><div class='docblock'><p>This is the index of the first vertex in the <code>VertexBuffer</code>. This value will be added to
+every index in the index-buffer, effectively moving the start of the <code>VertexBuffer</code> to this
+base-vertex.</p>
+</div><span id='structfield.instances' class='structfield'>
+                           <span id='instances.v' class='invisible'>
+                           <code>instances: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../gfx/type.InstanceParams.html' title='gfx::InstanceParams'>InstanceParams</a>&gt;</code>
+                           </span></span><span class='stab '></span><div class='docblock'><p>Instancing configuration.</p>
+</div><span id='structfield.buffer' class='structfield'>
+                           <span id='buffer.v' class='invisible'>
+                           <code>buffer: <a class='enum' href='../gfx/enum.IndexBuffer.html' title='gfx::IndexBuffer'>IndexBuffer</a>&lt;R&gt;</code>
+                           </span></span><span class='stab '></span><div class='docblock'><p>Represents the type of index-buffer used.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class='trait' href='../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a>&gt; <a class='struct' href='../gfx/struct.Slice.html' title='gfx::Slice'>Slice</a>&lt;R&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gfx/slice.rs.html#76-115' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new_match_vertex_buffer' class='method'><span id='new_match_vertex_buffer.v' class='invisible'><code>fn <a href='#method.new_match_vertex_buffer' class='fnname'>new_match_vertex_buffer</a>&lt;V&gt;(vbuf: &amp;<a class='struct' href='../gfx/handle/struct.Buffer.html' title='gfx::handle::Buffer'>Buffer</a>&lt;R, V&gt;) -&gt; Self <span class='where fmt-newline'>where V: <a class='trait' href='../gfx/pso/buffer/trait.Structure.html' title='gfx::pso::buffer::Structure'>Structure</a>&lt;<a class='struct' href='../gfx/format/struct.Format.html' title='gfx::format::Format'>Format</a>&gt;</span></code></span></h4>
+<div class='docblock'><p>Creates a new <code>Slice</code> to match the supplied vertex buffer, from start to end, in order.</p>
+</div><h4 id='method.get_prim_count' class='method'><span id='get_prim_count.v' class='invisible'><code>fn <a href='#method.get_prim_count' class='fnname'>get_prim_count</a>(&amp;self, prim: <a class='enum' href='../gfx/enum.Primitive.html' title='gfx::Primitive'>Primitive</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></span></h4>
+<div class='docblock'><p>Calculates the number of primitives of the specified type in this <code>Slice</code>.</p>
+</div><h4 id='method.split_at' class='method'><span id='split_at.v' class='invisible'><code>fn <a href='#method.split_at' class='fnname'>split_at</a>(&amp;self, mid: <a class='type' href='../gfx/type.VertexCount.html' title='gfx::VertexCount'>VertexCount</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a>Self, Self<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></span></h4>
+<div class='docblock'><p>Divides one slice into two at an index.</p>
+
+<p>The first will contain the range in the index-buffer [self.start, mid) (excluding the index mid itself) and the
+second will contain the range [mid, self.end).</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> + <a class='trait' href='../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html' title='core::cmp::PartialEq'>PartialEq</a> for <a class='struct' href='../gfx/struct.Slice.html' title='gfx::Slice'>Slice</a>&lt;R&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gfx/slice.rs.html#58' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class='method'><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../gfx/struct.Slice.html' title='gfx::Slice'>Slice</a>&lt;R&gt;) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class='method'><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class='struct' href='../gfx/struct.Slice.html' title='gfx::Slice'>Slice</a>&lt;R&gt;) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> + <a class='trait' href='../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../gfx/struct.Slice.html' title='gfx::Slice'>Slice</a>&lt;R&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gfx/slice.rs.html#58' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> + <a class='trait' href='../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../gfx/struct.Slice.html' title='gfx::Slice'>Slice</a>&lt;R&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gfx/slice.rs.html#58' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../gfx/struct.Slice.html' title='gfx::Slice'>Slice</a>&lt;R&gt;</code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "gfx";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

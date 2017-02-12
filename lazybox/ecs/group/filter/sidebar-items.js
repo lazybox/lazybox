@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Filter","Represents a filter of entities"]]});

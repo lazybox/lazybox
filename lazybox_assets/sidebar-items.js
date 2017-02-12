@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Status",""]],"fn":[["init",""]],"struct":[["AssetRef",""],["AsyncLoader",""],["Initializer",""],["ReadyAssetIter",""],["WaitAssetIter",""]],"trait":[["Loader",""]],"type":[["LoaderResult",""]]});

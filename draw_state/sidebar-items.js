@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["preset","State presets"],["state","Fixed-function hardware state."],["target","Render target specification."]]});

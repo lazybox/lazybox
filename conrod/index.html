@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `conrod` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, conrod">
+
+    <title>conrod - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'conrod', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>conrod</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/conrod/lib.rs.html#1-43' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'>
+<h1 id='conrod' class='section-header'><a href='#conrod'>Conrod</a></h1>
+<p>An easy-to-use, immediate-mode, 2D GUI library featuring a range of useful widgets.</p>
+
+<p>If you are new to Conrod, we recommend checking out <a href="./guide/index.html">The Guide</a>.</p>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<table><tr><td><code>pub use color::<a class='enum' href='../conrod/color/enum.Color.html' title='conrod::color::Color'>Color</a>;</code></td></tr><tr><td><code>pub use color::<a class='trait' href='../conrod/color/trait.Colorable.html' title='conrod::color::Colorable'>Colorable</a>;</code></td></tr><tr><td><code>pub use theme::<a class='struct' href='../conrod/theme/struct.Theme.html' title='conrod::theme::Theme'>Theme</a>;</code></td></tr><tr><td><code>pub use widget::<a class='mod' href='../conrod/widget/scroll/index.html' title='conrod::widget::scroll'>scroll</a>;</code></td></tr><tr><td><code>pub use widget::<a class='trait' href='../conrod/widget/trait.Widget.html' title='conrod::widget::Widget'>Widget</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='backend/index.html'
+                                  title='conrod::backend'>backend</a></td>
+                           <td class='docblock-short'>
+                                <p>Feature-gated, backend-specific functionality.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='color/index.html'
+                                  title='conrod::color'>color</a></td>
+                           <td class='docblock-short'>
+                                <p>A library providing simple <code>Color</code> and <code>Gradient</code> types along with useful transformations and
+presets.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='event/index.html'
+                                  title='conrod::event'>event</a></td>
+                           <td class='docblock-short'>
+                                <p>Contains all types used to describe the input events that <code>Widget</code>s may handle.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='graph/index.html'
+                                  title='conrod::graph'>graph</a></td>
+                           <td class='docblock-short'>
+                                <p>Conrod uses a directed acyclic graph to manage both storing widgets and describing their
+relationships.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='guide/index.html'
+                                  title='conrod::guide'>guide</a></td>
+                           <td class='docblock-short'>
+                                <p><strong>The Conrod Guide</strong></p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='image/index.html'
+                                  title='conrod::image'>image</a></td>
+                           <td class='docblock-short'>
+                                <p>A type used to manage a user&#39;s image data and map them to <code>Image</code> widgets:</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='input/index.html'
+                                  title='conrod::input'>input</a></td>
+                           <td class='docblock-short'>
+                                <p>This module contains all the logic for handling input events and providing them to widgets.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='render/index.html'
+                                  title='conrod::render'>render</a></td>
+                           <td class='docblock-short'>
+                                <p>Conrod&#39;s generic graphics backend.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='text/index.html'
+                                  title='conrod::text'>text</a></td>
+                           <td class='docblock-short'>
+                                <p>Text layout logic.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='theme/index.html'
+                                  title='conrod::theme'>theme</a></td>
+                           <td class='docblock-short'>
+                                <p>Types a functionality for handling Canvas and Widget theming.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='utils/index.html'
+                                  title='conrod::utils'>utils</a></td>
+                           <td class='docblock-short'>
+                                <p>Various utility functions used throughout Conrod.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='widget/index.html'
+                                  title='conrod::widget'>widget</a></td>
+                           <td class='docblock-short'>
+                                <p>Widgets are the core building blocks for every conrod user interface.</p>
+                           </td>
+                       </tr></table><h2 id='macros' class='section-header'><a href="#macros">Macros</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.builder_method.html'
+                                  title='conrod::builder_method'>builder_method</a></td>
+                           <td class='docblock-short'>
+                                <p>A macro for simplifying implementation of methods for the <code>builder pattern</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.builder_methods.html'
+                                  title='conrod::builder_methods'>builder_methods</a></td>
+                           <td class='docblock-short'>
+                                <p>A macro to simplify implementation of
+<a href="https://en.wikipedia.org/wiki/Builder_pattern">&quot;builder-pattern&quot;</a> methods.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.image_map.html'
+                                  title='conrod::image_map'>image_map</a></td>
+                           <td class='docblock-short'>
+                                <p>A macro for simplifying the instantiation of an <code>image::Map</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.widget_ids.html'
+                                  title='conrod::widget_ids'>widget_ids</a></td>
+                           <td class='docblock-short'>
+                                <p>A macro used to generate a struct with a field for each unique identifier given.
+Each field can then be used to generate unique <code>widget::Id</code>s.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='macro' href='macro.widget_style.html'
+                                  title='conrod::widget_style'>widget_style</a></td>
+                           <td class='docblock-short'>
+                                <p>A macro for vastly simplifying the definition and implementation of a widget&#39;s associated
+<code>Style</code> type.</p>
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Padding.html'
+                                  title='conrod::Padding'>Padding</a></td>
+                           <td class='docblock-short'>
+                                <p>The distance between the inner edge of a border and the outer edge of the inner content.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Range.html'
+                                  title='conrod::Range'>Range</a></td>
+                           <td class='docblock-short'>
+                                <p>Some start and end position along a single axis.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Rect.html'
+                                  title='conrod::Rect'>Rect</a></td>
+                           <td class='docblock-short'>
+                                <p>Defines a Rectangle&#39;s bounds across the x and y axes.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Ui.html'
+                                  title='conrod::Ui'>Ui</a></td>
+                           <td class='docblock-short'>
+                                <p><code>Ui</code> is the most important type within Conrod and is necessary for rendering and maintaining
+widget state.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.UiBuilder.html'
+                                  title='conrod::UiBuilder'>UiBuilder</a></td>
+                           <td class='docblock-short'>
+                                <p>A constructor type for building a <code>Ui</code> instance with a set of optional parameters.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.UiCell.html'
+                                  title='conrod::UiCell'>UiCell</a></td>
+                           <td class='docblock-short'>
+                                <p>A wrapper around the <code>Ui</code> that restricts the user from mutating the <code>Ui</code> in certain ways while
+in the scope of the <code>Ui::set_widgets</code> function and within <code>Widget</code>s&#39; <code>update</code> methods. Using
+the <code>UiCell</code>, users may access the <code>Ui</code> immutably (via <code>Deref</code>) however they wish, however they
+may only mutate the <code>Ui</code> via the <code>&amp;mut self</code> methods provided by the <code>UiCell</code>.</p>
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Align.html'
+                                  title='conrod::Align'>Align</a></td>
+                           <td class='docblock-short'>
+                                <p>The orientation of <strong>Align</strong>ment along some <strong>Axis</strong>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Axis.html'
+                                  title='conrod::Axis'>Axis</a></td>
+                           <td class='docblock-short'>
+                                <p>Represents either <strong>Axis</strong> in the 2-dimensional plane.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Bordering.html'
+                                  title='conrod::Bordering'>Bordering</a></td>
+                           <td class='docblock-short'>
+                                <p>To be used as a parameter for defining the aesthetic
+of the widget border.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Corner.html'
+                                  title='conrod::Corner'>Corner</a></td>
+                           <td class='docblock-short'>
+                                <p>Either of the four corners of a <strong>Rect</strong>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Dimension.html'
+                                  title='conrod::Dimension'>Dimension</a></td>
+                           <td class='docblock-short'>
+                                <p>The length of a <strong>Widget</strong> over either the <em>x</em> or <em>y</em> axes.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Direction.html'
+                                  title='conrod::Direction'>Direction</a></td>
+                           <td class='docblock-short'>
+                                <p>Directionally positioned, normally relative to some other widget.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Edge.html'
+                                  title='conrod::Edge'>Edge</a></td>
+                           <td class='docblock-short'>
+                                <p>Represents either the <strong>Start</strong> or <strong>End</strong> <strong>Edge</strong> of a <strong>Range</strong>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Place.html'
+                                  title='conrod::Place'>Place</a></td>
+                           <td class='docblock-short'>
+                                <p>Place the widget at a position on some other widget.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Position.html'
+                                  title='conrod::Position'>Position</a></td>
+                           <td class='docblock-short'>
+                                <p>Some <strong>Position</strong> of some <strong>Widget</strong> along a single axis.</p>
+                           </td>
+                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.Borderable.html'
+                                  title='conrod::Borderable'>Borderable</a></td>
+                           <td class='docblock-short'>
+                                <p>Widgets that may display a border.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.Labelable.html'
+                                  title='conrod::Labelable'>Labelable</a></td>
+                           <td class='docblock-short'>
+                                <p>Widgets that may display some label.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.Positionable.html'
+                                  title='conrod::Positionable'>Positionable</a></td>
+                           <td class='docblock-short'>
+                                <p>Widgets that are positionable.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.Sizeable.html'
+                                  title='conrod::Sizeable'>Sizeable</a></td>
+                           <td class='docblock-short'>
+                                <p>Widgets that support different dimensions.</p>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Depth.html'
+                                  title='conrod::Depth'>Depth</a></td>
+                           <td class='docblock-short'>
+                                <p>The depth at which the widget will be rendered.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Dimensions.html'
+                                  title='conrod::Dimensions'>Dimensions</a></td>
+                           <td class='docblock-short'>
+                                <p>General use 2D spatial dimensions.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.FontSize.html'
+                                  title='conrod::FontSize'>FontSize</a></td>
+                           <td class='docblock-short'>
+                                <p>Font size used throughout Conrod.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Margin.html'
+                                  title='conrod::Margin'>Margin</a></td>
+                           <td class='docblock-short'>
+                                <p>The margin for some <code>Place</code>ment on either end of an axis.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Point.html'
+                                  title='conrod::Point'>Point</a></td>
+                           <td class='docblock-short'>
+                                <p>General use 2D spatial point.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Scalar.html'
+                                  title='conrod::Scalar'>Scalar</a></td>
+                           <td class='docblock-short'>
+                                <p>An alias over the Scalar type used throughout Conrod.</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "conrod";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

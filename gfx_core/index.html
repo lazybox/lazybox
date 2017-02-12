@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `gfx_core` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, gfx_core">
+
+    <title>gfx_core - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'gfx_core', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>gfx_core</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/gfx_core/lib.rs.html#15-220' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Low-level graphics abstraction for Rust. Mostly operates on data, not types.
+Designed for use by libraries and higher-level abstractions only.</p>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<table><tr><td><code>pub use self::<a class='mod'
+                                       href='./factory/index.html'>factory</a>::<a class='trait' href='../gfx_core/factory/trait.Factory.html' title='gfx_core::factory::Factory'>Factory</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='buffer/index.html'
+                                  title='gfx_core::buffer'>buffer</a></td>
+                           <td class='docblock-short'>
+                                <p>Memory buffers</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='command/index.html'
+                                  title='gfx_core::command'>command</a></td>
+                           <td class='docblock-short'>
+                                <p>Command Buffer device interface</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='dummy/index.html'
+                                  title='gfx_core::dummy'>dummy</a></td>
+                           <td class='docblock-short'>
+                                <p>Dummy backend implementation to test the code for compile errors
+outside of the graphics development environment.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='factory/index.html'
+                                  title='gfx_core::factory'>factory</a></td>
+                           <td class='docblock-short'>
+                                <p>Resource factory</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='format/index.html'
+                                  title='gfx_core::format'>format</a></td>
+                           <td class='docblock-short'>
+                                <p>Universal format specification.
+Applicable to textures, views, and vertex buffers.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='handle/index.html'
+                                  title='gfx_core::handle'>handle</a></td>
+                           <td class='docblock-short'>
+                                <p>Resource handles</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='mapping/index.html'
+                                  title='gfx_core::mapping'>mapping</a></td>
+                           <td class='docblock-short'>
+                                <p>Memory mapping</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='memory/index.html'
+                                  title='gfx_core::memory'>memory</a></td>
+                           <td class='docblock-short'>
+                                <p>Memory stuff</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='pso/index.html'
+                                  title='gfx_core::pso'>pso</a></td>
+                           <td class='docblock-short'>
+                                <p>Raw Pipeline State Objects</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='shade/index.html'
+                                  title='gfx_core::shade'>shade</a></td>
+                           <td class='docblock-short'>
+                                <p>Shader handling.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='state/index.html'
+                                  title='gfx_core::state'>state</a></td>
+                           <td class='docblock-short'>
+                                <p>Fixed-function hardware state.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='target/index.html'
+                                  title='gfx_core::target'>target</a></td>
+                           <td class='docblock-short'>
+                                <p>Render target specification.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='texture/index.html'
+                                  title='gfx_core::texture'>texture</a></td>
+                           <td class='docblock-short'>
+                                <p>Texture creation and modification.</p>
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Capabilities.html'
+                                  title='gfx_core::Capabilities'>Capabilities</a></td>
+                           <td class='docblock-short'>
+                                <p>Features that the device supports.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.DomainShader.html'
+                                  title='gfx_core::DomainShader'>DomainShader</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.GeometryShader.html'
+                                  title='gfx_core::GeometryShader'>GeometryShader</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.HullShader.html'
+                                  title='gfx_core::HullShader'>HullShader</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.PixelShader.html'
+                                  title='gfx_core::PixelShader'>PixelShader</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.VertexShader.html'
+                                  title='gfx_core::VertexShader'>VertexShader</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.IndexType.html'
+                                  title='gfx_core::IndexType'>IndexType</a></td>
+                           <td class='docblock-short'>
+                                <p>A type of each index value in the slice&#39;s index buffer</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Primitive.html'
+                                  title='gfx_core::Primitive'>Primitive</a></td>
+                           <td class='docblock-short'>
+                                <p>Describes what geometric primitives are created from vertex data.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.ShaderSet.html'
+                                  title='gfx_core::ShaderSet'>ShaderSet</a></td>
+                           <td class='docblock-short'>
+                                <p>A complete set of shaders to link a program.</p>
+                           </td>
+                       </tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MAX_COLOR_TARGETS.html'
+                                  title='gfx_core::MAX_COLOR_TARGETS'>MAX_COLOR_TARGETS</a></td>
+                           <td class='docblock-short'>
+                                <p>Compile-time maximum number of color targets.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MAX_CONSTANT_BUFFERS.html'
+                                  title='gfx_core::MAX_CONSTANT_BUFFERS'>MAX_CONSTANT_BUFFERS</a></td>
+                           <td class='docblock-short'>
+                                <p>Compile-time maximum number of constant buffers.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MAX_RESOURCE_VIEWS.html'
+                                  title='gfx_core::MAX_RESOURCE_VIEWS'>MAX_RESOURCE_VIEWS</a></td>
+                           <td class='docblock-short'>
+                                <p>Compile-time maximum number of shader resource views (SRV).</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MAX_SAMPLERS.html'
+                                  title='gfx_core::MAX_SAMPLERS'>MAX_SAMPLERS</a></td>
+                           <td class='docblock-short'>
+                                <p>Compile-time maximum number of samplers.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MAX_UNORDERED_VIEWS.html'
+                                  title='gfx_core::MAX_UNORDERED_VIEWS'>MAX_UNORDERED_VIEWS</a></td>
+                           <td class='docblock-short'>
+                                <p>Compile-time maximum number of unordered access views (UAV).</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MAX_VERTEX_ATTRIBUTES.html'
+                                  title='gfx_core::MAX_VERTEX_ATTRIBUTES'>MAX_VERTEX_ATTRIBUTES</a></td>
+                           <td class='docblock-short'>
+                                <p>Compile-time maximum number of vertex attributes.</p>
+                           </td>
+                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.Device.html'
+                                  title='gfx_core::Device'>Device</a></td>
+                           <td class='docblock-short'>
+                                <p>A <code>Device</code> is responsible for submitting <code>CommandBuffer</code>s to the GPU.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.Resources.html'
+                                  title='gfx_core::Resources'>Resources</a></td>
+                           <td class='docblock-short'>
+                                <p>Different types of a specific API.</p>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.AttributeSlot.html'
+                                  title='gfx_core::AttributeSlot'>AttributeSlot</a></td>
+                           <td class='docblock-short'>
+                                <p>Slot for an attribute.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.ColorSlot.html'
+                                  title='gfx_core::ColorSlot'>ColorSlot</a></td>
+                           <td class='docblock-short'>
+                                <p>Slot for an active color buffer.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.ConstantBufferSlot.html'
+                                  title='gfx_core::ConstantBufferSlot'>ConstantBufferSlot</a></td>
+                           <td class='docblock-short'>
+                                <p>Slot for a constant buffer object.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.InstanceCount.html'
+                                  title='gfx_core::InstanceCount'>InstanceCount</a></td>
+                           <td class='docblock-short'>
+                                <p>Draw number of instances</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.PatchSize.html'
+                                  title='gfx_core::PatchSize'>PatchSize</a></td>
+                           <td class='docblock-short'>
+                                <p>Number of vertices in a patch</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.ResourceViewSlot.html'
+                                  title='gfx_core::ResourceViewSlot'>ResourceViewSlot</a></td>
+                           <td class='docblock-short'>
+                                <p>Slot for a shader resource view.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.SamplerSlot.html'
+                                  title='gfx_core::SamplerSlot'>SamplerSlot</a></td>
+                           <td class='docblock-short'>
+                                <p>Slot for a sampler.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.UnorderedViewSlot.html'
+                                  title='gfx_core::UnorderedViewSlot'>UnorderedViewSlot</a></td>
+                           <td class='docblock-short'>
+                                <p>Slot for an unordered access object.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.VertexCount.html'
+                                  title='gfx_core::VertexCount'>VertexCount</a></td>
+                           <td class='docblock-short'>
+                                <p>Draw vertex count.</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "gfx_core";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

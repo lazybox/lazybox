@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["id_from_usize","Converts a usize to an Id."],["max_entity_count","Returns the maxmimum of entities that can exists at the same time"]],"type":[["Id","The id type for an entity"],["IdSet",""],["Version","The version type for an entity"]]});

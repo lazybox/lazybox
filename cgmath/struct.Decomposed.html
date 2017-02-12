@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Decomposed` struct in crate `cgmath`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Decomposed">
+
+    <title>cgmath::Decomposed - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>cgmath</a></p><script>window.sidebarCurrent = {name: 'Decomposed', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>cgmath</a>::<wbr><a class='struct' href=''>Decomposed</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/cgmath/transform.rs.html#61-65' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Decomposed&lt;V:&nbsp;<a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>VectorSpace</a>, R&gt; {
+    pub scale: V::<a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>Scalar</a>,
+    pub rot: R,
+    pub disp: V,
+}</pre><div class='docblock'><p>A generic transformation consisting of a rotation,
+displacement vector and scale amount.</p>
+</div><h2 class='fields'>Fields</h2><span id='structfield.scale' class='structfield'>
+                           <span id='scale.v' class='invisible'>
+                           <code>scale: V::<a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>Scalar</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.rot' class='structfield'>
+                           <span id='rot.v' class='invisible'>
+                           <code>rot: R</code>
+                           </span></span><span class='stab '></span><span id='structfield.disp' class='structfield'>
+                           <span id='disp.v' class='invisible'>
+                           <code>disp: V</code>
+                           </span></span><span class='stab '></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;V:&nbsp;<a class='trait' href='../rustc_serialize/serialize/trait.Decodable.html' title='rustc_serialize::serialize::Decodable'>Decodable</a> + <a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>VectorSpace</a>, R:&nbsp;<a class='trait' href='../rustc_serialize/serialize/trait.Decodable.html' title='rustc_serialize::serialize::Decodable'>Decodable</a>&gt; <a class='trait' href='../rustc_serialize/serialize/trait.Decodable.html' title='rustc_serialize::serialize::Decodable'>Decodable</a> for <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;V, R&gt; <span class='where fmt-newline'>where V::<a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>Scalar</a>: <a class='trait' href='../rustc_serialize/serialize/trait.Decodable.html' title='rustc_serialize::serialize::Decodable'>Decodable</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cgmath/transform.rs.html#60' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.decode' class='method'><span id='decode.v' class='invisible'><code>fn <a href='../rustc_serialize/serialize/trait.Decodable.html#tymethod.decode' class='fnname'>decode</a>&lt;__DVR:&nbsp;<a class='trait' href='../rustc_serialize/serialize/trait.Decoder.html' title='rustc_serialize::serialize::Decoder'>Decoder</a>&gt;(__arg_0: &amp;mut __DVR)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;V, R&gt;, __DVR::<a class='trait' href='../rustc_serialize/serialize/trait.Decoder.html' title='rustc_serialize::serialize::Decoder'>Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Deserialize a value using a <code>Decoder</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;V:&nbsp;<a class='trait' href='../rustc_serialize/serialize/trait.Encodable.html' title='rustc_serialize::serialize::Encodable'>Encodable</a> + <a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>VectorSpace</a>, R:&nbsp;<a class='trait' href='../rustc_serialize/serialize/trait.Encodable.html' title='rustc_serialize::serialize::Encodable'>Encodable</a>&gt; <a class='trait' href='../rustc_serialize/serialize/trait.Encodable.html' title='rustc_serialize::serialize::Encodable'>Encodable</a> for <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;V, R&gt; <span class='where fmt-newline'>where V::<a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>Scalar</a>: <a class='trait' href='../rustc_serialize/serialize/trait.Encodable.html' title='rustc_serialize::serialize::Encodable'>Encodable</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cgmath/transform.rs.html#60' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.encode' class='method'><span id='encode.v' class='invisible'><code>fn <a href='../rustc_serialize/serialize/trait.Encodable.html#tymethod.encode' class='fnname'>encode</a>&lt;__SVR:&nbsp;<a class='trait' href='../rustc_serialize/serialize/trait.Encoder.html' title='rustc_serialize::serialize::Encoder'>Encoder</a>&gt;(&amp;self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; __arg_0: &amp;mut __SVR)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, __SVR::<a class='trait' href='../rustc_serialize/serialize/trait.Encoder.html' title='rustc_serialize::serialize::Encoder'>Error</a>&gt;</code></span></h4>
+<div class='docblock'><p>Serialize a value using an <code>Encoder</code>.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;V:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> + <a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>VectorSpace</a>, R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;V, R&gt; <span class='where fmt-newline'>where V::<a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>Scalar</a>: <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cgmath/transform.rs.html#59' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;V:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> + <a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>VectorSpace</a>, R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;V, R&gt; <span class='where fmt-newline'>where V::<a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>Scalar</a>: <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cgmath/transform.rs.html#59' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;V, R&gt;</code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;V:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> + <a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>VectorSpace</a>, R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a>&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;V, R&gt; <span class='where fmt-newline'>where V::<a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>Scalar</a>: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cgmath/transform.rs.html#59' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;P:&nbsp;<a class='trait' href='../cgmath/prelude/trait.EuclideanSpace.html' title='cgmath::prelude::EuclideanSpace'>EuclideanSpace</a>, R:&nbsp;<a class='trait' href='../cgmath/prelude/trait.Rotation.html' title='cgmath::prelude::Rotation'>Rotation</a>&lt;P&gt;&gt; <a class='trait' href='../cgmath/prelude/trait.Transform.html' title='cgmath::prelude::Transform'>Transform</a>&lt;P&gt; for <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;P::<a class='trait' href='../cgmath/prelude/trait.EuclideanSpace.html' title='cgmath::prelude::EuclideanSpace'>Diff</a>, R&gt; <span class='where fmt-newline'>where P::<a class='trait' href='../cgmath/prelude/trait.EuclideanSpace.html' title='cgmath::prelude::EuclideanSpace'>Scalar</a>: <a class='trait' href='../cgmath/trait.BaseFloat.html' title='cgmath::BaseFloat'>BaseFloat</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P::<a class='trait' href='../cgmath/prelude/trait.EuclideanSpace.html' title='cgmath::prelude::EuclideanSpace'>Diff</a>: <a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>VectorSpace</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cgmath/transform.rs.html#67-125' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.one' class='method'><span id='one.v' class='invisible'><code>fn <a href='../cgmath/prelude/trait.Transform.html#tymethod.one' class='fnname'>one</a>() -&gt; <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;P::<a class='trait' href='../cgmath/prelude/trait.EuclideanSpace.html' title='cgmath::prelude::EuclideanSpace'>Diff</a>, R&gt;</code></span></h4>
+<div class='docblock'><p>Create an identity transformation. That is, a transformation which does nothing. <a href="../cgmath/prelude/trait.Transform.html#tymethod.one">Read more</a></p>
+</div><h4 id='method.look_at' class='method'><span id='look_at.v' class='invisible'><code>fn <a href='../cgmath/prelude/trait.Transform.html#tymethod.look_at' class='fnname'>look_at</a>(eye: P, center: P, up: P::<a class='trait' href='../cgmath/prelude/trait.EuclideanSpace.html' title='cgmath::prelude::EuclideanSpace'>Diff</a>) -&gt; <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;P::<a class='trait' href='../cgmath/prelude/trait.EuclideanSpace.html' title='cgmath::prelude::EuclideanSpace'>Diff</a>, R&gt;</code></span></h4>
+<div class='docblock'><p>Create a transformation that rotates a vector to look at <code>center</code> from <code>eye</code>, using <code>up</code> for orientation. <a href="../cgmath/prelude/trait.Transform.html#tymethod.look_at">Read more</a></p>
+</div><h4 id='method.transform_vector' class='method'><span id='transform_vector.v' class='invisible'><code>fn <a href='../cgmath/prelude/trait.Transform.html#tymethod.transform_vector' class='fnname'>transform_vector</a>(&amp;self, vec: P::<a class='trait' href='../cgmath/prelude/trait.EuclideanSpace.html' title='cgmath::prelude::EuclideanSpace'>Diff</a>) -&gt; P::<a class='trait' href='../cgmath/prelude/trait.EuclideanSpace.html' title='cgmath::prelude::EuclideanSpace'>Diff</a></code></span></h4>
+<div class='docblock'><p>Transform a vector using this transform.</p>
+</div><h4 id='method.transform_point' class='method'><span id='transform_point.v' class='invisible'><code>fn <a href='../cgmath/prelude/trait.Transform.html#tymethod.transform_point' class='fnname'>transform_point</a>(&amp;self, point: P) -&gt; P</code></span></h4>
+<div class='docblock'><p>Transform a point using this transform.</p>
+</div><h4 id='method.concat' class='method'><span id='concat.v' class='invisible'><code>fn <a href='../cgmath/prelude/trait.Transform.html#tymethod.concat' class='fnname'>concat</a>(&amp;self, other: &amp;<a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;P::<a class='trait' href='../cgmath/prelude/trait.EuclideanSpace.html' title='cgmath::prelude::EuclideanSpace'>Diff</a>, R&gt;) -&gt; <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;P::<a class='trait' href='../cgmath/prelude/trait.EuclideanSpace.html' title='cgmath::prelude::EuclideanSpace'>Diff</a>, R&gt;</code></span></h4>
+<div class='docblock'><p>Combine this transform with another, yielding a new transformation which has the effects of both. <a href="../cgmath/prelude/trait.Transform.html#tymethod.concat">Read more</a></p>
+</div><h4 id='method.inverse_transform' class='method'><span id='inverse_transform.v' class='invisible'><code>fn <a href='../cgmath/prelude/trait.Transform.html#tymethod.inverse_transform' class='fnname'>inverse_transform</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;P::<a class='trait' href='../cgmath/prelude/trait.EuclideanSpace.html' title='cgmath::prelude::EuclideanSpace'>Diff</a>, R&gt;&gt;</code></span></h4>
+<div class='docblock'><p>Create a transform that &quot;un-does&quot; this one.</p>
+</div><h4 id='method.concat_self' class='method'><span id='concat_self.v' class='invisible'><code>fn <a href='../cgmath/prelude/trait.Transform.html#method.concat_self' class='fnname'>concat_self</a>(&amp;mut self, other: &amp;Self)</code></span></h4>
+<div class='docblock'><p>Combine this transform with another, in-place.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;S:&nbsp;<a class='trait' href='../cgmath/trait.BaseFloat.html' title='cgmath::BaseFloat'>BaseFloat</a>, R:&nbsp;<a class='trait' href='../cgmath/prelude/trait.Rotation2.html' title='cgmath::prelude::Rotation2'>Rotation2</a>&lt;S&gt;&gt; <a class='trait' href='../cgmath/prelude/trait.Transform2.html' title='cgmath::prelude::Transform2'>Transform2</a>&lt;S&gt; for <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;<a class='struct' href='../cgmath/struct.Vector2.html' title='cgmath::Vector2'>Vector2</a>&lt;S&gt;, R&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cgmath/transform.rs.html#148' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;S:&nbsp;<a class='trait' href='../cgmath/trait.BaseFloat.html' title='cgmath::BaseFloat'>BaseFloat</a>, R:&nbsp;<a class='trait' href='../cgmath/prelude/trait.Rotation3.html' title='cgmath::prelude::Rotation3'>Rotation3</a>&lt;S&gt;&gt; <a class='trait' href='../cgmath/prelude/trait.Transform3.html' title='cgmath::prelude::Transform3'>Transform3</a>&lt;S&gt; for <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;<a class='struct' href='../cgmath/struct.Vector3.html' title='cgmath::Vector3'>Vector3</a>&lt;S&gt;, R&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cgmath/transform.rs.html#150' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;S:&nbsp;<a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>VectorSpace</a>, R, E:&nbsp;<a class='trait' href='../cgmath/trait.BaseFloat.html' title='cgmath::BaseFloat'>BaseFloat</a>&gt; <a class='trait' href='../approx/trait.ApproxEq.html' title='approx::ApproxEq'>ApproxEq</a> for <a class='struct' href='../cgmath/struct.Decomposed.html' title='cgmath::Decomposed'>Decomposed</a>&lt;S, R&gt; <span class='where fmt-newline'>where S: <a class='trait' href='../approx/trait.ApproxEq.html' title='approx::ApproxEq'>ApproxEq</a>&lt;Epsilon=E&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S::<a class='trait' href='../cgmath/prelude/trait.VectorSpace.html' title='cgmath::prelude::VectorSpace'>Scalar</a>: <a class='trait' href='../approx/trait.ApproxEq.html' title='approx::ApproxEq'>ApproxEq</a>&lt;Epsilon=E&gt;,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R: <a class='trait' href='../approx/trait.ApproxEq.html' title='approx::ApproxEq'>ApproxEq</a>&lt;Epsilon=E&gt;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/cgmath/transform.rs.html#152-185' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Epsilon' class='type'><span id='Epsilon.t' class='invisible'><code>type <a href='../approx/trait.ApproxEq.html#associatedtype.Epsilon' class='type'>Epsilon</a> = E</code></span></h4>
+<div class='docblock'><p>Used for specifying relative comparisons.</p>
+</div><h4 id='method.default_epsilon' class='method'><span id='default_epsilon.v' class='invisible'><code>fn <a href='../approx/trait.ApproxEq.html#tymethod.default_epsilon' class='fnname'>default_epsilon</a>() -&gt; E</code></span></h4>
+<div class='docblock'><p>The default tolerance to use when testing values that are close together. <a href="../approx/trait.ApproxEq.html#tymethod.default_epsilon">Read more</a></p>
+</div><h4 id='method.default_max_relative' class='method'><span id='default_max_relative.v' class='invisible'><code>fn <a href='../approx/trait.ApproxEq.html#tymethod.default_max_relative' class='fnname'>default_max_relative</a>() -&gt; E</code></span></h4>
+<div class='docblock'><p>The default relative tolerance for testing values that are far-apart. <a href="../approx/trait.ApproxEq.html#tymethod.default_max_relative">Read more</a></p>
+</div><h4 id='method.default_max_ulps' class='method'><span id='default_max_ulps.v' class='invisible'><code>fn <a href='../approx/trait.ApproxEq.html#tymethod.default_max_ulps' class='fnname'>default_max_ulps</a>() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></span></h4>
+<div class='docblock'><p>The default ULPs to tolerate when testing values that are far-apart. <a href="../approx/trait.ApproxEq.html#tymethod.default_max_ulps">Read more</a></p>
+</div><h4 id='method.relative_eq' class='method'><span id='relative_eq.v' class='invisible'><code>fn <a href='../approx/trait.ApproxEq.html#tymethod.relative_eq' class='fnname'>relative_eq</a>(&amp;self, other: &amp;Self, epsilon: E, max_relative: E) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>A test for equality that uses a relative comparison if the values are far apart.</p>
+</div><h4 id='method.ulps_eq' class='method'><span id='ulps_eq.v' class='invisible'><code>fn <a href='../approx/trait.ApproxEq.html#tymethod.ulps_eq' class='fnname'>ulps_eq</a>(&amp;self, other: &amp;Self, epsilon: E, max_ulps: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>A test for equality that uses units in the last place (ULP) if the values are far apart.</p>
+</div><h4 id='method.relative_ne' class='method'><span id='relative_ne.v' class='invisible'><code>fn <a href='../approx/trait.ApproxEq.html#method.relative_ne' class='fnname'>relative_ne</a>(&amp;self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; other: &amp;Self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; epsilon: Self::<a class='trait' href='../approx/trait.ApproxEq.html' title='approx::ApproxEq'>Epsilon</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; max_relative: Self::<a class='trait' href='../approx/trait.ApproxEq.html' title='approx::ApproxEq'>Epsilon</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>The inverse of <code>ApproxEq::relative_eq</code>.</p>
+</div><h4 id='method.ulps_ne' class='method'><span id='ulps_ne.v' class='invisible'><code>fn <a href='../approx/trait.ApproxEq.html#method.ulps_ne' class='fnname'>ulps_ne</a>(&amp;self, other: &amp;Self, epsilon: Self::<a class='trait' href='../approx/trait.ApproxEq.html' title='approx::ApproxEq'>Epsilon</a>, max_ulps: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>The inverse of <code>ApproxEq::ulps_eq</code>.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "cgmath";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

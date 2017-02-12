@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["StorageHandler",""]],"trait":[["Handler","Represents a storage Handler."],["Storage","Defines any `DataComponent` storage that can be used."]]});

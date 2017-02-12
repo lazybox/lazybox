@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Bundle` struct in crate `gfx`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Bundle">
+
+    <title>gfx::pso::bundle::Bundle - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>gfx</a>::<wbr><a href='../index.html'>pso</a>::<wbr><a href='index.html'>bundle</a></p><script>window.sidebarCurrent = {name: 'Bundle', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>gfx</a>::<wbr><a href='../index.html'>pso</a>::<wbr><a href='index.html'>bundle</a>::<wbr><a class='struct' href=''>Bundle</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/gfx/pso/bundle.rs.html#9-16' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Bundle&lt;R:&nbsp;<a class='trait' href='../../../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a>, Data:&nbsp;<a class='trait' href='../../../gfx/pso/trait.PipelineData.html' title='gfx::pso::PipelineData'>PipelineData</a>&lt;R&gt;&gt; {
+    pub slice: <a class='struct' href='../../../gfx/struct.Slice.html' title='gfx::Slice'>Slice</a>&lt;R&gt;,
+    pub pso: <a class='struct' href='../../../gfx/pso/struct.PipelineState.html' title='gfx::pso::PipelineState'>PipelineState</a>&lt;R, Data::<a class='trait' href='../../../gfx/pso/trait.PipelineData.html' title='gfx::pso::PipelineData'>Meta</a>&gt;,
+    pub data: Data,
+}</pre><div class='docblock'><p>Slice-PSO bundle.</p>
+</div><h2 class='fields'>Fields</h2><span id='structfield.slice' class='structfield'>
+                           <span id='slice.v' class='invisible'>
+                           <code>slice: <a class='struct' href='../../../gfx/struct.Slice.html' title='gfx::Slice'>Slice</a>&lt;R&gt;</code>
+                           </span></span><span class='stab '></span><div class='docblock'><p>Slice</p>
+</div><span id='structfield.pso' class='structfield'>
+                           <span id='pso.v' class='invisible'>
+                           <code>pso: <a class='struct' href='../../../gfx/pso/struct.PipelineState.html' title='gfx::pso::PipelineState'>PipelineState</a>&lt;R, Data::<a class='trait' href='../../../gfx/pso/trait.PipelineData.html' title='gfx::pso::PipelineData'>Meta</a>&gt;</code>
+                           </span></span><span class='stab '></span><div class='docblock'><p>Pipeline state</p>
+</div><span id='structfield.data' class='structfield'>
+                           <span id='data.v' class='invisible'>
+                           <code>data: Data</code>
+                           </span></span><span class='stab '></span><div class='docblock'><p>Pipeline data</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class='trait' href='../../../gfx/trait.Resources.html' title='gfx::Resources'>Resources</a>, Data:&nbsp;<a class='trait' href='../../../gfx/pso/trait.PipelineData.html' title='gfx::pso::PipelineData'>PipelineData</a>&lt;R&gt;&gt; <a class='struct' href='../../../gfx/pso/bundle/struct.Bundle.html' title='gfx::pso::bundle::Bundle'>Bundle</a>&lt;R, Data&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/gfx/pso/bundle.rs.html#18-34' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(slice: <a class='struct' href='../../../gfx/struct.Slice.html' title='gfx::Slice'>Slice</a>&lt;R&gt;, pso: <a class='struct' href='../../../gfx/pso/struct.PipelineState.html' title='gfx::pso::PipelineState'>PipelineState</a>&lt;R, Data::<a class='trait' href='../../../gfx/pso/trait.PipelineData.html' title='gfx::pso::PipelineData'>Meta</a>&gt;, data: Data) -&gt; Self</code></span></h4>
+<div class='docblock'><p>Create new Bundle</p>
+</div><h4 id='method.encode' class='method'><span id='encode.v' class='invisible'><code>fn <a href='#method.encode' class='fnname'>encode</a>&lt;C&gt;(&amp;self, encoder: &amp;mut <a class='struct' href='../../../gfx/struct.Encoder.html' title='gfx::Encoder'>Encoder</a>&lt;R, C&gt;) <span class='where fmt-newline'>where C: <a class='trait' href='../../../gfx/trait.CommandBuffer.html' title='gfx::CommandBuffer'>CommandBuffer</a>&lt;R&gt;</span></code></span></h4>
+<div class='docblock'><p>Draw bundle using encoder.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "gfx";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>

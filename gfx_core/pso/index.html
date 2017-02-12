@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `pso` mod in crate `gfx_core`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, pso">
+
+    <title>gfx_core::pso - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>gfx_core</a></p><script>window.sidebarCurrent = {name: 'pso', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>gfx_core</a>::<wbr><a class='mod' href=''>pso</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/gfx_core/pso.rs.html#15-349' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Raw Pipeline State Objects</p>
+
+<p>This module contains items used to create and manage a raw pipeline state object. Most users
+will want to use the typed and safe <code>PipelineState</code>. See the <code>pso</code> module inside the <code>gfx</code>
+crate.</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.AccessInfo.html'
+                                  title='gfx_core::pso::AccessInfo'>AccessInfo</a></td>
+                           <td class='docblock-short'>
+                                <p>Informations about what is accessed by the pipeline</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ColorInfo.html'
+                                  title='gfx_core::pso::ColorInfo'>ColorInfo</a></td>
+                           <td class='docblock-short'>
+                                <p>Color output configuration of the PSO.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ConstantBufferParam.html'
+                                  title='gfx_core::pso::ConstantBufferParam'>ConstantBufferParam</a></td>
+                           <td class='docblock-short'>
+                                <p>A constant buffer run-time parameter for PSO.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.CreationError.html'
+                                  title='gfx_core::pso::CreationError'>CreationError</a></td>
+                           <td class='docblock-short'>
+                                <p>Error types happening upon PSO creation on the device side.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.DepthStencilInfo.html'
+                                  title='gfx_core::pso::DepthStencilInfo'>DepthStencilInfo</a></td>
+                           <td class='docblock-short'>
+                                <p>Depth and stencil state of the PSO.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Descriptor.html'
+                                  title='gfx_core::pso::Descriptor'>Descriptor</a></td>
+                           <td class='docblock-short'>
+                                <p>All the information surrounding a shader program that is required
+for PSO creation, including the formats of vertex buffers and pixel targets;</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Element.html'
+                                  title='gfx_core::pso::Element'>Element</a></td>
+                           <td class='docblock-short'>
+                                <p>A struct element descriptor.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.PixelTargetSet.html'
+                                  title='gfx_core::pso::PixelTargetSet'>PixelTargetSet</a></td>
+                           <td class='docblock-short'>
+                                <p>A complete set of render targets to be used for pixel export in PSO.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ResourceViewParam.html'
+                                  title='gfx_core::pso::ResourceViewParam'>ResourceViewParam</a></td>
+                           <td class='docblock-short'>
+                                <p>A shader resource view (SRV) run-time parameter for PSO.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.SamplerParam.html'
+                                  title='gfx_core::pso::SamplerParam'>SamplerParam</a></td>
+                           <td class='docblock-short'>
+                                <p>A sampler run-time parameter for PSO.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.UnorderedViewParam.html'
+                                  title='gfx_core::pso::UnorderedViewParam'>UnorderedViewParam</a></td>
+                           <td class='docblock-short'>
+                                <p>An unordered access view (UAV) run-time parameter for PSO.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.VertexBufferDesc.html'
+                                  title='gfx_core::pso::VertexBufferDesc'>VertexBufferDesc</a></td>
+                           <td class='docblock-short'>
+                                <p>Vertex buffer descriptor</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.VertexBufferSet.html'
+                                  title='gfx_core::pso::VertexBufferSet'>VertexBufferSet</a></td>
+                           <td class='docblock-short'>
+                                <p>A complete set of vertex buffers to be used for vertex import in PSO.</p>
+                           </td>
+                       </tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='constant' href='constant.MAX_VERTEX_BUFFERS.html'
+                                  title='gfx_core::pso::MAX_VERTEX_BUFFERS'>MAX_VERTEX_BUFFERS</a></td>
+                           <td class='docblock-short'>
+                                <p>Maximum number of vertex buffers used in a PSO definition.</p>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.AttributeDesc.html'
+                                  title='gfx_core::pso::AttributeDesc'>AttributeDesc</a></td>
+                           <td class='docblock-short'>
+                                <p>PSO vertex attribute descriptor</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.BufferIndex.html'
+                                  title='gfx_core::pso::BufferIndex'>BufferIndex</a></td>
+                           <td class='docblock-short'>
+                                <p>Index of a vertex buffer.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.BufferOffset.html'
+                                  title='gfx_core::pso::BufferOffset'>BufferOffset</a></td>
+                           <td class='docblock-short'>
+                                <p>An offset inside a vertex buffer, in bytes.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.ColorTargetDesc.html'
+                                  title='gfx_core::pso::ColorTargetDesc'>ColorTargetDesc</a></td>
+                           <td class='docblock-short'>
+                                <p>PSO color target descriptor</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.ConstantBufferDesc.html'
+                                  title='gfx_core::pso::ConstantBufferDesc'>ConstantBufferDesc</a></td>
+                           <td class='docblock-short'>
+                                <p>PSO constant buffer descriptor</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.DepthStencilDesc.html'
+                                  title='gfx_core::pso::DepthStencilDesc'>DepthStencilDesc</a></td>
+                           <td class='docblock-short'>
+                                <p>PSO depth-stencil target descriptor</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.ElemOffset.html'
+                                  title='gfx_core::pso::ElemOffset'>ElemOffset</a></td>
+                           <td class='docblock-short'>
+                                <p>Offset of an attribute from the start of the buffer, in bytes</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.ElemStride.html'
+                                  title='gfx_core::pso::ElemStride'>ElemStride</a></td>
+                           <td class='docblock-short'>
+                                <p>Offset between attribute values, in bytes</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.InstanceRate.html'
+                                  title='gfx_core::pso::InstanceRate'>InstanceRate</a></td>
+                           <td class='docblock-short'>
+                                <p>The number of instances between each subsequent attribute value</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.ResourceViewDesc.html'
+                                  title='gfx_core::pso::ResourceViewDesc'>ResourceViewDesc</a></td>
+                           <td class='docblock-short'>
+                                <p>PSO shader resource view descriptor</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.SamplerDesc.html'
+                                  title='gfx_core::pso::SamplerDesc'>SamplerDesc</a></td>
+                           <td class='docblock-short'>
+                                <p>PSO sampler descriptor</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.UnorderedViewDesc.html'
+                                  title='gfx_core::pso::UnorderedViewDesc'>UnorderedViewDesc</a></td>
+                           <td class='docblock-short'>
+                                <p>PSO unordered access view descriptor</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "gfx_core";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `EventQueue` struct in crate `wayland_client`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, EventQueue">
+
+    <title>wayland_client::EventQueue - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>wayland_client</a></p><script>window.sidebarCurrent = {name: 'EventQueue', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>wayland_client</a>::<wbr><a class='struct' href=''>EventQueue</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/wayland_client/event_queue.rs.html#182-185' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct EventQueue { /* fields omitted */ }</pre><div class='docblock'><p>An event queue managing wayland events</p>
+
+<p>Each wayland object can receive events from the server. To handle these events
+you must use a handler object: a struct (or enum) which you have implemented
+the appropriate <code>Handler</code> traits on it (each wayland interface defines a <code>Handler</code>
+trait in its module), and declared it using the <code>declare_handler!(..)</code> macro.</p>
+
+<p>This handler contains the state all your handler methods will be able to access
+via the <code>&amp;mut self</code> argument. You can then instanciate your type, and give ownership of
+the handler object to the event queue, via the <code>add_handler(..)</code> method. Then, each
+wayland object must be registered to a handler via the <code>register(..)</code> method (or its events
+will all be ignored).</p>
+
+<p>The event queues also provides you control on the flow of the program, via the <code>dispatch()</code> and
+<code>dispatch_pending()</code> methods.</p>
+
+<h2 id='example-of-use' class='section-header'><a href='#example-of-use'>example of use</a></h2>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>struct</span> <span class='ident'>MyHandler</span> { <span class='comment'>/* ... */</span> }
+
+<span class='kw'>impl</span> <span class='ident'>wl_surface</span>::<span class='ident'>Handler</span> <span class='kw'>for</span> <span class='ident'>MyHandler</span> {
+    <span class='comment'>// implementation of the handler methods</span>
+}
+
+<span class='macro'>declare_handler</span><span class='macro'>!</span>(<span class='ident'>MyHandler</span>, <span class='ident'>wl_surface</span>::<span class='ident'>Handler</span>, <span class='ident'>wl_surface</span>::<span class='ident'>WlSurface</span>);
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='comment'>/* ... setup of your environment ... */</span>
+    <span class='kw'>let</span> <span class='ident'>surface</span> <span class='op'>=</span> <span class='ident'>compositor</span>.<span class='ident'>create_surface</span>().<span class='ident'>expect</span>(<span class='string'>&quot;Compositor cannot be destroyed.&quot;</span>);
+    <span class='kw'>let</span> <span class='ident'>my_id</span> <span class='op'>=</span> <span class='ident'>eventqueue</span>.<span class='ident'>add_handler</span>(<span class='ident'>MyHandler</span>::<span class='ident'>new</span>());
+    <span class='ident'>eventqueue</span>.<span class='ident'>register</span>::<span class='op'>&lt;</span>_, <span class='ident'>MyHandler</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='ident'>surface</span>, <span class='ident'>my_id</span>);
+
+    <span class='comment'>// main event loop</span>
+    <span class='kw'>loop</span> {
+        <span class='comment'>// flush requests to the server</span>
+        <span class='ident'>display</span>.<span class='ident'>flush</span>().<span class='ident'>unwrap</span>();
+        <span class='comment'>// dispatch events from the server, blocking if needed</span>
+        <span class='ident'>eventqueue</span>.<span class='ident'>dispatch</span>().<span class='ident'>unwrap</span>();
+    }
+}</pre>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../wayland_client/struct.EventQueue.html' title='wayland_client::EventQueue'>EventQueue</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/wayland_client/event_queue.rs.html#187-319' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.dispatch' class='method'><span id='dispatch.v' class='invisible'><code>fn <a href='#method.dispatch' class='fnname'>dispatch</a>(&amp;mut self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>IoResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code></span></h4>
+<div class='docblock'><p>Dispatches events from the internal buffer.</p>
+
+<p>Dispatches all events to their appropriate handlers.
+If not events were in the internal buffer, will block until
+some events are read and dispatch them.
+This process can insert events in the internal buffers of
+other event queues.</p>
+
+<p>If an error is returned, your connexion with the wayland
+compositor is probably lost.</p>
+</div><h4 id='method.dispatch_pending' class='method'><span id='dispatch_pending.v' class='invisible'><code>fn <a href='#method.dispatch_pending' class='fnname'>dispatch_pending</a>(&amp;mut self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>IoResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;</code></span></h4>
+<div class='docblock'><p>Dispatches pending events from the internal buffer.</p>
+
+<p>Dispatches all events to their appropriate handlers.
+Never blocks, if not events were pending, simply returns
+<code>Ok(0)</code>.</p>
+
+<p>If an error is returned, your connexion with the wayland
+compositor is probably lost.</p>
+</div><h4 id='method.sync_roundtrip' class='method'><span id='sync_roundtrip.v' class='invisible'><code>fn <a href='#method.sync_roundtrip' class='fnname'>sync_roundtrip</a>(&amp;mut self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>IoResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code></span></h4>
+<div class='docblock'><p>Synchronous roundtrip</p>
+
+<p>This call will cause a synchonous roundtrip with the wayland server. It will block until all
+pending requests of this queue are send to the server and it has processed all of them and
+send the appropriate events.</p>
+
+<p>Handlers are called as a consequence.</p>
+
+<p>On success returns the number of dispatched events.</p>
+</div><h4 id='method.state' class='method'><span id='state.v' class='invisible'><code>fn <a href='#method.state' class='fnname'>state</a>(&amp;mut self) -&gt; <a class='struct' href='../wayland_client/struct.StateGuard.html' title='wayland_client::StateGuard'>StateGuard</a></code></span></h4>
+<div class='docblock'><p>Get a handle to the internal state</p>
+
+<p>The returned guard object allows you to get references
+to the handler objects you previously inserted in this
+event queue.</p>
+</div><h4 id='method.prepare_read' class='method'><span id='prepare_read.v' class='invisible'><code>fn <a href='#method.prepare_read' class='fnname'>prepare_read</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../wayland_client/struct.ReadEventsGuard.html' title='wayland_client::ReadEventsGuard'>ReadEventsGuard</a>&gt;</code></span></h4>
+<div class='docblock'><p>Prepare an conccurent read</p>
+
+<p>Will declare your intention to read events from the server socket.</p>
+
+<p>Will return <code>None</code> if there are still some events awaiting dispatch on this EventIterator.
+In this case, you need to call <code>dispatch_pending()</code> before calling this method again.</p>
+
+<p>As long as the returned guard is in scope, no events can be dispatched to any event iterator.</p>
+
+<p>The guard can then be destroyed by two means:</p>
+
+<ul>
+<li>Calling its <code>cancel()</code> method (or letting it go out of scope): the read intention will
+be cancelled</li>
+<li>Calling its <code>read_events()</code> method: will block until all existing guards are destroyed
+by one of these methods, then events will be read and all blocked <code>read_events()</code> calls
+will return.</li>
+</ul>
+
+<p>This call will otherwise not block on the server socket if it is empty, and return
+an io error <code>WouldBlock</code> in such cases.</p>
+</div></div><h2 id='deref-methods'>Methods from <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a>&lt;Target=<a class='struct' href='../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a>&gt;</h2><div class='impl-items'><h4 id='method.register' class='method'><span id='register.v' class='invisible'><code>fn <a href='#method.register' class='fnname'>register</a>&lt;P:&nbsp;<a class='trait' href='../wayland_client/trait.Proxy.html' title='wayland_client::Proxy'>Proxy</a>, H:&nbsp;<a class='trait' href='../wayland_client/trait.Handler.html' title='wayland_client::Handler'>Handler</a>&lt;P&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + 'static&gt;(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; proxy: &amp;P,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; handler_id: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>)</code></span></h4>
+<div class='docblock'><p>Register a proxy to a handler of this event queue.</p>
+
+<p>The H type must be provided and match the type of the targetted Handler, or
+it will panic.</p>
+
+<p>This overwrites any precedently set Handler for this proxy.</p>
+</div><h4 id='method.add_handler' class='method'><span id='add_handler.v' class='invisible'><code>fn <a href='#method.add_handler' class='fnname'>add_handler</a>&lt;H:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + 'static&gt;(&amp;mut self, handler: H) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
+<div class='docblock'><p>Insert a new handler to this event queue</p>
+
+<p>Returns the index of this handler in the internal array, which is needed
+to register proxies to it.</p>
+</div><h4 id='method.add_handler_with_init' class='method'><span id='add_handler_with_init.v' class='invisible'><code>fn <a href='#method.add_handler_with_init' class='fnname'>add_handler_with_init</a>&lt;H:&nbsp;<a class='trait' href='../wayland_client/trait.Init.html' title='wayland_client::Init'>Init</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + 'static&gt;(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; handler: H)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
+<div class='docblock'><p>Insert a new handler with init</p>
+
+<p>Allows you to insert handlers that require some interaction with the
+event loop in their initialization, like registering some objects to it.</p>
+
+<p>The handler must implement the <code>Init</code> trait, and its init method will
+be called after its insertion.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../wayland_client/struct.EventQueue.html' title='wayland_client::EventQueue'>EventQueue</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/wayland_client/event_queue.rs.html#321' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html' title='core::ops::Deref'>Deref</a> for <a class='struct' href='../wayland_client/struct.EventQueue.html' title='wayland_client::EventQueue'>EventQueue</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/wayland_client/event_queue.rs.html#323-328' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Target' class='type'><span id='Target.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#associatedtype.Target' class='type'>Target</a> = <a class='struct' href='../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a></code></span></h4>
+<div class='docblock'><p>The resulting type after dereferencing</p>
+</div><h4 id='method.deref' class='method'><span id='deref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Deref.html#tymethod.deref' class='fnname'>deref</a>(&amp;self) -&gt; &amp;<a class='struct' href='../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a></code></span></h4>
+<div class='docblock'><p>The method called to dereference a value</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html' title='core::ops::DerefMut'>DerefMut</a> for <a class='struct' href='../wayland_client/struct.EventQueue.html' title='wayland_client::EventQueue'>EventQueue</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/wayland_client/event_queue.rs.html#330-334' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.deref_mut' class='method'><span id='deref_mut.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.DerefMut.html#tymethod.deref_mut' class='fnname'>deref_mut</a>(&amp;mut self) -&gt; &amp;mut <a class='struct' href='../wayland_client/struct.EventQueueHandle.html' title='wayland_client::EventQueueHandle'>EventQueueHandle</a></code></span></h4>
+<div class='docblock'><p>The method called to mutably dereference a value</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "wayland_client";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

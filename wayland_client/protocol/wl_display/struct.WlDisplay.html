@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `WlDisplay` struct in crate `wayland_client`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, WlDisplay">
+
+    <title>wayland_client::protocol::wl_display::WlDisplay - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>wayland_client</a>::<wbr><a href='../index.html'>protocol</a>::<wbr><a href='index.html'>wl_display</a></p><script>window.sidebarCurrent = {name: 'WlDisplay', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../../index.html'>wayland_client</a>::<wbr><a href='../index.html'>protocol</a>::<wbr><a href='index.html'>wl_display</a>::<wbr><a class='struct' href=''>WlDisplay</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../../src/wayland_client/home/travis/build/lazybox/lazybox/target/debug/build/wayland-client-0bd58f00e900cc20/out/wayland_api.rs.html#17' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct WlDisplay { /* fields omitted */ }</pre><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../../wayland_client/protocol/wl_display/struct.WlDisplay.html' title='wayland_client::protocol::wl_display::WlDisplay'>WlDisplay</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/wayland_client/display.rs.html#62-127' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.flush' class='method'><span id='flush.v' class='invisible'><code>fn <a href='#method.flush' class='fnname'>flush</a>(&amp;self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code></span></h4>
+<div class='docblock'><p>Non-blocking write to the server</p>
+
+<p>Will write as many pending requests as possible to the server socket. Never blocks: if not all
+requests coul be written, will return an io error <code>WouldBlock</code>.</p>
+
+<p>On success returns the number of written requests.</p>
+</div><h4 id='method.create_event_queue' class='method'><span id='create_event_queue.v' class='invisible'><code>fn <a href='#method.create_event_queue' class='fnname'>create_event_queue</a>(&amp;self) -&gt; <a class='struct' href='../../../wayland_client/struct.EventQueue.html' title='wayland_client::EventQueue'>EventQueue</a></code></span></h4>
+<div class='docblock'><p>Create a new EventQueue</p>
+
+<p>No object is by default attached to it.</p>
+</div><h4 id='method.last_error' class='method'><span id='last_error.v' class='invisible'><code>fn <a href='#method.last_error' class='fnname'>last_error</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../../../wayland_client/enum.FatalError.html' title='wayland_client::FatalError'>FatalError</a>&gt;</code></span></h4>
+<div class='docblock'><p>Get the last error that occured on the session</p>
+
+<p>Such errors are <em>fatal</em>, meaning that if this function does not
+return <code>None</code>, your session is not usable any longer.</p>
+
+<p>As such, this function mostly provide diagnistics information. You can have a hint
+an error might have been generated if I/O methods of EventQueue start returning errors.</p>
+</div><h4 id='method.get_fd' class='method'><span id='get_fd.v' class='invisible'><code>fn <a href='#method.get_fd' class='fnname'>get_fd</a>(&amp;self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/sys/imp/ext/io/type.RawFd.html' title='std::sys::imp::ext::io::RawFd'>RawFd</a></code></span></h4>
+<div class='docblock'><p>Get the raw File Descriptor associated with the connection</p>
+
+<p>This is provided to be used in conjunction with some polling mecanism,
+if you want to manually control the flow with something like <code>epoll</code>.
+In this case, you&#39;ll most likely want to use <code>EventQueue::prepare_read()</code> and
+<code>EventQueue::dispatch_pending()</code> rather than <code>EventQueue::dispatch()</code>.</p>
+
+<p>Reading or writing anything to this FD will corrupt the internal state of
+the lib.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../../wayland_client/protocol/wl_display/struct.WlDisplay.html' title='wayland_client::protocol::wl_display::WlDisplay'>WlDisplay</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/wayland_client/home/travis/build/lazybox/lazybox/target/debug/build/wayland-client-0bd58f00e900cc20/out/wayland_api.rs.html#66-97' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.sync' class='method'><span id='sync.v' class='invisible'><code>fn <a href='#method.sync' class='fnname'>sync</a>(&amp;self) -&gt; <a class='enum' href='../../../wayland_client/enum.RequestResult.html' title='wayland_client::RequestResult'>RequestResult</a>&lt;<a class='struct' href='../../../wayland_client/protocol/wl_callback/struct.WlCallback.html' title='wayland_client::protocol::wl_callback::WlCallback'>WlCallback</a>&gt;</code></span></h4>
+<div class='docblock'><p>asynchronous roundtrip</p>
+
+<p>The sync request asks the server to emit the &#39;done&#39; event
+on the returned wl_callback object.  Since requests are
+handled in-order and events are delivered in-order, this can
+be used as a barrier to ensure all previous requests and the
+resulting events have been handled.</p>
+
+<p>The object returned by this request will be destroyed by the
+compositor after the callback is fired and as such the client must not
+attempt to use it after that point.</p>
+
+<p>The callback_data passed in the callback is the event serial.</p>
+</div><h4 id='method.get_registry' class='method'><span id='get_registry.v' class='invisible'><code>fn <a href='#method.get_registry' class='fnname'>get_registry</a>(&amp;self) -&gt; <a class='enum' href='../../../wayland_client/enum.RequestResult.html' title='wayland_client::RequestResult'>RequestResult</a>&lt;<a class='struct' href='../../../wayland_client/protocol/wl_registry/struct.WlRegistry.html' title='wayland_client::protocol::wl_registry::WlRegistry'>WlRegistry</a>&gt;</code></span></h4>
+<div class='docblock'><p>get global registry object</p>
+
+<p>This request creates a registry object that allows the client
+to list and bind the global objects available from the
+compositor.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../../../wayland_client/protocol/wl_display/struct.WlDisplay.html' title='wayland_client::protocol::wl_display::WlDisplay'>WlDisplay</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/wayland_client/display.rs.html#129-133' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.drop' class='method'><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span></h4>
+<div class='docblock'><p>A method called when the value goes out of scope. <a href="https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop">Read more</a></p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../../../wayland_client/protocol/wl_display/struct.WlDisplay.html' title='wayland_client::protocol::wl_display::WlDisplay'>WlDisplay</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/wayland_client/home/travis/build/lazybox/lazybox/target/debug/build/wayland-client-0bd58f00e900cc20/out/wayland_api.rs.html#19' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../../../wayland_client/protocol/wl_display/struct.WlDisplay.html' title='wayland_client::protocol::wl_display::WlDisplay'>WlDisplay</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/wayland_client/home/travis/build/lazybox/lazybox/target/debug/build/wayland-client-0bd58f00e900cc20/out/wayland_api.rs.html#20' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../../wayland_client/trait.Proxy.html' title='wayland_client::Proxy'>Proxy</a> for <a class='struct' href='../../../wayland_client/protocol/wl_display/struct.WlDisplay.html' title='wayland_client::protocol::wl_display::WlDisplay'>WlDisplay</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/wayland_client/home/travis/build/lazybox/lazybox/target/debug/build/wayland-client-0bd58f00e900cc20/out/wayland_api.rs.html#22-39' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.ptr' class='method'><span id='ptr.v' class='invisible'><code>fn <a href='../../../wayland_client/trait.Proxy.html#tymethod.ptr' class='fnname'>ptr</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='../../../wayland_sys/client/enum.wl_proxy.html' title='wayland_sys::client::wl_proxy'>wl_proxy</a></code></span></h4>
+<div class='docblock'><p>Pointer to the underlying wayland proxy object</p>
+</div><h4 id='method.from_ptr_new' class='method'><span id='from_ptr_new.v' class='invisible'><code>unsafe fn <a href='../../../wayland_client/trait.Proxy.html#tymethod.from_ptr_new' class='fnname'>from_ptr_new</a>(ptr: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='../../../wayland_sys/client/enum.wl_proxy.html' title='wayland_sys::client::wl_proxy'>wl_proxy</a>) -&gt; <a class='struct' href='../../../wayland_client/protocol/wl_display/struct.WlDisplay.html' title='wayland_client::protocol::wl_display::WlDisplay'>WlDisplay</a></code></span></h4>
+<div class='docblock'><p>Create an instance from a wayland pointer <a href="../../../wayland_client/trait.Proxy.html#tymethod.from_ptr_new">Read more</a></p>
+</div><h4 id='method.from_ptr_initialized' class='method'><span id='from_ptr_initialized.v' class='invisible'><code>unsafe fn <a href='../../../wayland_client/trait.Proxy.html#tymethod.from_ptr_initialized' class='fnname'>from_ptr_initialized</a>(ptr: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a><a class='enum' href='../../../wayland_sys/client/enum.wl_proxy.html' title='wayland_sys::client::wl_proxy'>wl_proxy</a>) -&gt; <a class='struct' href='../../../wayland_client/protocol/wl_display/struct.WlDisplay.html' title='wayland_client::protocol::wl_display::WlDisplay'>WlDisplay</a></code></span></h4>
+<div class='docblock'><p>Create an instance from a wayland pointer <a href="../../../wayland_client/trait.Proxy.html#tymethod.from_ptr_initialized">Read more</a></p>
+</div><h4 id='method.interface_ptr' class='method'><span id='interface_ptr.v' class='invisible'><code>fn <a href='../../../wayland_client/trait.Proxy.html#tymethod.interface_ptr' class='fnname'>interface_ptr</a>() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*const </a><a class='struct' href='../../../wayland_sys/common/struct.wl_interface.html' title='wayland_sys::common::wl_interface'>wl_interface</a></code></span></h4>
+<div class='docblock'><p>Pointer to the interface representation</p>
+</div><h4 id='method.interface_name' class='method'><span id='interface_name.v' class='invisible'><code>fn <a href='../../../wayland_client/trait.Proxy.html#tymethod.interface_name' class='fnname'>interface_name</a>() -&gt; &amp;'static <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a></code></span></h4>
+<div class='docblock'><p>Internal wayland name of this interface</p>
+</div><h4 id='method.supported_version' class='method'><span id='supported_version.v' class='invisible'><code>fn <a href='../../../wayland_client/trait.Proxy.html#tymethod.supported_version' class='fnname'>supported_version</a>() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></span></h4>
+<div class='docblock'><p>Max version of this interface supported</p>
+</div><h4 id='method.version' class='method'><span id='version.v' class='invisible'><code>fn <a href='../../../wayland_client/trait.Proxy.html#tymethod.version' class='fnname'>version</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></span></h4>
+<div class='docblock'><p>Current version of the interface this proxy is instanciated with</p>
+</div><h4 id='method.is_alive' class='method'><span id='is_alive.v' class='invisible'><code>fn <a href='../../../wayland_client/trait.Proxy.html#tymethod.is_alive' class='fnname'>is_alive</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>Check if the proxt behind this handle is actually still alive</p>
+</div><h4 id='method.equals' class='method'><span id='equals.v' class='invisible'><code>fn <a href='../../../wayland_client/trait.Proxy.html#tymethod.equals' class='fnname'>equals</a>(&amp;self, other: &amp;<a class='struct' href='../../../wayland_client/protocol/wl_display/struct.WlDisplay.html' title='wayland_client::protocol::wl_display::WlDisplay'>WlDisplay</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h4>
+<div class='docblock'><p>Check of two handles are actually the same wayland object <a href="../../../wayland_client/trait.Proxy.html#tymethod.equals">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "wayland_client";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>
