@@ -98,12 +98,15 @@ impl<Cx: Send> State<Cx> {
                          .. } = self;
 
         {
+            entities.commit();
+            
             let commit_args = CommitArgs {
+                entities: &*entities,
                 update_queues: update_queues,
                 world_removes: &world_removes,
             };
 
-            rayon::join(|| entities.commit(), || modules.commit(&commit_args, cx));
+            modules.commit(&commit_args, cx);
         }
         groups.commit(&update_queues.monitors());
         update_queues.clear_flags();
@@ -176,6 +179,7 @@ impl<'a, Cx: Send + 'a> Copy for Commit<'a, Cx> {}
 
 
 pub struct CommitArgs<'a> {
+    pub entities: &'a Entities,
     update_queues: &'a UpdateQueues,
     world_removes: &'a [Entity],
 }

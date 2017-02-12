@@ -6,7 +6,9 @@ use vec_map::VecMap;
 
 use ecs::entity::Accessor;
 use ecs::policy::Id;
-use super::{DataComponent, Storage};
+use ecs::module::Component;
+use modules::data::{Storage, DataComponent};
+
 
 /// A entry into the storage that associate a component with its link index
 #[derive(Clone, Debug)]
@@ -40,6 +42,38 @@ impl<V> Packed<V> {
         Packed {
             components: Vec::new(),
             links: VecMap::new(),
+        }
+    }
+
+    /// Associate a new Component V to the entity
+    pub fn insert<'a>(&mut self, key: Accessor<'a>, component: V) -> bool {
+        let id = key.id();
+        let index = id as usize;
+
+        let entry = Entry::new(id, component);
+
+        if let Some(&link) = self.links.get(index) {
+            let link_index = link as usize;
+
+            self.components[link_index] = entry;
+            return false;
+        }
+
+        let link = self.components.len() as Id;
+        self.links.insert(index, link);
+        self.components.push(entry);
+
+        true
+    }
+
+    /// Detach a Component V from the entity
+    pub fn remove<'a>(&mut self, key: Accessor<'a>) {
+        let links = &mut self.links;
+        if let Some(link) = links.remove(key.index()) {
+            let link_index = link as usize;
+
+            self.components.swap_remove(link_index);
+            self.components.get(link_index).map(|entry| links.insert(entry.entity as usize, link));
         }
     }
 
@@ -89,33 +123,11 @@ impl<V> Storage for Packed<V>
     type Component = V;
 
     fn insert<'a>(&mut self, key: Accessor<'a>, component: V) -> bool {
-        let id = key.id();
-        let index = id as usize;
-
-        let entry = Entry::new(id, component);
-
-        if let Some(&link) = self.links.get(index) {
-            let link_index = link as usize;
-
-            self.components[link_index] = entry;
-            return false;
-        }
-
-        let link = self.components.len() as Id;
-        self.links.insert(index, link);
-        self.components.push(entry);
-
-        true
+        Packed::<V>::insert(self, key, component)
     }
 
     fn remove<'a>(&mut self, key: Accessor<'a>) {
-        let links = &mut self.links;
-        if let Some(link) = links.remove(key.index()) {
-            let link_index = link as usize;
-
-            self.components.swap_remove(link_index);
-            self.components.get(link_index).map(|entry| links.insert(entry.entity as usize, link));
-        }
+        Packed::<V>::remove(self, key);
     }
 }
 
@@ -125,9 +137,7 @@ impl<V> Default for Packed<V> {
     }
 }
 
-impl<'a, V> Index<Accessor<'a>> for Packed<V>
-    where V: DataComponent
-{
+impl<'a, V> Index<Accessor<'a>> for Packed<V> {
     type Output = V;
 
     #[inline]
@@ -136,9 +146,7 @@ impl<'a, V> Index<Accessor<'a>> for Packed<V>
     }
 }
 
-impl<'a, V> IndexMut<Accessor<'a>> for Packed<V>
-    where V: DataComponent
-{
+impl<'a, V> IndexMut<Accessor<'a>> for Packed<V> {
     #[inline]
     fn index_mut(&mut self, key: Accessor<'a>) -> &mut V {
         self.get_mut(key).unwrap()
@@ -295,7 +303,7 @@ mod tests {
         }
     }
 
-    fn insert_for_entity<'a, V: DataComponent>(packed: &mut Packed<V>, entity: Id, component: V) -> Accessor<'a> {
+    fn insert_for_entity<'a, V: Component>(packed: &mut Packed<V>, entity: Id, component: V) -> Accessor<'a> {
         let entity = unsafe { Accessor::new_unchecked(entity) };
         packed.insert(entity, component);
 

@@ -1,14 +1,18 @@
 pub mod storages;
 
+pub use self::storages::Storage;
+
 use ecs::state::CommitArgs;
+use ecs::entity::Entities;
+use ecs::Context;
 use ecs::module::{Module, HasComponent};
 use ecs::module::{Component, Template, ComponentType};
 use ecs::module::{StorageReadGuard, StorageWriteGuard};
 use fnv::FnvHashMap;
-use self::storages::{Storage, StorageHandler, Handler};
 use rayon;
 use std::fmt::Debug;
 use std::any::Any;
+use self::storages::{StorageHandler, Handler};
 
 pub trait DataComponent: Any + Clone + Debug + Send + Sync {
     type Storage: Storage;
