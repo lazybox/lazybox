@@ -33,6 +33,8 @@ fnv = "1.0"
 serde = "0.8"
 serde_derive = "0.8"
 rayon = { version = "0.6.0", features = ["unstable"] }
+cgmath = "0.12.0"
+approx = "0.1"
 
 [features]
 unstable = []

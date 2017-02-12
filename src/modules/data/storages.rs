@@ -1,7 +1,3 @@
-pub mod packed;
-
-pub use self::packed::Packed as PackedStorage;
-
 use std::any::Any;
 use mopa;
 use ecs::entity::Accessor;
