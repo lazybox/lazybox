@@ -1,0 +1,24 @@
+[package]
+workspace = ".."
+name = "lazybox_core"
+version = "0.1.0"
+authors = ["Thomas Koehler <basta.t.k+git@gmail.com>"]
+
+[dependencies]
+rayon = { version = "^0.6", features = ["unstable"] }
+nalgebra = "^0.10"
+serde = "0.8"
+serde_derive = "0.8"
+parking_lot = "^0.3"
+crossbeam = "^0.2"
+vec_map = "^0.6"
+bit-set = "^0.4"
+daggy = "^0.4"
+fnv = "^1.0"
+mopa = "^0.2"
+approx = "^0.1"
+
+[features]
+unstable = []
+default = ["u16_handle"]
+u16_handle = []

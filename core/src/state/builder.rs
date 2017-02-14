@@ -1,15 +1,14 @@
-use ecs::state::State;
-use ecs::state::update_queue::UpdateQueues;
-use ecs::group::Groups;
-use ecs::module::{Module, Modules,Component};
+use {State, Context, Groups};
+use state::update_queue::UpdateQueues;
+use {Module, Modules, Component};
 
-pub struct StateBuilder<Cx: Send> {
+pub struct StateBuilder<Cx: Context> {
     update_queues: UpdateQueues,
     groups: Groups,
     modules: Modules<Cx>,
 }
 
-impl<Cx: Send> StateBuilder<Cx> {
+impl<Cx: Context> StateBuilder<Cx> {
     pub fn new() -> Self {
         StateBuilder {
             update_queues: UpdateQueues::new(),

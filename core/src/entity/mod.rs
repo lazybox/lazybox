@@ -1,10 +1,9 @@
 pub mod iter;
 
-use ecs::policy::{Id, Version};
+use policy::{self, Id, Version};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use crossbeam::sync::SegQueue;
 use std::marker::PhantomData;
-use ecs::policy;
 use vec_map::{self, VecMap};
 
 /// Represents an unique entity in the world.
@@ -258,9 +257,8 @@ impl<'a> Iterator for Iter<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use super::Entities;
 
-    use ecs::policy::{self, Id};
+    use policy::{self, Id};
 
     #[test]
     fn test_create_entity() {

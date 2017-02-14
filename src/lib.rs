@@ -13,6 +13,7 @@ extern crate mopa;
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
+extern crate glutin;
 extern crate cgmath;
 #[macro_use]
 extern crate approx;

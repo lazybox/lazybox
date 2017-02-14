@@ -1,14 +1,13 @@
-use ecs::module::Component;
-use ecs::entity::{Entity, EntityRef, Accessor};
-use ecs::state::Commit;
+use {Entity, EntityRef, Accessor, Component, Context};
+use state::Commit;
 
 /// An entity to be spawn
-pub struct SpawnRequest<'a, Cx: Send + 'a> {
+pub struct SpawnRequest<'a, Cx: Context + 'a> {
     entity: Entity,
     commit: Commit<'a, Cx>,
 }
 
-impl<'a, Cx: Send + 'a> SpawnRequest<'a, Cx> {
+impl<'a, Cx: Context + 'a> SpawnRequest<'a, Cx> {
     /// Constructs a new SpawnRequest with the given `Entity`.
     pub(crate) fn new(entity: Entity,
                       commit: Commit<'a, Cx>)
@@ -42,5 +41,5 @@ impl<'a, Cx: Send + 'a> SpawnRequest<'a, Cx> {
 }
 
 pub trait Prototype: Sized {
-    fn spawn_later_with<'a, Cx: Send>(self, spawn: SpawnRequest<'a, Cx>) where Self: Sized;
+    fn spawn_later_with<'a, Cx: Context>(self, spawn: SpawnRequest<'a, Cx>) where Self: Sized;
 }

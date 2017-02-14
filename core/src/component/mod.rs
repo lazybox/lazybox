@@ -2,9 +2,7 @@ pub mod storage;
 
 use std::any::{Any, TypeId};
 use std::fmt::Debug;
-use super::HasComponent;
-
-pub use self::storage::{StorageLock, StorageWriteGuard, StorageReadGuard};
+use HasComponent;
 
 pub trait Component: Any {
     type Module: HasComponent<Self>;

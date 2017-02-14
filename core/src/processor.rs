@@ -1,12 +1,11 @@
-use ecs::state::{State, Commit};
-use ecs::module::ComponentType;
+use {Context, ComponentType};
+use state::{State, Commit};
 use std::any::Any;
 use daggy::{self, Dag, Walker};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use parking_lot::Mutex;
 use rayon;
 use fnv::FnvHashMap;
-use ecs::Context;
 
 pub type ComponentTypes = [ComponentType];
 

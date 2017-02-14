@@ -4,22 +4,23 @@ pub mod update_queue;
 pub use self::builder::StateBuilder;
 pub use self::update_queue::Monitors as UpdateMonitors;
 
-use ecs::entity::{Entities, Entity, EntityRef, Accessor};
-use ecs::module::{Component, StorageReadGuard, StorageWriteGuard};
-use ecs::module::{Module, Modules, HasComponent};
-use ecs::spawn::{SpawnRequest, Prototype};
-use ecs::group::Groups;
+use {Entities, Entity, EntityRef, Accessor};
+use {Component, StorageReadGuard, StorageWriteGuard};
+use {Module, Modules, HasComponent};
+use spawn::{SpawnRequest, Prototype};
+use group::Groups;
 use self::update_queue::{UpdateQueues, UpdateQueue, UpdateQueueReader};
-use rayon;
 
-pub struct State<Cx: Send> {
+pub trait Context: Sync {}
+
+pub struct State<Cx: Context> {
     entities: Entities,
     modules: Modules<Cx>,
     groups: Groups,
     update_queues: UpdateQueues,
 }
 
-impl<Cx: Send> State<Cx> {
+impl<Cx: Context> State<Cx> {
     pub fn new(modules: Modules<Cx>,
                groups: Groups,
                update_queues: UpdateQueues)
@@ -113,11 +114,11 @@ impl<Cx: Send> State<Cx> {
     }
 }
 
-pub struct Update<'a, Cx: Send + 'a> {
+pub struct Update<'a, Cx: Context + 'a> {
     state: &'a mut State<Cx>,
 }
 
-impl<'a, Cx: Send + 'a> Update<'a, Cx> {
+impl<'a, Cx: Context + 'a> Update<'a, Cx> {
     pub fn commit<F>(&mut self, context: &mut Cx, f: F)
         where F: FnOnce(&State<Cx>, Commit<Cx>, &mut Cx)
     {
@@ -129,11 +130,11 @@ impl<'a, Cx: Send + 'a> Update<'a, Cx> {
     }
 }
 
-pub struct Commit<'a, Cx: Send + 'a> {
+pub struct Commit<'a, Cx: Context + 'a> {
     state: &'a State<Cx>,
 }
 
-impl<'a, Cx: Send + 'a> Commit<'a, Cx> {
+impl<'a, Cx: Context + 'a> Commit<'a, Cx> {
     #[inline]
     pub fn spawn_later(self) -> SpawnRequest<'a, Cx> {
         let entity = self.state.spawn_later();
@@ -168,14 +169,14 @@ impl<'a, Cx: Send + 'a> Commit<'a, Cx> {
     }
 }
 
-impl<'a, Cx: Send + 'a> Clone for Commit<'a, Cx> {
+impl<'a, Cx: Context + 'a> Clone for Commit<'a, Cx> {
     #[inline]
     fn clone(&self) -> Self {
         Commit { state: self.state }
     }
 }
 
-impl<'a, Cx: Send + 'a> Copy for Commit<'a, Cx> {}
+impl<'a, Cx: Context + 'a> Copy for Commit<'a, Cx> {}
 
 
 pub struct CommitArgs<'a> {
