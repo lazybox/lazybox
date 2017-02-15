@@ -1,6 +1,6 @@
 use crossbeam::sync::SegQueue;
 use fnv::FnvHashMap;
-use parking_lot::{RwLock, RwLockWriteGuard, RwLockReadGuard};
+use sync::{RwLock, RwLockWriteGuard, RwLockReadGuard};
 use mopa;
 use {Component, ComponentType};
 use {Entity, Accessor};

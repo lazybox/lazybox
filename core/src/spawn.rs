@@ -9,9 +9,8 @@ pub struct SpawnRequest<'a, Cx: Context + 'a> {
 
 impl<'a, Cx: Context + 'a> SpawnRequest<'a, Cx> {
     /// Constructs a new SpawnRequest with the given `Entity`.
-    pub(crate) fn new(entity: Entity,
-                      commit: Commit<'a, Cx>)
-                      -> Self {
+    #[doc(hidden)]
+    pub fn new(entity: Entity, commit: Commit<'a, Cx>) -> Self {
         SpawnRequest {
             entity: entity,
             commit: commit,

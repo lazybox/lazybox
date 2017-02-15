@@ -3,7 +3,7 @@ use state::{State, Commit};
 use std::any::Any;
 use daggy::{self, Dag, Walker};
 use std::sync::atomic::{AtomicUsize, Ordering};
-use parking_lot::Mutex;
+use sync::Mutex;
 use rayon;
 use fnv::FnvHashMap;
 
@@ -218,31 +218,29 @@ pub struct ActionGraph {
 
 impl ActionGraph {
     fn par_for_each_mut<F, Cx: Context>(&self,
-                           processors: &Processors<Cx>,
-                           state: &State<Cx>,
-                           commit: Commit<Cx>,
-                           cx: &Cx,
-                           f: F)
+                                        processors: &Processors<Cx>,
+                                        state: &State<Cx>,
+                                        commit: Commit<Cx>,
+                                        cx: &Cx,
+                                        f: F)
         where F: Fn(&State<Cx>, Commit<Cx>, &Cx, &mut Processor<Cx>) + Sync + Send
     {
         let f = &f;
-        rayon::scope(|scope| {
-            for &head in &self.heads {
-                scope.spawn(move |scope| {
-                    self.run_process_mut(processors, scope, head, state, commit, cx, f)
-                });
-            }
+        rayon::scope(|scope| for &head in &self.heads {
+            scope.spawn(move |scope| {
+                self.run_process_mut(processors, scope, head, state, commit, cx, f)
+            });
         });
     }
 
     fn run_process_mut<'a: 's, 's, F: 'a, Cx: Context>(&'a self,
-                                          processors: &'a Processors<Cx>,
-                                          scope: &rayon::Scope<'s>,
-                                          node: NodeIndex,
-                                          state: &'a State<Cx>,
-                                          commit: Commit<'a, Cx>,
-                                          cx: &'a Cx,
-                                          f: &'a F)
+                                                       processors: &'a Processors<Cx>,
+                                                       scope: &rayon::Scope<'s>,
+                                                       node: NodeIndex,
+                                                       state: &'a State<Cx>,
+                                                       commit: Commit<'a, Cx>,
+                                                       cx: &'a Cx,
+                                                       f: &'a F)
         where F: Fn(&'a State<Cx>, Commit<'a, Cx>, &'a Cx, &mut Processor<Cx>) + Sync + Send
     {
         let slot = &self.execution_dag[node];
@@ -282,20 +280,29 @@ impl<Cx: Context> SchedulerBuilder<Cx> {
         SchedulerBuilder {
             processors: Processors::new(),
             updates: ActionGraphBuilder::new(),
-            fixed_updates: ActionGraphBuilder::new()
+            fixed_updates: ActionGraphBuilder::new(),
         }
     }
 
-    pub fn register<P: Processor<Cx>>(&mut self, processor: P, update_type: UpdateType) -> &mut Self {
+    pub fn register<P: Processor<Cx>>(&mut self,
+                                      processor: P,
+                                      update_type: UpdateType)
+                                      -> &mut Self {
         {
-            let &mut SchedulerBuilder { ref mut processors, ref mut updates, ref mut fixed_updates } = self;
+            let &mut SchedulerBuilder { ref mut processors,
+                                        ref mut updates,
+                                        ref mut fixed_updates } = self;
             processors.push(Box::new(processor), |index, processor| {
                 let reads = processor.reads();
                 let writes = processor.writes();
 
                 match update_type {
-                    UpdateType::Frame => { updates.register(index, reads, writes); },
-                    UpdateType::Fixed => { fixed_updates.register(index, reads, writes); }
+                    UpdateType::Frame => {
+                        updates.register(index, reads, writes);
+                    }
+                    UpdateType::Fixed => {
+                        fixed_updates.register(index, reads, writes);
+                    }
                     UpdateType::Both => {
                         updates.register(index, reads, writes);
                         fixed_updates.register(index, reads, writes);
@@ -329,9 +336,13 @@ impl<Cx: Context> Scheduler<Cx> {
         let mut update = state.update();
 
         update.commit(context, |state, commit, context| {
-            self.updates.par_for_each_mut(&self.processors, state, commit, context, |state, commit, context, processor| {
-                processor.update(state, commit, context, delta);
-            });
+            self.updates.par_for_each_mut(&self.processors,
+                                          state,
+                                          commit,
+                                          context,
+                                          |state, commit, context, processor| {
+                                              processor.update(state, commit, context, delta);
+                                          });
         });
     }
 
@@ -339,9 +350,13 @@ impl<Cx: Context> Scheduler<Cx> {
         let mut update = state.update();
 
         update.commit(context, |state, commit, context| {
-            self.fixed_updates.par_for_each_mut(&self.processors, state, commit, context, |state, commit, context, processor| {
-                processor.fixed_update(state, commit, context);
-            });
+            self.fixed_updates.par_for_each_mut(&self.processors,
+                                                state,
+                                                commit,
+                                                context,
+                                                |state, commit, context, processor| {
+                                                    processor.fixed_update(state, commit, context);
+                                                });
         });
     }
 }

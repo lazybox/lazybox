@@ -7,8 +7,6 @@ authors = ["Thomas Koehler <basta.t.k+git@gmail.com>"]
 [dependencies]
 rayon = { version = "^0.6", features = ["unstable"] }
 nalgebra = "^0.10"
-serde = "0.8"
-serde_derive = "0.8"
 parking_lot = "^0.3"
 crossbeam = "^0.2"
 vec_map = "^0.6"

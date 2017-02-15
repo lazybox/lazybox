@@ -1,10 +1,5 @@
-#![feature(pub_restricted, associated_consts)]
-
 extern crate rayon;
 extern crate nalgebra;
-extern crate serde;
-#[macro_use]
-extern crate serde_derive;
 extern crate parking_lot;
 extern crate crossbeam;
 extern crate vec_map;
@@ -26,6 +21,7 @@ pub mod spawn;
 pub mod group;
 pub mod processor;
 pub mod math;
+pub mod sync;
 
 pub use entity::{Entity, EntityRef, Accessor, Entities};
 pub use component::{Component, ComponentType};
