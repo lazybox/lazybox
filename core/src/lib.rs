@@ -22,6 +22,7 @@ pub mod group;
 pub mod processor;
 pub mod math;
 pub mod sync;
+pub mod event;
 
 pub use entity::{Entity, EntityRef, Accessor, Entities};
 pub use component::{Component, ComponentType};

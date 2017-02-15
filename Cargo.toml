@@ -3,7 +3,6 @@ members = [
   "core/",
   "assets/",
   "codegen/",
-  "events/",
   "frameclock/",
   "graphics/",
   "inputs/",
@@ -20,7 +19,6 @@ authors = ["Thomas Koehler <basta.t.k+git@gmail.com>",
 lazybox_graphics = { path = "graphics" }
 lazybox_settings = { path = "settings" }
 lazybox_inputs = { path = "inputs" }
-lazybox_events = { path = "events" }
 lazybox_assets = { path = "assets" }
 lazybox_frameclock = { path = "frameclock" }
 

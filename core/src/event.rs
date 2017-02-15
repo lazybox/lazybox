@@ -1,8 +1,6 @@
-extern crate crossbeam;
-
 use std::any::Any;
 use std::sync::Arc;
-use crossbeam::sync::SegQueue;
+use sync::SegQueue;
 
 pub trait Message: Any + Sync + Send {}
 

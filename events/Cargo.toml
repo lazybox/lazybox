@@ -1,8 +1,0 @@
-[package]
-workspace = ".."
-name = "lazybox_events"
-version = "0.1.0"
-authors = ["Romain Vaillant <rph.vaillant@gmail.com>"]
-
-[dependencies]
-crossbeam = "0.2"
