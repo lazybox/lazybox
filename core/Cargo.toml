@@ -15,6 +15,7 @@ daggy = "^0.4"
 fnv = "^1.0"
 mopa = "^0.2"
 approx = "^0.1"
+yaml-rust = "^0.3"
 
 [features]
 unstable = []

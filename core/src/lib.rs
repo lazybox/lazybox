@@ -10,6 +10,7 @@ extern crate fnv;
 extern crate mopa;
 // #[macro_use]
 // extern crate approx;
+extern crate yaml_rust;
 
 pub mod policy;
 pub mod entity;
@@ -23,6 +24,7 @@ pub mod processor;
 pub mod math;
 pub mod sync;
 pub mod event;
+pub mod settings;
 
 pub use entity::{Entity, EntityRef, Accessor, Entities};
 pub use component::{Component, ComponentType};

@@ -2,7 +2,7 @@ use std::{fmt, ops};
 use std::collections::HashMap;
 use yaml_rust::yaml::{self, Yaml};
 
-use Error;
+use settings::Error;
 
 pub enum Value {
     Real(f64),
@@ -138,7 +138,8 @@ impl<'a> ops::Index<&'a str> for ValueMap {
 }
 
 impl Value {
-    pub(crate) fn from(v: Yaml) -> Result<Self, Error> {
+    #[doc(hidden)]
+    pub fn from(v: Yaml) -> Result<Self, Error> {
         Ok(match v {
             Yaml::Real(s) => Value::Real(parse_float(s)),
             Yaml::Integer(i) => Value::Integer(i),
@@ -152,7 +153,8 @@ impl Value {
         })
     }
 
-    pub(crate) fn override_with(&mut self, v: Yaml) -> Result<(), Error> {
+    #[doc(hidden)]
+    pub fn override_with(&mut self, v: Yaml) -> Result<(), Error> {
         let v = match self {
             &mut Value::Map(ref mut m) => {
                 match v {
@@ -176,7 +178,8 @@ fn parse_float(s: String) -> f64 {
 }
 
 impl ValueArray {
-    pub(crate) fn from(a: yaml::Array) -> Result<Self, Error> {
+    #[doc(hidden)]
+    pub fn from(a: yaml::Array) -> Result<Self, Error> {
         let mut array = Vec::with_capacity(a.len());
         for v in a {
             array.push(try!(Value::from(v)));
@@ -187,15 +190,19 @@ impl ValueArray {
 }
 
 impl ValueMap {
-    pub(crate) fn empty() -> Self {
+    #[doc(hidden)]
+    pub fn empty() -> Self {
         ValueMap(HashMap::new())
     }
 
-    pub(crate) fn from(h: yaml::Hash) -> Result<Self, Error> {
+    #[doc(hidden)]
+    pub fn from(h: yaml::Hash) -> Result<Self, Error> {
         let mut map = HashMap::with_capacity(h.len());
         for (k, v) in h {
             match k {
-                Yaml::String(s) => { map.insert(s, try!(Value::from(v))); }
+                Yaml::String(s) => {
+                    map.insert(s, try!(Value::from(v)));
+                }
                 _ => return Err(Error::InvalidKey),
             }
         }
@@ -203,15 +210,17 @@ impl ValueMap {
         Ok(ValueMap(map))
     }
 
-    pub(crate) fn override_with(&mut self, h: yaml::Hash) -> Result<(), Error> {
+    #[doc(hidden)]
+    pub fn override_with(&mut self, h: yaml::Hash) -> Result<(), Error> {
         for (k, v) in h {
             match k {
-                Yaml::String(ref s) =>
+                Yaml::String(ref s) => {
                     if let Some(current) = self.0.get_mut(s) {
-                       try!(current.override_with(v));
+                        try!(current.override_with(v));
                     } else {
                         return Err(Error::InvalidOverride);
-                    },
+                    }
+                }
                 _ => return Err(Error::InvalidKey),
             }
         }

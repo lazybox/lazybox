@@ -1,13 +1,9 @@
-#![feature(pub_restricted)]
-
-extern crate yaml_rust;
-
 mod value;
 pub use self::value::*;
 
+use yaml_rust::Yaml;
 use std::{ops, fmt};
 use std::path::Path;
-use yaml_rust::Yaml;
 
 pub struct Settings {
     values: ValueMap,
@@ -37,12 +33,8 @@ impl Settings {
 
     pub fn from_yaml(yaml: Yaml) -> Result<Self, Error> {
         match yaml {
-            Yaml::Hash(h) => Ok(Settings {
-                values: try!(ValueMap::from(h)),
-            }),
-            Yaml::Null => Ok(Settings {
-                values: ValueMap::empty(),
-            }),
+            Yaml::Hash(h) => Ok(Settings { values: try!(ValueMap::from(h)) }),
+            Yaml::Null => Ok(Settings { values: ValueMap::empty() }),
             _ => Err(Error::InvalidRoot),
         }
     }
@@ -64,7 +56,9 @@ impl fmt::Debug for Settings {
 
 impl ops::Deref for Settings {
     type Target = ValueMap;
-    fn deref(&self) -> &ValueMap { &self.values }
+    fn deref(&self) -> &ValueMap {
+        &self.values
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
