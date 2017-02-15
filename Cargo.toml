@@ -1,7 +1,6 @@
 [workspace]
 members = [
   "core/",
-  "assets/",
   "codegen/",
   "frameclock/",
   "graphics/",
@@ -17,7 +16,6 @@ authors = ["Thomas Koehler <basta.t.k+git@gmail.com>",
 [dependencies]
 lazybox_graphics = { path = "graphics" }
 lazybox_inputs = { path = "inputs" }
-lazybox_assets = { path = "assets" }
 lazybox_frameclock = { path = "frameclock" }
 
 [features]

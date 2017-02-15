@@ -1,22 +1,14 @@
-#![cfg_attr(feature = "eders", feature(plugin, custom_derive))]
-#![cfg_attr(feature = "eders", plugin(serde_macros))]
-
-#[cfg(feature = "eders")]
-extern crate serde;
-extern crate crossbeam;
-
 mod request;
 
 use std::io;
 use std::any::Any;
 use std::collections::HashMap;
 use std::sync::atomic::{AtomicBool, ATOMIC_BOOL_INIT, Ordering};
-use request::*;
+use self::request::*;
 use std::sync::Arc;
-use crossbeam::sync::MsQueue;
+use sync::MsQueue;
 
 #[derive(Clone, Hash, PartialEq, Eq, Debug)]
-#[cfg_attr(feature = "eders", derive(Serialize, Deserialize))]
 pub struct AssetRef(String);
 
 impl AssetRef {
@@ -47,7 +39,7 @@ type StatusMap = HashMap<AssetRef, Status>;
 pub struct AsyncLoader<A: Loader> {
     queue: RequestQueue<A>,
     status: StatusMap,
-    pending_requests: u32
+    pending_requests: u32,
 }
 
 impl<A: Loader> AsyncLoader<A> {
@@ -55,7 +47,7 @@ impl<A: Loader> AsyncLoader<A> {
         AsyncLoader {
             queue: queue,
             status: StatusMap::new(),
-            pending_requests: 0
+            pending_requests: 0,
         }
     }
 
@@ -75,7 +67,7 @@ impl<A: Loader> AsyncLoader<A> {
                     self.queue.send_request(assert_ref.path());
                     self.pending_requests += 1;
                 }
-            },
+            }
         }
     }
 
@@ -84,9 +76,7 @@ impl<A: Loader> AsyncLoader<A> {
     }
 
     pub fn ready_assets(&mut self) -> ReadyAssetIter<A> {
-        ReadyAssetIter {
-            async_loader: self
-        }
+        ReadyAssetIter { async_loader: self }
     }
 
     pub fn wait_for_ready(&mut self, mut amount: u32) -> WaitAssetIter<A> {
@@ -97,19 +87,21 @@ impl<A: Loader> AsyncLoader<A> {
 
         WaitAssetIter {
             async_loader: self,
-            limit: limit
+            limit: limit,
         }
     }
 
     pub fn wait_all(&mut self) -> WaitAssetIter<A> {
         WaitAssetIter {
             async_loader: self,
-            limit: 0
+            limit: 0,
         }
     }
 
-    fn handle_response(request: Request, result: LoaderResult<A::Output>, status: &mut StatusMap)
-        -> (AssetRef, LoaderResult<A::Output>) {
+    fn handle_response(request: Request,
+                       result: LoaderResult<A::Output>,
+                       status: &mut StatusMap)
+                       -> (AssetRef, LoaderResult<A::Output>) {
 
         let asset_ref = AssetRef::new(request.path);
         if result.is_ok() {
@@ -128,7 +120,8 @@ impl<'a, A: Loader> Iterator for ReadyAssetIter<'a, A> {
     type Item = (AssetRef, LoaderResult<A::Output>);
 
     fn next(&mut self) -> Option<Self::Item> {
-        let AsyncLoader::<A> { ref mut queue, ref mut status, ref mut pending_requests} = *self.async_loader;
+        let AsyncLoader::<A> { ref mut queue, ref mut status, ref mut pending_requests } =
+            *self.async_loader;
 
         queue.next_response().map(|(request, result)| {
             *pending_requests -= 1;
@@ -146,7 +139,8 @@ impl<'a, A: Loader> Iterator for WaitAssetIter<'a, A> {
     type Item = (AssetRef, LoaderResult<A::Output>);
 
     fn next(&mut self) -> Option<Self::Item> {
-        let AsyncLoader::<A> { ref mut queue, ref mut status, ref mut pending_requests} = *self.async_loader;
+        let AsyncLoader::<A> { ref mut queue, ref mut status, ref mut pending_requests } =
+            *self.async_loader;
 
         if self.limit == *pending_requests {
             None
@@ -171,7 +165,7 @@ impl Initializer {
         Initializer {
             request_sender: queue.clone(),
             request_receiver: Arc::downgrade(&queue),
-            handlers: HandlerMap::new()
+            handlers: HandlerMap::new(),
         }
     }
 
