@@ -2,8 +2,6 @@
 members = [
   "core/",
   "codegen/",
-  "graphics/",
-  "inputs/",
   "scene2d/",
 ]
 
@@ -14,8 +12,7 @@ authors = ["Thomas Koehler <basta.t.k+git@gmail.com>",
            "Romain Vaillant <rph.vaillant@gmail.com>"]
 
 [dependencies]
-lazybox_graphics = { path = "graphics" }
-lazybox_inputs = { path = "inputs" }
+lazybox_core = { path = "core" }
 
 [features]
 unstable = []

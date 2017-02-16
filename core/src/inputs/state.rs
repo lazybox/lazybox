@@ -1,6 +1,6 @@
 use std::collections::HashSet;
-use cgmath::Point2;
-use glutin::{MouseButton, VirtualKeyCode, ElementState};
+use math::Point2;
+use winit::{MouseButton, VirtualKeyCode, ElementState};
 
 pub struct InputState {
     mouse: MouseState,
@@ -9,7 +9,7 @@ pub struct InputState {
 }
 
 impl InputState {
-    pub(crate) fn new() -> Self {
+    pub fn new() -> Self {
         InputState {
             mouse: MouseState::new(),
             keyboard: KeyboardState::new(),
@@ -17,7 +17,7 @@ impl InputState {
         }
     }
 
-    pub(crate) fn update_mouse_position(&mut self, position: Point2<i32>) {
+    pub fn update_mouse_position(&mut self, position: Point2<i32>) {
         self.mouse.position = position;
     }
 
@@ -25,8 +25,8 @@ impl InputState {
         self.mouse.position
     }
 
-    pub(crate) fn update_mouse_button(&mut self, button: MouseButton, state: ElementState) {
-        use glutin::ElementState::*;
+    pub fn update_mouse_button(&mut self, button: MouseButton, state: ElementState) {
+        use winit::ElementState::*;
 
         match state {
             Pressed => self.mouse.buttons.insert(button),
@@ -38,8 +38,8 @@ impl InputState {
         self.mouse.buttons.contains(button)
     }
 
-    pub(crate) fn update_key(&mut self, key: VirtualKeyCode, state: ElementState) {
-        use glutin::ElementState::*;
+    pub fn update_key(&mut self, key: VirtualKeyCode, state: ElementState) {
+        use winit::ElementState::*;
 
         match state {
             Pressed => self.keyboard.keys.insert(key),
@@ -51,7 +51,7 @@ impl InputState {
         self.keyboard.keys.contains(key)
     }
 
-    pub(crate) fn update_window_focus(&mut self, focused: bool) {
+    pub fn update_window_focus(&mut self, focused: bool) {
         self.window.focused = focused
     }
 
@@ -60,7 +60,7 @@ impl InputState {
     }
 }
 
-pub(crate) struct MouseState {
+pub struct MouseState {
     position: Point2<i32>,
     buttons: HashSet<MouseButton>,
 }
@@ -74,7 +74,7 @@ impl MouseState {
     }
 }
 
-pub(crate) struct KeyboardState {
+pub struct KeyboardState {
     keys: HashSet<VirtualKeyCode>,
 }
 
@@ -84,7 +84,7 @@ impl KeyboardState {
     }
 }
 
-pub(crate) struct WindowState {
+pub struct WindowState {
     focused: bool,
 }
 

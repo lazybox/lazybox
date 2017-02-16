@@ -5,7 +5,7 @@ use std::slice;
 use vec_map::VecMap;
 
 use super::{Storage, DataComponent};
-use {Accessor, Component};
+use Accessor;
 use policy::Id;
 
 /// A entry into the storage that associate a component with its link index

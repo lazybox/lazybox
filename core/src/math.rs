@@ -1,3 +1,3 @@
 extern crate nalgebra;
 
-pub use nalgebra::*;
+pub use self::nalgebra::*;

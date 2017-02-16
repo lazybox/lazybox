@@ -1,4 +1,0 @@
-spaceship:
-  rules:
-    - { action: Shoot, when: MouseButton.Held.Left }
-    - { action: LaunchBomb, when: Key.Pressed.Space }

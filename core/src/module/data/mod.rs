@@ -3,15 +3,13 @@ pub mod storages;
 pub use self::storages::Storage;
 
 use state::CommitArgs;
-use entity::Entities;
-use module::{Module, HasComponent};
+use {Context, Module, HasComponent};
 use component::{Component, Template, ComponentType};
-use module::{StorageReadGuard, StorageWriteGuard};
+use {StorageReadGuard, StorageWriteGuard};
 use fnv::FnvHashMap;
 use rayon;
 use std::fmt::Debug;
 use std::any::Any;
-use Context;
 
 use self::storages::{StorageHandler, Handler};
 

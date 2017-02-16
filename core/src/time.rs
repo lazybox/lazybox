@@ -1,6 +1,6 @@
 extern crate time;
 
-pub use time::*;
+pub use self::time::*;
 
 pub struct FrameClock {
     mark: f64,
@@ -11,14 +11,14 @@ pub struct FrameClock {
 impl FrameClock {
     pub fn start(timestep: f64) -> Self {
         FrameClock {
-            mark: time::precise_time_s(),
+            mark: precise_time_s(),
             timestep: timestep,
             accumulator: 0.,
         }
     }
 
     pub fn reset(&mut self) -> f64 {
-        let now = time::precise_time_s();
+        let now = precise_time_s();
         let delta = now - self.mark;
         self.mark = now;
         self.accumulator += delta;

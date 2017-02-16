@@ -1,25 +1,17 @@
-#![feature(pub_restricted)]
-
-extern crate glutin;
-extern crate cgmath;
-extern crate yaml_rust;
-#[macro_use]
-extern crate error_chain;
-
 pub mod error;
 pub mod state;
 pub mod interaction;
 #[macro_use]
 pub mod macros;
 
-pub use error::Error;
-pub use state::InputState;
-pub use interaction::{Interaction, InteractionBuilder, InterfaceBuilder, Action};
-use interaction::Interface;
-use error::Result;
+pub use self::error::{Error, Result};
+pub use self::state::InputState;
+pub use self::interaction::{
+    Interface, Interaction, InteractionBuilder, InterfaceBuilder, Action
+};
 
-use glutin::Event;
-use cgmath::Point2;
+use winit::Event;
+use math::Point2;
 use yaml_rust::YamlLoader;
 
 pub struct Inputs {

@@ -1,16 +1,18 @@
 use std::collections::{HashMap, HashSet};
-use glutin::{VirtualKeyCode, MouseButton, ElementState};
+use winit::{VirtualKeyCode, MouseButton, ElementState};
 use yaml_rust::Yaml;
-use state::InputState;
-use error::{ErrorKind, Result};
+use inputs::state::InputState;
+use inputs::error::{ErrorKind, Result};
 
 #[derive(Clone, Eq, PartialEq, Hash)]
-pub(crate) enum Input {
+#[doc(hidden)]
+pub enum Input {
     Key(ElementState, VirtualKeyCode),
     MouseButton(ElementState, MouseButton),
 }
 
-pub(crate) enum Condition {
+#[doc(hidden)]
+pub enum Condition {
     KeyHeld(VirtualKeyCode),
     MouseButtonHeld(MouseButton),
 }
@@ -26,7 +28,8 @@ impl Condition {
 
 pub type Action = &'static str;
 
-pub(crate) struct ConditionalAction {
+#[doc(hidden)]
+pub struct ConditionalAction {
     action: Action,
     condition: Condition,
 }
@@ -41,7 +44,8 @@ impl ConditionalAction {
     }
 }
 
-pub(crate) struct Rules {
+#[doc(hidden)]
+pub struct Rules {
     by_input: HashMap<Input, Action>,
     others: Vec<ConditionalAction>,
 }
@@ -74,7 +78,8 @@ impl InteractionBuilder {
         self
     }
 
-    pub(crate) fn build(self) -> Interaction {
+    #[doc(hidden)]
+    pub fn build(self) -> Interaction {
         Interaction { interfaces: self.interfaces }
     }
 }
@@ -120,32 +125,33 @@ impl Interaction {
         Ok(())
     }
 
-    pub(crate) fn interface(&self, name: &str) -> Option<&Interface> {
+    pub fn interface(&self, name: &str) -> Option<&Interface> {
         self.interfaces.get(name)
     }
 
-    pub(crate) fn trigger_input_actions(&mut self, input: &Input, state: &InputState) {
+    pub fn trigger_input_actions(&mut self, input: &Input, state: &InputState) {
         // TODO: enable/disable interface dispatch
         for (_, interface) in &mut self.interfaces {
             interface.trigger_input_actions(input, state);
         }
     }
 
-    pub(crate) fn trigger_state_actions(&mut self, state: &InputState) {
+    pub fn trigger_state_actions(&mut self, state: &InputState) {
         // TODO: enable/disable interface dispatch
         for (_, interface) in &mut self.interfaces {
             interface.trigger_state_actions(state);
         }
     }
 
-    pub(crate) fn clear_actions(&mut self) {
+    pub fn clear_actions(&mut self) {
         for (_, interface) in &mut self.interfaces {
             interface.clear_actions();
         }
     }
 }
 
-pub(crate) struct Interface {
+#[doc(hidden)]
+pub struct Interface {
     actions: HashSet<Action>,
     rules: Rules,
     triggered_actions: Vec<Action>,
@@ -222,7 +228,7 @@ impl WhenParse {
         use self::WhenParse::*;
         use self::Input::*;
         use self::Condition::*;
-        use glutin::ElementState::*;
+        use winit::ElementState::*;
 
         let mut split = s.split('.');
         match split.next() {
@@ -291,7 +297,7 @@ macro_rules! enum_str_conv {
 }
 
 enum_str_conv! {
-    key_to_str, key_from_str, ::glutin::VirtualKeyCode,
+    key_to_str, key_from_str, ::winit::VirtualKeyCode,
     Key1,
     Key2,
     Key3,
@@ -445,7 +451,7 @@ enum_str_conv! {
 }
 
 enum_str_conv! {
-    mouse_button_to_str, mouse_button_from_str, ::glutin::MouseButton,
+    mouse_button_to_str, mouse_button_from_str, ::winit::MouseButton,
     Left,
     Right,
     Middle
