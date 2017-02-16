@@ -20,22 +20,22 @@ pub struct NormalizedColor {
 }
 
 impl Color {
-    pub fn from_srgb([r, g, b, a]: [u8; 4]) -> Self {
+    pub fn from_srgb(cs: [u8; 4]) -> Self {
         let conv = |v|
             component_from_float(
                 component_srgb_to_linear(
                     component_to_float(v)));
                     
         Color {
-            r: conv(r),
-            g: conv(g),
-            b: conv(b),
-            a: a,
+            r: conv(cs[0]),
+            g: conv(cs[1]),
+            b: conv(cs[2]),
+            a: cs[3],
         }
     }
 
-    pub fn from_array([r, g, b, a]: [u8; 4]) -> Self {
-        Color { r: r, g: g, b: b, a: a }
+    pub fn from_array(cs: [u8; 4]) -> Self {
+        Color { r: cs[0], g: cs[1], b: cs[2], a: cs[3] }
     }
 
     pub fn to_array(&self) -> [u8; 4] {
@@ -48,18 +48,18 @@ impl Color {
 }
 
 impl NormalizedColor {
-    pub fn from_srgb([r, g, b, a]: [f32; 4]) -> Self {
+    pub fn from_srgb(cs: [f32; 4]) -> Self {
         use self::component_srgb_to_linear as conv;
         NormalizedColor {
-            r: conv(r),
-            g: conv(g),
-            b: conv(b),
-            a: a,
+            r: conv(cs[0]),
+            g: conv(cs[1]),
+            b: conv(cs[2]),
+            a: cs[3],
         }
     }
 
-    pub fn from_array([r, g, b, a]: [f32; 4]) -> Self {
-        NormalizedColor { r: r, g: g, b: b, a: a }
+    pub fn from_array(cs: [f32; 4]) -> Self {
+        NormalizedColor { r: cs[0], g: cs[1], b: cs[2], a: cs[3] }
     }
 
     pub fn to_array(&self) -> [f32; 4] {

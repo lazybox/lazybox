@@ -1,13 +1,11 @@
 pub mod triangulation;
 
-use gfx;
-use gfx_core;
+use {gfx, gfx_core};
 
-use {Graphics, Frame, Color};
-use camera;
-use color::PackedColor;
-use utils::*;
-use types::*;
+use {Graphics, Frame, Color, PackedColor};
+use graphics::types::*;
+use graphics::utils::*;
+use graphics::camera;
 
 pub type Triangle = [[f32; 2]; 3];
 pub const VERTEX_BUFFER_TRIANGLES: usize = 512;
@@ -21,9 +19,9 @@ pub const RENDER_GLSLF_150: &'static [u8] = include_bytes!("render_150.glslf");
 #[doc(hidden)]
 pub use self::defines::{Vertex, pipe};
 mod defines {
-    pub use types::*;
-    pub use camera;
     use gfx;
+    pub use graphics::types::*;
+    pub use graphics::camera;
 
     gfx_defines! {
         vertex Vertex {

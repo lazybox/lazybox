@@ -1,5 +1,6 @@
-use glutin::Window;
-use cgmath::{Point2, Vector2, EuclideanSpace};
+use core::winit::Window;
+use core::nalgebra::{Point2, Vector2};
+use core::alga::linear::EuclideanSpace;
 
 #[derive(Debug, Clone)]
 pub struct Camera {
@@ -33,40 +34,32 @@ impl Camera {
             Vector2::new(self.size.x, self.size.y / aspect_ratio)
         };
 
-        self.translate = -self.position.to_vec();
+        self.translate = -self.position.coordinates();
         self.scale = Vector2::new(2. / size.x, 2. / size.y);
     }
 
     pub fn window_point_to_gl(p: Point2<i32>, window: &Window) -> Point2<f32> {
         let (w, h) = window.get_inner_size_pixels().unwrap();
-        Point2 {
-            x: (p.x as f32 / w as f32) * 2.0 - 1.0,
-            y: 1.0 - (p.y as f32 / h as f32) * 2.0,
-        }
+        Point2::new((p.x as f32 / w as f32) * 2.0 - 1.0,
+                    1.0 - (p.y as f32 / h as f32) * 2.0)
     }
 
     pub fn window_vector_to_gl(v: Vector2<i32>, window: &Window) -> Vector2<f32> {
         let (w, h) = window.get_inner_size_pixels().unwrap();
-        Vector2 {
-            x:  (v.x as f32 / w as f32),
-            y: -(v.y as f32 / h as f32),
-        }
+        Vector2::new((v.x as f32 / w as f32),
+                     (v.y as f32 / h as f32))
     }
 
     pub fn window_point_to_world(&self, p: Point2<i32>, window: &Window) -> Point2<f32> {
         let gl = Self::window_point_to_gl(p, window);
-        Point2 {
-            x: gl.x / self.scale.x - self.translate.x,
-            y: gl.y / self.scale.y - self.translate.y,
-        }
+        Point2::new(gl.x / self.scale.x - self.translate.x,
+                    gl.y / self.scale.y - self.translate.y)
     }
 
     pub fn window_vector_to_world(&self, v: Vector2<i32>, window: &Window) -> Vector2<f32> {
         let gl = Self::window_vector_to_gl(v, window);
-        Vector2 {
-            x: gl.x / self.scale.x,
-            y: gl.y / self.scale.y,
-        }
+        Vector2::new(gl.x / self.scale.x,
+                     gl.y / self.scale.y)
     }
 }
 

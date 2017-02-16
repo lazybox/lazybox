@@ -1,5 +1,5 @@
 use std::collections::HashSet;
-use maths::Point2;
+use nalgebra::Point2;
 use winit::{MouseButton, VirtualKeyCode, ElementState};
 
 pub struct InputState {

@@ -1,6 +1,6 @@
 use gfx;
 
-use types::*;
+use graphics::types::*;
 
 pub struct MappingWriter<'a, T: 'a + Copy> {
     buffer: &'a gfx::handle::Buffer<Resources, T>,

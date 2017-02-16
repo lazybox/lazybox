@@ -1,11 +1,10 @@
-use {Graphics, Frame, Camera};
-use camera;
-use layer::{LayerId, LayerOcclusion};
-use lights::*;
-use specialized::sprites;
-use specialized::dynamic_lights::{self as lights, OcclusionFormat};
-use types::*;
-use utils::*;
+use {Graphics, Frame, Camera, LayerId, LayerOcclusion};
+use graphics::types::*;
+use graphics::utils::*;
+use graphics::camera;
+use graphics::lights::*;
+use graphics::specialized::sprites;
+use graphics::specialized::dynamic_lights::{self as lights, OcclusionFormat};
 
 #[doc(hidden)]
 pub const FORWARD_GLSLV_150: &'static [u8] = include_bytes!("forward_150.glslv");
@@ -15,9 +14,9 @@ pub const FORWARD_GLSLF_150: &'static [u8] = include_bytes!("forward_150.glslf")
 #[doc(hidden)]
 pub use self::defines::forward_pipe;
 mod defines {
-    pub use types::*;
-    pub use utils::*;
     use gfx;
+    pub use graphics::types::*;
+    pub use graphics::utils::*;
 
     gfx_defines! {
         pipeline forward_pipe {
@@ -178,8 +177,8 @@ impl Renderer {
 
     fn update_camera(&mut self, camera: &Camera, graphics: &mut Graphics) {
         let locals = camera::Locals {
-            translate: camera.translate.into(),
-            scale: camera.scale.into(),
+            translate: [camera.translate.x, camera.translate.y],
+            scale: [camera.scale.x, camera.scale.y]
         };
         graphics.encoder.update_constant_buffer(&self.sprites.camera(), &locals);
     }

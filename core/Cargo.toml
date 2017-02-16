@@ -2,11 +2,13 @@
 workspace = ".."
 name = "lazybox_core"
 version = "0.1.0"
-authors = ["Thomas Koehler <basta.t.k+git@gmail.com>"]
+authors = ["Thomas Koehler <basta.t.k+git@gmail.com>",
+           "Liotitch <rph.vaillant@gmail.com>"]
 
 [dependencies]
 winit = "^0.5"
 rayon = { version = "^0.6", features = ["unstable"] }
+alga = "^0.5"
 nalgebra = "^0.11"
 parking_lot = "^0.3"
 crossbeam = "^0.2"

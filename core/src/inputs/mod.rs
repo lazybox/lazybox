@@ -9,7 +9,7 @@ pub use self::state::InputState;
 pub use self::interaction::{Interface, Interaction, InteractionBuilder, InterfaceBuilder, Action};
 
 use winit::Event;
-use maths::Point2;
+use nalgebra::Point2;
 use yaml_rust::YamlLoader;
 
 pub struct Inputs {

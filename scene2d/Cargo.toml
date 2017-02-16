@@ -1,9 +1,18 @@
 [package]
+workspace = ".."
 name = "lazybox_scene2d"
 version = "0.1.0"
-authors = ["Liotitch <rph.vaillant@gmail.com>"]
+authors = ["Liotitch <rph.vaillant@gmail.com>",
+           "Thomas Koehler <basta.t.k+git@gmail.com>"]
 
 [dependencies]
 lazybox_core = { path = "../core" }
 vec_map = "0.6"
 approx = "0.1"
+
+gfx = "^0.14"
+gfx_core = "^0.6"
+gfx_device_gl = "^0.13"
+gfx_window_glutin = "^0.14"
+glutin = "^0.7"
+image = "^0.12"
