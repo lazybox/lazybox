@@ -12,7 +12,7 @@ extern crate gfx_window_glutin;
 extern crate glutin;
 extern crate image;
 
-// pub mod transform;
+pub mod transform;
 pub mod graphics;
 
 pub use graphics::{Graphics, Frame};

@@ -1,4 +1,4 @@
-use core::maths::{Point2, Vector2, UnitComplex, Rotation2};
+use core::nalgebra::{Point2, Vector2, UnitComplex, Rotation2};
 use core::{Entities, Accessor, EntityRef};
 use core::component::Template;
 use core::policy::Id;
@@ -446,7 +446,7 @@ impl Children {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use core::maths::{Vector2, Point2};
+    use core::nalgebra::{Vector2, Point2};
     use core::entity::{Entities, Entity, Accessor};
     use std::f32::consts;
 
