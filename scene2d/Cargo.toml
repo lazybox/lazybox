@@ -5,3 +5,5 @@ authors = ["Liotitch <rph.vaillant@gmail.com>"]
 
 [dependencies]
 lazybox_core = { path = "../core" }
+vec_map = "0.6"
+approx = "0.1"

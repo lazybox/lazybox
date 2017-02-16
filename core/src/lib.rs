@@ -21,7 +21,7 @@ pub mod state;
 pub mod spawn;
 pub mod group;
 pub mod processor;
-pub mod math;
+pub mod maths;
 pub mod sync;
 pub mod event;
 pub mod settings;

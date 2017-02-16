@@ -2,11 +2,11 @@ mod dynamic;
 
 pub use self::dynamic::{Transform, TransformTemplate};
 
-use core::storages::packed::{self, Packed};
-use core::{Accessor, EntityRef, Module, StorageLock, StorageReadGuard, StorageWriteGuard, Template};
-use ecs::state::CommitArgs;
-use ecs::Context;
-use ecs::policy::Id;
+use core::module::data::storages::packed::{self, Packed};
+use core::{Accessor, Context, Module, StorageLock};
+use core::component::Template;
+use core::state::CommitArgs;
+use core::policy::Id;
 use std::ops::Index;
 use self::dynamic::TransformStorage;
 

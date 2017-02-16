@@ -1,6 +1,7 @@
 pub mod storages;
 
 pub use self::storages::Storage;
+pub use self::storages::packed::Packed as PackedStorage;
 
 use state::CommitArgs;
 use {Context, Module, HasComponent};

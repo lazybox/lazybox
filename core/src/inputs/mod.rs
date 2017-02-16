@@ -6,12 +6,10 @@ pub mod macros;
 
 pub use self::error::{Error, Result};
 pub use self::state::InputState;
-pub use self::interaction::{
-    Interface, Interaction, InteractionBuilder, InterfaceBuilder, Action
-};
+pub use self::interaction::{Interface, Interaction, InteractionBuilder, InterfaceBuilder, Action};
 
 use winit::Event;
-use math::Point2;
+use maths::Point2;
 use yaml_rust::YamlLoader;
 
 pub struct Inputs {

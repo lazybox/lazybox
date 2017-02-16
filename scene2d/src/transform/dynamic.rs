@@ -1,31 +1,45 @@
-use maths::{Point2, Vector2, Basis2, Rotation2, Rad, EuclideanSpace, Rotation, ApproxEq, Angle};
-use std::ops::{Deref, DerefMut};
-use ecs::entity::{Entities, Accessor, EntityRef};
-use ecs::state::CommitArgs;
-use ecs::module::{Component, Template};
-use ecs::policy::Id;
-use std::ops::Index;
+use core::maths::{Point2, Vector2, UnitComplex, Rotation2};
+use core::{Entities, Accessor, EntityRef};
+use core::component::Template;
+use core::policy::Id;
+use core::state::CommitArgs;
+use approx::ApproxEq;
+
 use std::collections::VecDeque;
 use vec_map::VecMap;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Transform {
     pub position: Point2<f32>,
-    pub rotation: Rad<f32>,
+    pub rotation: UnitComplex<f32>,
     pub scale: Vector2<f32>,
 }
 
 impl Transform {
+    pub fn new(position: Point2<f32>, rotation: f32, scale: Vector2<f32>) -> Self {
+        Transform {
+            position: position,
+            rotation: UnitComplex::from_angle(rotation),
+            scale: scale,
+        }
+    }
+
     pub fn one() -> Self {
         Transform {
             position: Point2::new(0., 0.),
-            rotation: Rad(0.),
+            rotation: UnitComplex::identity(),
             scale: Vector2::new(1., 1.),
         }
     }
 
-    pub fn basis(&self) -> Basis2<f32> {
-        Basis2::from_angle(self.rotation)
+    #[inline]
+    pub fn angle(&self) -> f32 {
+        self.rotation.angle()
+    }
+
+    #[inline]
+    pub fn rotation_matrix(&self) -> Rotation2<f32> {
+        self.rotation.to_rotation_matrix()
     }
 
     pub fn scale_vector(&self, v: Vector2<f32>) -> Vector2<f32> {
@@ -276,13 +290,12 @@ impl TransformStorage {
         let mut current_child = {
             let instance = &mut self.instances[instance_index];
 
-            let direction = parent_transform.basis()
-                .rotate_vector(instance.local.position.to_vec());
+            let direction = parent_transform.rotation_matrix() * instance.local.position.coords;
             let parent_to_child = parent_transform.scale_vector(direction);
 
             instance.world = Transform {
                 position: parent_transform.position + parent_to_child,
-                rotation: (parent_transform.rotation + instance.local.rotation).normalize(),
+                rotation: parent_transform.rotation * instance.local.rotation,
                 scale: parent_transform.scale_vector(instance.local.scale),
             };
 
@@ -433,8 +446,9 @@ impl Children {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use maths::{Vector2, Rad, Deg, Point2, ApproxEq};
-    use ecs::entity::{Entities, Entity, Accessor};
+    use core::maths::{Vector2, Point2};
+    use core::entity::{Entities, Entity, Accessor};
+    use std::f32::consts;
 
     macro_rules! transform_approx_eq {
         ($left:expr, $right:expr) => (
@@ -451,11 +465,7 @@ mod tests {
         let mut entities = Entities::new();
 
         let (entity, accessor) = spawn_entity(&mut entities);
-        let transform = Transform {
-            position: Point2::new(5., 5.),
-            rotation: Rad(0.4),
-            scale: Vector2::new(1., 1.),
-        };
+        let transform = Transform::new(Point2::new(5., 5.), 0.4, Vector2::new(1., 1.));
 
         storage.insert(&entities,
                        entity.id(),
@@ -476,11 +486,7 @@ mod tests {
 
         let (entity, accessor) = spawn_entity(&mut entities);
 
-        let transform = Transform {
-            position: Point2::new(5., 5.),
-            rotation: Rad(0.4),
-            scale: Vector2::new(1., 1.),
-        };
+        let transform = Transform::new(Point2::new(5., 5.), 0.4, Vector2::new(1., 1.));
 
         storage.insert(&entities,
                        entity.id(),
@@ -515,11 +521,8 @@ mod tests {
         let (parent, parent_accessor) = spawn_entity(&mut entities);
         let (child, child_accessor) = spawn_entity(&mut entities);
 
-        let parent_transform = Transform {
-            position: Point2::new(0., 5.),
-            rotation: Rad::from(Deg(180.)),
-            scale: Vector2::new(2., 1.),
-        };
+        let parent_transform =
+            Transform::new(Point2::new(0., 5.), consts::PI, Vector2::new(2., 1.));
 
         storage.insert(&entities,
                        parent.id(),
@@ -535,11 +538,7 @@ mod tests {
                            parent: None,
                        });
 
-        let child_transform = Transform {
-            position: Point2::new(5., 0.),
-            rotation: Rad(0.),
-            scale: Vector2::new(1., 1.),
-        };
+        let child_transform = Transform::new(Point2::new(5., 0.), 0., Vector2::new(1., 1.));
 
         storage.insert(&entities,
                        child.id(),
@@ -548,11 +547,7 @@ mod tests {
                            parent: Some(entities.entity_ref(parent_accessor)),
                        });
 
-        let expected = Transform {
-            position: Point2::new(-10., 5.),
-            rotation: Rad::from(Deg(180.)),
-            scale: Vector2::new(2., 1.),
-        };
+        let expected = Transform::new(Point2::new(-10., 5.), consts::PI, Vector2::new(2., 1.));
 
         transform_approx_eq!(storage.local(child_accessor), Some(child_transform));
         transform_approx_eq!(storage.world(child_accessor), Some(expected));
@@ -567,17 +562,10 @@ mod tests {
         let (parent, parent_accessor) = spawn_entity(&mut entities);
         let (child, child_accessor) = spawn_entity(&mut entities);
 
-        let parent_transform = Transform {
-            position: Point2::new(0., 5.),
-            rotation: Rad::from(Deg(180.)),
-            scale: Vector2::new(2., 1.),
-        };
+        let parent_transform =
+            Transform::new(Point2::new(0., 5.), consts::PI, Vector2::new(2., 1.));
 
-        let child_transform = Transform {
-            position: Point2::new(5., 0.),
-            rotation: Rad(0.),
-            scale: Vector2::new(1., 1.),
-        };
+        let child_transform = Transform::new(Point2::new(5., 0.), 0., Vector2::new(1., 1.));
 
         storage.insert(&entities,
                        parent.id(),
@@ -597,11 +585,7 @@ mod tests {
         transform_approx_eq!(storage.world(parent_accessor), Some(parent_transform));
         assert_eq!(storage.parent(parent_accessor), None);
 
-        let expected = Transform {
-            position: Point2::new(-10., 5.),
-            rotation: Rad::from(Deg(180.)),
-            scale: Vector2::new(2., 1.),
-        };
+        let expected = Transform::new(Point2::new(-10., 5.), consts::PI, Vector2::new(2., 1.));
 
         transform_approx_eq!(storage.local(child_accessor), Some(child_transform));
         transform_approx_eq!(storage.world(child_accessor), Some(expected));
@@ -616,17 +600,10 @@ mod tests {
         let (parent, parent_accessor) = spawn_entity(&mut entities);
         let (child, child_accessor) = spawn_entity(&mut entities);
 
-        let parent_transform = Transform {
-            position: Point2::new(0., 5.),
-            rotation: Rad::from(Deg(180.)),
-            scale: Vector2::new(2., 1.),
-        };
+        let parent_transform =
+            Transform::new(Point2::new(0., 5.), consts::PI, Vector2::new(2., 1.));
 
-        let child_transform = Transform {
-            position: Point2::new(5., 0.),
-            rotation: Rad(0.),
-            scale: Vector2::new(1., 1.),
-        };
+        let child_transform = Transform::new(Point2::new(5., 0.), 0., Vector2::new(1., 1.));
 
         storage.insert(&entities,
                        parent.id(),
@@ -657,17 +634,10 @@ mod tests {
         let (parent, parent_accessor) = spawn_entity(&mut entities);
         let (child, child_accessor) = spawn_entity(&mut entities);
 
-        let parent_transform = Transform {
-            position: Point2::new(0., 5.),
-            rotation: Rad::from(Deg(180.)),
-            scale: Vector2::new(2., 1.),
-        };
+        let parent_transform =
+            Transform::new(Point2::new(0., 5.), consts::PI, Vector2::new(2., 1.));
 
-        let child_transform = Transform {
-            position: Point2::new(5., 0.),
-            rotation: Rad(0.),
-            scale: Vector2::new(1., 1.),
-        };
+        let child_transform = Transform::new(Point2::new(5., 0.), 0., Vector2::new(1., 1.));
 
         storage.insert(&entities,
                        parent.id(),
@@ -685,11 +655,7 @@ mod tests {
 
         storage.set_parent(child_accessor, parent_accessor);
 
-        let expected = Transform {
-            position: Point2::new(-10., 5.),
-            rotation: Rad::from(Deg(180.)),
-            scale: Vector2::new(2., 1.),
-        };
+        let expected = Transform::new(Point2::new(-10., 5.), consts::PI, Vector2::new(2., 1.));
 
         transform_approx_eq!(storage.local(child_accessor), Some(child_transform));
         transform_approx_eq!(storage.world(child_accessor), Some(expected));
