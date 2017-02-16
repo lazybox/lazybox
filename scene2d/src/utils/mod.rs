@@ -7,7 +7,7 @@ pub use self::common::*;
 pub use self::mapping::*;
 
 use gfx;
-use types::*;
+use graphics::types::*;
 
 pub fn create_vertex_upload_pair<T: Copy>(factory: &mut Factory, size: usize)
                                           -> (GpuBuffer<T>, GpuBuffer<T>) {

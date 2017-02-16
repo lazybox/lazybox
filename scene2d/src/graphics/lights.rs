@@ -1,6 +1,6 @@
-use cgmath::Point2;
+use core::nalgebra::Point2;
 
-use layer::LayerId;
+use graphics::layer::LayerId;
 
 #[derive(Clone, Debug)]
 pub struct AmbientLight {
@@ -26,17 +26,17 @@ pub struct LightColor {
 }
 
 impl LightColor {
-    pub fn from_srgb([r, g, b]: [f32; 3]) -> Self {
-        use color::component_srgb_to_linear as conv;
+    pub fn from_srgb(cs: [f32; 3]) -> Self {
+        use graphics::color::component_srgb_to_linear as conv;
         LightColor {
-            r: conv(r),
-            g: conv(g),
-            b: conv(b),
+            r: conv(cs[0]),
+            g: conv(cs[1]),
+            b: conv(cs[2]),
         }
     }
 
-    pub fn from_array([r, g, b]: [f32; 3]) -> Self {
-        LightColor { r: r, g: g, b: b }
+    pub fn from_array(cs: [f32; 3]) -> Self {
+        LightColor { r: cs[0], g: cs[1], b: cs[2] }
     }
 
     pub fn to_array(&self) -> [f32; 3] {

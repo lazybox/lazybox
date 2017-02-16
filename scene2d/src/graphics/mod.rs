@@ -1,37 +1,23 @@
-#![feature(pub_restricted, slice_patterns)]
+mod utils;
 
-#[macro_use]
-extern crate gfx;
-extern crate gfx_core;
-extern crate gfx_device_gl;
-extern crate gfx_window_glutin;
-extern crate glutin;
-extern crate rusttype;
-extern crate conrod;
-extern crate cgmath;
-extern crate image;
-extern crate quickersort;
-extern crate rayon;
+pub mod types;
+pub mod camera;
+pub mod color;
+pub mod lights;
+pub mod sprites;
+#[doc(hidden)]
+pub mod texture;
+#[doc(hidden)]
+pub mod layer;
 
 pub mod combined;
 pub mod specialized;
-pub mod camera;
-pub mod layer;
-pub mod color;
-pub mod texture;
-pub mod sprites;
-pub mod lights;
-pub mod types;
-#[doc(hidden)]
-pub mod utils;
 
-pub use camera::Camera;
-pub use color::{Color, NormalizedColor};
-pub use texture::TextureBind;
-
-use types::*;
-use texture::TextureBinds;
+use {gfx, glutin, gfx_window_glutin, gfx_device_gl, image};
 use glutin::{WindowBuilder, Window};
+use self::types::*;
+use {NormalizedColor, TextureBind};
+use self::texture::TextureBinds;
 
 pub struct Graphics {
     device: Device,
@@ -132,8 +118,8 @@ impl Graphics {
 }
 
 pub struct Frame<'a> {
-    pub(crate) graphics: &'a mut Graphics,
-    pub(crate) should_flush: bool,
+    pub graphics: &'a mut Graphics,
+    pub should_flush: bool,
 }
 
 impl<'a> Frame<'a> {

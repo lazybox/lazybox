@@ -1,12 +1,11 @@
-use cgmath::{Point2, Vector2, Rad};
-
+use core::nalgebra::{Point2, Vector2};
 use {TextureBind, Color};
 
 #[derive(Clone, Debug)]
 pub struct Sprite {
     pub position: Point2<f32>,
     pub size: Vector2<f32>,
-    pub rotation: Rad<f32>,
+    pub rotation: f32,
     pub texture: SpriteTexture,
     pub color: Color,
 }

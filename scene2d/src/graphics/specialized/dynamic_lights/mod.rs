@@ -1,10 +1,10 @@
 use gfx;
 
 use {Graphics, Frame};
-use lights::*;
-use camera;
-use utils::*;
-use types::*;
+use graphics::types::*;
+use graphics::utils::*;
+use graphics::camera;
+use graphics::lights::*;
 
 pub const CATEGORY_COUNT: usize = 2;
 pub const SHADOW_MAP_SIZES: [u16; CATEGORY_COUNT] = [64, 256];
@@ -33,10 +33,11 @@ pub type LightFormat = (gfx::format::R16_G16_B16_A16, gfx::format::Float);
 #[doc(hidden)]
 pub use self::defines::{MapPosition, LightInstance, shadow_map_pipe, render_pipe};
 mod defines {
+    use gfx;
     pub use super::*;
-    pub use types::*;
-    pub use utils::*;
-    pub use camera;
+    pub use graphics::types::*;
+    pub use graphics::utils::*;
+    pub use graphics::camera;
 
     gfx_defines! {
         vertex MapPosition {
@@ -251,7 +252,7 @@ impl<'a> Render<'a> {
                 light.color.b,
                 light.intensity
             ],
-            center: light.center.into(),
+            center: [light.center.x, light.center.y],
             radius: light.radius,
             source_radius: light.source_radius,
             occlusion_threshold: ((light.source_layer.0) as f32 + 0.5) / self.layer_count,

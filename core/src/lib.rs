@@ -1,5 +1,7 @@
-extern crate winit;
-extern crate rayon;
+pub extern crate winit;
+pub extern crate rayon;
+pub extern crate alga;
+pub extern crate nalgebra;
 extern crate parking_lot;
 extern crate crossbeam;
 extern crate vec_map;
@@ -21,7 +23,6 @@ pub mod state;
 pub mod spawn;
 pub mod group;
 pub mod processor;
-pub mod math;
 pub mod sync;
 pub mod event;
 pub mod settings;

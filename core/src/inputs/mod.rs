@@ -11,7 +11,7 @@ pub use self::interaction::{
 };
 
 use winit::Event;
-use math::Point2;
+use nalgebra::Point2;
 use yaml_rust::YamlLoader;
 
 pub struct Inputs {

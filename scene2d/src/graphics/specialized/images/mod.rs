@@ -1,11 +1,9 @@
-use gfx;
-use gfx_core;
+use {gfx, gfx_core};
 
-use {Graphics, Frame, Color};
-use camera;
-use color::PackedColor;
-use types::*;
-pub use utils::*;
+use {Graphics, Frame, Color, PackedColor};
+use graphics::types::*;
+use graphics::utils::*;
+use graphics::camera;
 
 const IMAGE_BUFFER_SIZE: usize = 128;
 
@@ -17,10 +15,10 @@ pub const RENDER_GLSLF_150: &'static [u8] = include_bytes!("render_150.glslf");
 #[doc(hidden)]
 pub use self::defines::{ImageInstance, render_pipe};
 mod defines {
-    pub use types::*;
-    pub use utils::*;
-    pub use camera;
     use gfx;
+    pub use graphics::types::*;
+    pub use graphics::utils::*;
+    pub use graphics::camera;
 
     gfx_defines! {
         vertex ImageInstance {

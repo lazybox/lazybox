@@ -1,15 +1,12 @@
 use gfx;
-use rayon::prelude::*;
+use core::rayon::prelude::*;
 
-use {Graphics, Frame, TextureBind};
-use sprites::Sprite;
-use color::PackedColor;
-use layer::{LayerId, LayerOrder, LayerOcclusion, Layers};
-use texture;
-use camera;
-use utils::*;
-use types::*;
-use specialized::dynamic_lights::OcclusionFormat;
+use {Graphics, Frame, TextureBind, Sprite, PackedColor};
+use graphics::types::*;
+use graphics::utils::*;
+use graphics::{camera, texture};
+use graphics::layer::{LayerId, LayerOrder, LayerOcclusion, Layers};
+use graphics::specialized::dynamic_lights::OcclusionFormat;
 
 pub const SPRITE_BUFFER_SIZE: usize = 2048;
 
@@ -21,11 +18,11 @@ pub const RENDER_GLSLF_150: &'static [u8] = include_bytes!("render_150.glslf");
 #[doc(hidden)]
 pub use self::defines::{SpriteInstance, LayerLocals, render_pipe};
 mod defines {
-    pub use types::*;
-    pub use utils::*;
-    pub use specialized::dynamic_lights::OcclusionFormat;
-    pub use camera;
     use gfx;
+    pub use graphics::types::*;
+    pub use graphics::utils::*;
+    pub use graphics::camera;
+    pub use graphics::specialized::dynamic_lights::OcclusionFormat;
 
     gfx_defines! {
         vertex SpriteInstance {
@@ -291,8 +288,6 @@ impl Renderer {
     }
 
     fn preprocess_layer(buffers: &mut [LayerEntities], data: &mut LayerData) {
-        use quickersort::sort;
-
         data.sort_keys.clear();
 
         for (buffer_index, buffer) in buffers.iter_mut().enumerate() {
@@ -301,7 +296,7 @@ impl Renderer {
             }
         }
 
-        sort(&mut data.sort_keys);
+        data.sort_keys.sort(); // TODO: radix sort ?
     }
 }
 
@@ -325,9 +320,9 @@ pub struct Queue<'a> {
 impl<'a> Queue<'a> {
     pub fn submit(&mut self, sprite: &Sprite, order: LayerOrder) {
         let instance = SpriteInstance {
-            translate: sprite.position.into(),
-            scale: sprite.size.into(),
-            rotate: sprite.rotation.0,
+            translate: [sprite.position.x, sprite.position.y],
+            scale: [sprite.size.x, sprite.size.y],
+            rotate: sprite.rotation,
             color: PackedColor::from(sprite.color).0,
             tex_coord_inf: sprite.texture.coord_inf,
             tex_coord_sup: sprite.texture.coord_sup,
@@ -342,7 +337,7 @@ struct SortKey(u32);
 const ORDER_BITS: u32 = 5; // ~> 32 sub layers
 const TEXTURE_BITS: u32 = 9; // ~> 512 textures
 const BUFFER_BITS: u32 = 4; // ~> 16 threads 
-const INDEX_BITS: u32 = 14; // ~> 16_384 sprites per thread
+// const INDEX_BITS: u32 = 14; // ~> 16_384 sprites per thread
 const ORDER_SHIFT: u32 = 32 - ORDER_BITS;
 const TEXTURE_SHIFT: u32 = ORDER_SHIFT - TEXTURE_BITS;
 const TEXTURE_MASK: u32 = 0xFFFFFFFF >> ORDER_BITS;

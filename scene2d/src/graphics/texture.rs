@@ -1,19 +1,19 @@
-use types::*;
+use graphics::types::*;
 
 #[derive(Clone, Copy, Debug, PartialOrd, Ord, PartialEq, Eq)]
-pub struct TextureBind(pub(crate) u32);
+pub struct TextureBind(pub u32);
 
 impl TextureBind {
     fn new(index: usize) -> Self { TextureBind(index as u32) }
     fn index(self) -> usize { self.0 as usize }
 }
 
-pub(crate) struct TextureBinds {
+pub struct TextureBinds {
     binds: Vec<Option<Bind>>,
     available: Vec<usize>,
 }
 
-pub(crate) struct Bind {
+pub struct Bind {
     pub color: TextureView<ColorFormat>,
     pub normal: TextureView<NormalFormat>,
 }

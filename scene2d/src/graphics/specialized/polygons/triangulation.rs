@@ -1,7 +1,7 @@
 //! Methods for converting shapes into triangles, inspired from piston graphics.
 
 use std::f32;
-use cgmath::{Point2, Vector2, Angle, Rad};
+use core::nalgebra::{Point2, Vector2};
 
 use super::Triangle;
 
@@ -61,7 +61,7 @@ pub fn stream_round_borders_line<S>(start: Point2<f32>,
 
     let diff = end - start;
     let half_pi = f32::consts::PI/2.0;
-    let start_angle = Rad::atan2(diff.y, diff.x).0 + half_pi;
+    let start_angle = diff.y.atan2(diff.x) + half_pi;
 
     let mut i = 0;
     

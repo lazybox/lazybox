@@ -1,5 +1,5 @@
 use std::sync::MutexGuard;
-use utils::{Pool, Guard};
+use graphics::utils::{Pool, Guard};
 
 #[derive(Clone, Copy, Debug)]
 pub struct LayerId(pub u8);
@@ -17,11 +17,11 @@ pub enum LayerOcclusion {
     Stack,
 }
 
-pub(crate) struct Layers<T: 'static + Default, D = ()> {
-    pub(crate) vec: Vec<Layer<T, D>>,
+pub struct Layers<T: 'static + Default, D = ()> {
+    pub vec: Vec<Layer<T, D>>,
 }
 
-pub(crate) struct Layer<T: 'static + Default, D> {
+pub struct Layer<T: 'static + Default, D> {
     pool: Pool<T>,
     data: D,
 }
