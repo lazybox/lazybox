@@ -2,17 +2,19 @@ pub mod storages;
 
 pub use self::storages::Storage;
 
-use ecs::state::CommitArgs;
-use ecs::entity::Entities;
-use ecs::Context;
-use ecs::module::{Module, HasComponent};
-use ecs::module::{Component, Template, ComponentType};
-use ecs::module::{StorageReadGuard, StorageWriteGuard};
+use state::CommitArgs;
+use entity::Entities;
+use module::{Module, HasComponent};
+use component::{Component, Template, ComponentType};
+use module::{StorageReadGuard, StorageWriteGuard};
 use fnv::FnvHashMap;
 use rayon;
 use std::fmt::Debug;
 use std::any::Any;
+use Context;
+
 use self::storages::{StorageHandler, Handler};
+
 
 pub trait DataComponent: Any + Clone + Debug + Send + Sync {
     type Storage: Storage;
@@ -56,12 +58,10 @@ impl DataModule {
     }
 }
 
-impl<Cx: Send> Module<Cx> for DataModule {
+impl<Cx: Context> Module<Cx> for DataModule {
     fn commit(&mut self, args: &CommitArgs, _context: &mut Cx) {
-        rayon::scope(|scope| {
-            for (_, handler) in &mut self.handlers {
-                scope.spawn(move |_| handler.commit(args));
-            }
+        rayon::scope(|scope| for (_, handler) in &mut self.handlers {
+            scope.spawn(move |_| handler.commit(args));
         });
     }
 }

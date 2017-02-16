@@ -1,10 +1,14 @@
+pub mod packed;
+
+pub use self::packed::Packed;
+
 use std::any::Any;
 use mopa;
-use ecs::entity::Accessor;
-use ecs::state::CommitArgs;
-use ecs::module::StorageLock;
+use state::CommitArgs;
+use component::storage::StorageLock;
 use std::fmt::Debug;
 use super::DataComponent;
+use Accessor;
 
 /// Defines any `DataComponent` storage that can be used.
 ///

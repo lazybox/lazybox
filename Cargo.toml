@@ -5,6 +5,7 @@ members = [
   "frameclock/",
   "graphics/",
   "inputs/",
+  "scene2d/",
 ]
 
 [package]

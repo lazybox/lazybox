@@ -2,10 +2,9 @@ mod dynamic;
 
 pub use self::dynamic::{Transform, TransformTemplate};
 
-use modules::storages::packed::{self, Packed};
-use ecs::entity::{Accessor, EntityRef};
+use core::storages::packed::{self, Packed};
+use core::{Accessor, EntityRef, Module, StorageLock, StorageReadGuard, StorageWriteGuard, Template};
 use ecs::state::CommitArgs;
-use ecs::module::{Module, StorageLock, StorageReadGuard, StorageWriteGuard, Template};
 use ecs::Context;
 use ecs::policy::Id;
 use std::ops::Index;
@@ -46,7 +45,7 @@ impl StaticTransformStorage {
         self.transforms.iter()
     }
 
-    
+
     fn commit(&mut self, args: &CommitArgs) {
         let mut reader = args.update_reader_for::<StaticTransform>();
 
@@ -99,7 +98,7 @@ impl<Cx: Context> Module<Cx> for TransformModule {
     fn commit(&mut self, args: &CommitArgs, _cx: &mut Cx) {
         let mut statics = self.statics.write();
         let mut dynamics = self.dynamics.write();
-        
+
         statics.commit(args);
         dynamics.commit(args);
     }

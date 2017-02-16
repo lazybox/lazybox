@@ -1,0 +1,7 @@
+[package]
+name = "lazybox_scene2d"
+version = "0.1.0"
+authors = ["Liotitch <rph.vaillant@gmail.com>"]
+
+[dependencies]
+lazybox_core = { path = "../core" }

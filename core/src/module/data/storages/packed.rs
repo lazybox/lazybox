@@ -4,11 +4,9 @@ use std::ops::{Index, IndexMut};
 use std::slice;
 use vec_map::VecMap;
 
-use ecs::entity::Accessor;
-use ecs::policy::Id;
-use ecs::module::Component;
-use modules::data::{Storage, DataComponent};
-
+use super::{Storage, DataComponent};
+use {Accessor, Component};
+use policy::Id;
 
 /// A entry into the storage that associate a component with its link index
 #[derive(Clone, Debug)]
@@ -97,7 +95,7 @@ impl<V> Packed<V> {
         }
         None
     }
-    
+
     /// Returns a mutable access to the associated component
     pub fn get_mut<'a>(&mut self, key: Accessor<'a>) -> Option<&mut V> {
         if let Some(&link) = self.links.get(key.index()) {
@@ -219,7 +217,7 @@ mod tests {
     #[test]
     fn test_insert() {
         let mut packed = Packed::new();
-        let entity = unsafe { Accessor::new_unchecked(0) }; 
+        let entity = unsafe { Accessor::new_unchecked(0) };
 
         packed.insert(entity, Dummy(0));
 
@@ -265,7 +263,7 @@ mod tests {
 
         packed.insert(entity, Dummy(0));
         packed.remove(entity);
-    
+
         assert_eq!(packed.get(entity), None);
         assert_eq!(packed.get_mut(entity), None);
     }
@@ -293,17 +291,20 @@ mod tests {
         {
             let mut iter = packed.iter();
             assert_eq!(iter.next(), Some((entity1, &Dummy(0))));
-            assert_eq!(iter.next(), Some((entity2, &Dummy(1))));           
+            assert_eq!(iter.next(), Some((entity2, &Dummy(1))));
         }
 
         {
             let mut iter_mut = packed.iter_mut();
             assert_eq!(iter_mut.next(), Some((entity1, &mut Dummy(0))));
-            assert_eq!(iter_mut.next(), Some((entity2, &mut Dummy(1))));     
+            assert_eq!(iter_mut.next(), Some((entity2, &mut Dummy(1))));
         }
     }
 
-    fn insert_for_entity<'a, V: Component>(packed: &mut Packed<V>, entity: Id, component: V) -> Accessor<'a> {
+    fn insert_for_entity<'a, V: Component>(packed: &mut Packed<V>,
+                                           entity: Id,
+                                           component: V)
+                                           -> Accessor<'a> {
         let entity = unsafe { Accessor::new_unchecked(entity) };
         packed.insert(entity, component);
 

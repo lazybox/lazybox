@@ -1,3 +1,5 @@
+pub mod data;
+
 use std::any::{Any, TypeId};
 use std::collections::hash_map;
 use fnv::FnvHashMap;
@@ -145,14 +147,14 @@ impl<'a, Cx: Context> IntoIterator for &'a mut Modules<Cx> {
 #[macro_export]
 macro_rules! impl_has_component {
     ($cmp:ident, $storage:ident, $module:ident => $name:ident) => (
-        impl $crate::ecs::module::HasComponent<$cmp> for $module {
+        impl $crate::module::HasComponent<$cmp> for $module {
             type Storage = $storage;
 
-            fn read(&self) -> $crate::ecs::module::StorageReadGuard<Self::Storage> {
+            fn read(&self) -> $crate::component::storage::StorageReadGuard<Self::Storage> {
                 self.$name.read()
             }
 
-            fn write(&self) -> $crate::ecs::module::StorageWriteGuard<Self::Storage> {
+            fn write(&self) -> $crate::component::storage::StorageWriteGuard<Self::Storage> {
                 self.$name.write()
             }
         }
@@ -162,7 +164,7 @@ macro_rules! impl_has_component {
 #[macro_export]
 macro_rules! derive_component {
     ($cmp:ident, $template:ident, $module:ident) => (
-        impl $crate::ecs::module::Component for $cmp {
+        impl $crate::component::Component for $cmp {
             type Module = $module;
             type Template = $template;
         }
