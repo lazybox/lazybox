@@ -1,5 +1,7 @@
 extern crate time;
 
+pub use time::*;
+
 pub struct FrameClock {
     mark: f64,
     timestep: f64,

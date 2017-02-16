@@ -5,6 +5,7 @@ version = "0.1.0"
 authors = ["Thomas Koehler <basta.t.k+git@gmail.com>"]
 
 [dependencies]
+winit = "^0.5"
 rayon = { version = "^0.6", features = ["unstable"] }
 nalgebra = "^0.11"
 parking_lot = "^0.3"
@@ -14,8 +15,9 @@ bit-set = "^0.4"
 daggy = "^0.4"
 fnv = "^1.0"
 mopa = "^0.2"
-approx = "^0.1"
 yaml-rust = "^0.3"
+time = "^0.1"
+error-chain = "^0.8"
 
 [features]
 unstable = []

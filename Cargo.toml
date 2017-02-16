@@ -2,7 +2,6 @@
 members = [
   "core/",
   "codegen/",
-  "frameclock/",
   "graphics/",
   "inputs/",
   "scene2d/",
@@ -17,7 +16,6 @@ authors = ["Thomas Koehler <basta.t.k+git@gmail.com>",
 [dependencies]
 lazybox_graphics = { path = "graphics" }
 lazybox_inputs = { path = "inputs" }
-lazybox_frameclock = { path = "frameclock" }
 
 [features]
 unstable = []
