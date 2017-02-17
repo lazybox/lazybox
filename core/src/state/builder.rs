@@ -1,10 +1,10 @@
-use {State, Context, Groups};
+use {State, Context, Interfaces};
 use state::update_queue::UpdateQueues;
 use {Module, Modules, Component};
 
 pub struct StateBuilder<Cx: Context> {
     update_queues: UpdateQueues,
-    groups: Groups,
+    groups: Interfaces,
     modules: Modules<Cx>,
 }
 
@@ -12,7 +12,7 @@ impl<Cx: Context> StateBuilder<Cx> {
     pub fn new() -> Self {
         StateBuilder {
             update_queues: UpdateQueues::new(),
-            groups: Groups::new(),
+            groups: Interfaces::new(),
             modules: Modules::new(),
         }
     }
@@ -28,8 +28,6 @@ impl<Cx: Context> StateBuilder<Cx> {
     }
 
     pub fn build(self) -> State<Cx> {
-        State::new(self.modules,
-                   self.groups,
-                   self.update_queues)
+        State::new(self.modules, self.groups, self.update_queues)
     }
 }

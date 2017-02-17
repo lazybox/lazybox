@@ -8,7 +8,8 @@ use {Entities, Entity, EntityRef, Accessor};
 use {Component, StorageReadGuard, StorageWriteGuard};
 use {Module, Modules, HasComponent};
 use spawn::{SpawnRequest, Prototype};
-use group::Groups;
+use interface::Interfaces;
+use tag::{Tag, Tags, TagType};
 use self::update_queue::{UpdateQueues, UpdateQueue, UpdateQueueReader};
 
 pub trait Context: Sync {}
@@ -16,19 +17,18 @@ pub trait Context: Sync {}
 pub struct State<Cx: Context> {
     entities: Entities,
     modules: Modules<Cx>,
-    groups: Groups,
+    interfaces: Interfaces,
+    tags: Tags,
     update_queues: UpdateQueues,
 }
 
 impl<Cx: Context> State<Cx> {
-    pub fn new(modules: Modules<Cx>,
-               groups: Groups,
-               update_queues: UpdateQueues)
-               -> Self {
+    pub fn new(modules: Modules<Cx>, interfaces: Interfaces, update_queues: UpdateQueues) -> Self {
         State {
             entities: Entities::new(),
             modules: modules,
-            groups: groups,
+            interfaces: interfaces,
+            tags: Tags::new(),
             update_queues: update_queues,
         }
     }
@@ -41,29 +41,8 @@ impl<Cx: Context> State<Cx> {
         self.entities.upgrade(entity_ref)
     }
 
-    fn spawn_later(&self) -> Entity {
-        let entity = self.entities.create();
-        self.entities.spawn_later(entity);
-
-        entity
-    }
-
-    fn attach_later<'a, C: Component>(&self, accessor: Accessor<'a>, component: C::Template) {
-        self.update_queue::<C>().attach(accessor, component);
-    }
-
-    fn detach_later<'a, C: Component>(&self, accessor: Accessor<'a>) {
-        self.update_queue::<C>().detach(accessor);
-    }
-
-    fn update_queue<C: Component>(&self) -> &UpdateQueue<C> {
-        self.update_queues
-            .get::<C>()
-            .expect("the component has not been registered")
-    }
-
-    fn remove_later<'a>(&self, entity: Accessor<'a>) {
-        self.entities.remove_later(entity);
+    pub fn tagged<T: Tag>(&self) -> Option<Accessor> {
+        self.tags.tagged(&self.entities, TagType::of::<T>())
     }
 
     pub fn read<C: Component>(&self) -> StorageReadGuard<<C::Module as HasComponent<C>>::Storage>
@@ -93,14 +72,14 @@ impl<Cx: Context> State<Cx> {
         let world_removes = self.entities.push_removes();
 
         let &mut State { ref mut update_queues,
-                         ref mut groups,
+                         ref mut interfaces,
                          ref mut entities,
                          ref mut modules,
                          .. } = self;
 
         {
             entities.commit();
-            
+
             let commit_args = CommitArgs {
                 entities: &*entities,
                 update_queues: update_queues,
@@ -109,7 +88,7 @@ impl<Cx: Context> State<Cx> {
 
             modules.commit(&commit_args, cx);
         }
-        groups.commit(&update_queues.monitors());
+        interfaces.commit(&update_queues.monitors());
         update_queues.clear_flags();
     }
 }
@@ -136,36 +115,52 @@ pub struct Commit<'a, Cx: Context + 'a> {
 
 impl<'a, Cx: Context + 'a> Commit<'a, Cx> {
     #[inline]
-    pub fn spawn_later(self) -> SpawnRequest<'a, Cx> {
-        let entity = self.state.spawn_later();
+    pub fn spawn(self) -> SpawnRequest<'a, Cx> {
+        let entity = self.state.entities.create();
+        self.state.entities.spawn_later(entity);
+
         SpawnRequest::new(entity, self)
     }
 
     #[inline]
-    pub fn spawn_later_with<P: Prototype>(self, prototype: P) {
-        let request = self.spawn_later();
+    pub fn spawn_with<P: Prototype>(self, prototype: P) {
+        let request = self.spawn();
         prototype.spawn_later_with(request);
+    }
+
+
+    #[inline]
+    pub fn remove(self, entity: Accessor) {
+        self.state.entities.remove_later(entity);
+    }
+
+    #[inline]
+    pub fn attach<C: Component>(self, entity: Accessor, component: C::Template) {
+        self.update_queue::<C>().attach(entity, component);
+    }
+
+    #[inline]
+    pub fn detach<C: Component>(self, entity: Accessor) {
+        self.update_queue::<C>().detach(entity);
+    }
+
+    #[inline]
+    pub fn tag<T: Tag>(self, entity: Accessor) {
+        let entity_ref = self.state.entities.entity_ref(entity);
+        self.state.tags.tag_later(entity_ref, TagType::of::<T>());
+    }
+
+    #[inline]
+    pub fn remove_tag<T: Tag>(self) {
+        self.state.tags.remove_later(TagType::of::<T>());
     }
 
     #[inline]
     pub fn update_queue<C: Component>(self) -> &'a UpdateQueue<C> {
-        self.state.update_queue::<C>()
-    }
-
-
-    #[inline]
-    pub fn remove_later(self, entity: Accessor) {
-        self.state.remove_later(entity)
-    }
-
-    #[inline]
-    pub fn attach_later<C: Component>(self, entity: Accessor, component: C::Template) {
-        self.state.attach_later::<C>(entity, component);
-    }
-
-    #[inline]
-    pub fn detach_later<C: Component>(self, entity: Accessor) {
-        self.state.detach_later::<C>(entity);
+        self.state
+            .update_queues
+            .get::<C>()
+            .expect("the component has not been registered")
     }
 }
 

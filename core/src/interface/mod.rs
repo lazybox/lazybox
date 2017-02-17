@@ -8,14 +8,14 @@ use fnv::FnvHashMap;
 use std::any::{Any, TypeId};
 use rayon::prelude::*;
 
-pub struct Group {
+pub struct Interface {
     filter: Filter,
     entities: IdSet,
 }
 
-impl Group {
+impl Interface {
     pub fn new(filter: Filter) -> Self {
-        Group {
+        Interface {
             filter: filter,
             entities: IdSet::new(),
         }
@@ -49,13 +49,9 @@ impl Group {
     }
 
     fn has_been_modified(&self, monitors: &UpdateMonitors) -> bool {
-        for &component_type in &self.filter.require {
-            if monitors.monitor(component_type).modified() {
-                return true;
-            }
-        }
+        let modified_iter = self.filter.require.iter().chain(self.filter.reject.iter());
 
-        for &component_type in &self.filter.reject {
+        for &component_type in modified_iter {
             if monitors.monitor(component_type).modified() {
                 return true;
             }
@@ -65,58 +61,58 @@ impl Group {
     }
 }
 
-pub trait GroupToken: Any + Send + Sync {
+pub trait InterfaceToken: Any + Send + Sync {
     fn name() -> &'static str;
     fn filter() -> Filter;
 }
 
 #[derive(Debug, Copy, Clone, Hash, Eq, PartialEq)]
-pub struct GroupType(TypeId);
+pub struct InterfaceType(TypeId);
 
-impl GroupType {
-    pub fn of<T: GroupToken>() -> Self {
-        GroupType(TypeId::of::<T>())
+impl InterfaceType {
+    pub fn of<T: InterfaceToken>() -> Self {
+        InterfaceType(TypeId::of::<T>())
     }
 }
 
-type GroupIndex = usize;
+type InterfaceIndex = usize;
 
-pub struct Groups {
-    groups: Vec<Group>,
-    type_to_index: FnvHashMap<GroupType, GroupIndex>,
+pub struct Interfaces {
+    interfaces: Vec<Interface>,
+    type_to_index: FnvHashMap<InterfaceType, InterfaceIndex>,
 }
 
-impl Groups {
+impl Interfaces {
     pub fn new() -> Self {
-        Groups {
-            groups: Vec::new(),
+        Interfaces {
+            interfaces: Vec::new(),
             type_to_index: FnvHashMap::default(),
         }
     }
 
-    pub fn insert(&mut self, group_type: GroupType, group: Group) {
+    pub fn insert(&mut self, interface_type: InterfaceType, interface: Interface) {
         use std::collections::hash_map::Entry;
 
-        match self.type_to_index.entry(group_type) {
+        match self.type_to_index.entry(interface_type) {
             Entry::Vacant(vacant) => {
-                vacant.insert(self.groups.len());
-                self.groups.push(group);
+                vacant.insert(self.interfaces.len());
+                self.interfaces.push(interface);
             }
             Entry::Occupied(occupied_entry) => {
-                self.groups[*occupied_entry.get()] = group;
+                self.interfaces[*occupied_entry.get()] = interface;
             }
         }
     }
 
-    pub fn get(&self, group_type: GroupType) -> Option<&Group> {
+    pub fn get(&self, interface_type: InterfaceType) -> Option<&Interface> {
         self.type_to_index
-            .get(&group_type)
-            .and_then(|&index| self.groups.get(index))
+            .get(&interface_type)
+            .and_then(|&index| self.interfaces.get(index))
     }
 
     pub fn commit(&mut self, monitors: &UpdateMonitors) {
-        self.groups
+        self.interfaces
             .par_iter_mut()
-            .for_each(|group| group.commit(monitors));
+            .for_each(|interface| interface.commit(monitors));
     }
 }

@@ -20,7 +20,7 @@ impl<'a, Cx: Context + 'a> SpawnRequest<'a, Cx> {
     /// Sets a component to associate with the spawned entity.
     pub fn set<C: Component>(self, component: C::Template) -> Self {
         let accessor = unsafe { Accessor::new_unchecked(self.entity.id()) };
-        self.commit.attach_later::<C>(accessor, component);
+        self.commit.attach::<C>(accessor, component);
 
         self
     }
