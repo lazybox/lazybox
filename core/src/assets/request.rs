@@ -1,6 +1,5 @@
 use std::any::TypeId;
 use std::collections::HashMap;
-use std::io;
 use std::thread;
 use std::sync::{Arc, Weak};
 use crossbeam::sync::MsQueue;
@@ -33,7 +32,6 @@ impl Request {
 pub type RequestSender = Arc<MsQueue<Request>>;
 pub type RequestReceiver = Weak<MsQueue<Request>>;
 
-pub type Response<T> = Result<T, io::Error>;
 pub type ResponseReceiver<T> = Arc<MsQueue<(Request, LoaderResult<T>)>>;
 pub type ResponseSender<T> = Weak<MsQueue<(Request, LoaderResult<T>)>>;
 
@@ -86,7 +84,8 @@ impl<A: Loader> Handler for RequestHandler<A> {
     fn handle(&mut self, request: Request) -> bool {
         let result = self.loader.load(&request.path);
 
-        self.sender.upgrade()
+        self.sender
+            .upgrade()
             .map(|sender| sender.push((request, result)))
             .is_some()
     }
@@ -108,18 +107,17 @@ impl LoadingThread {
     }
 
     pub fn run(mut self) {
-        thread::spawn(move || {
-            while let Some(receiver) =  self.receiver.upgrade() {
-                self.handle_request(receiver.pop());
-            }
+        thread::spawn(move || while let Some(receiver) = self.receiver.upgrade() {
+            self.handle_request(receiver.pop());
         });
     }
 
     fn handle_request(&mut self, request: Request) {
         let token = request.token;
 
-        let result = self.handlers.get_mut(&token)
-                                  .map(|handler| handler.handle(request));
+        let result = self.handlers
+            .get_mut(&token)
+            .map(|handler| handler.handle(request));
 
         if let Some(false) = result {
             self.handlers.remove(&token);
