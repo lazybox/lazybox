@@ -97,6 +97,7 @@ impl<Cx: Context> State<Cx> {
         let &mut State { ref mut update_queues,
                          ref mut interfaces,
                          ref mut groups,
+                         ref mut tags,
                          ref mut entities,
                          ref mut modules,
                          .. } = self;
@@ -112,6 +113,7 @@ impl<Cx: Context> State<Cx> {
 
             modules.commit(&commit_args, cx);
         }
+        tags.commit();
         interfaces.commit(&update_queues.monitors());
         groups.commit(&world_removes);
         update_queues.clear_flags();

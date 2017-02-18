@@ -4,7 +4,6 @@ use bit_set::BitSet;
 use fnv::FnvHashMap;
 use sync::SegQueue;
 use entity::iter::{SetIter, accessors_from_set};
-use policy::Id;
 use {Accessor, Entity};
 
 pub trait GroupToken: Debug + Any {}
