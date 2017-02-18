@@ -30,6 +30,7 @@ pub mod assets;
 pub mod inputs;
 pub mod time;
 mod tag;
+mod group;
 
 pub use entity::{Entity, EntityRef, Accessor, Entities};
 pub use component::{Component, ComponentType};
@@ -40,3 +41,4 @@ pub use spawn::SpawnRequest;
 pub use interface::{Interface, InterfaceToken, InterfaceType, Interfaces};
 pub use processor::Processor;
 pub use tag::Tag;
+pub use group::GroupToken;

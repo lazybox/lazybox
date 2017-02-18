@@ -2,7 +2,6 @@ use fnv::FnvHashMap;
 use std::any::{Any, TypeId};
 use {Entities, Accessor, EntityRef};
 use sync::SegQueue;
-use std::ops::Index;
 use std::fmt::Debug;
 
 pub trait Tag: Debug + Any {}

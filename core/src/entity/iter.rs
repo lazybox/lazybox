@@ -23,7 +23,7 @@ impl<'a> Iterator for SliceIter<'a> {
     }
 }
 
-/// Creates an accessor iterator from a HashSet of `Id`.
+/// Creates an accessor iterator from a Set of `Id`.
 ///
 /// This is unsafe because ids might be refering to a removed entity
 pub unsafe fn accessors_from_set(ids: &IdSet) -> SetIter {
