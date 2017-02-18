@@ -32,13 +32,7 @@ fn expand_prototype(ast: &syn::DeriveInput) -> quote::Tokens {
         syn::Body::Enum(_) => panic!("can only be used with regular structs")
     };
 
-    let batch_name: syn::Ident = match ast.attrs.iter().find(|&a| a.name() == "batch") {
-        None => panic!("expected 'batch' attribute"),
-        Some(ref a) => match a.value {
-            syn::MetaItem::NameValue(_, syn::Lit::Str(ref s, _)) => (s as &str).into(),
-            _ => panic!("malformed 'batch' attribute")
-        }
-    };
+    let batch_name = find_ident_attribute("batch", ast.attrs.iter());
 
     let field_names: &Vec<_> = &fields.iter().map(|f| &f.ident).collect();
     let component_types: &Vec<_> = &fields.iter().map(|f| &f.ty).collect();
@@ -48,14 +42,14 @@ fn expand_prototype(ast: &syn::DeriveInput) -> quote::Tokens {
     });
 
     quote! {
-        impl ::lazybox::ecs::spawn::Prototype for #name {
-            fn spawn_later_with<'a, Cx: Send>(self, spawn: ::lazybox::ecs::SpawnRequest<'a, Cx>) {
+        impl ::lazybox::core::spawn::Prototype for #name {
+            fn spawn_later_with<'a, Cx: ::lazybox::core::Context>(self, spawn: ::lazybox::core::SpawnRequest<'a, Cx>) {
                 spawn #(.set::<#component_types>(self.#field_names))* ;
             }
         }
 
         impl #name {
-            fn batch<'a, Cx: Send>(commit: ::lazybox::ecs::state::Commit<'a, Cx>)
+            fn batch<'a, Cx: ::lazybox::core::Context>(commit: ::lazybox::core::state::Commit<'a, Cx>)
                                    -> #batch_name<'a, Cx> {
                 #batch_name {
                     #(#field_names: commit.update_queue::<#component_types>(),)*
@@ -64,16 +58,16 @@ fn expand_prototype(ast: &syn::DeriveInput) -> quote::Tokens {
             }
         }
 
-        pub struct #batch_name<'a, Cx: 'a + Send> {
-            commit: ::lazybox::ecs::state::Commit<'a, Cx>,
-            #(#field_names: &'a ::lazybox::ecs::state::update_queue::UpdateQueue<#component_types>,)*
+        pub struct #batch_name<'a, Cx: 'a + ::lazybox::core::Context> {
+            commit: ::lazybox::core::state::Commit<'a, Cx>,
+            #(#field_names: &'a ::lazybox::core::state::update_queue::UpdateQueue<#component_types>,)*
         }
 
-        impl<'a, Cx: 'a + Send> #batch_name<'a, Cx> {
+        impl<'a, Cx: 'a + ::lazybox::core::Context> #batch_name<'a, Cx> {
             fn spawn_later(&self, prototype: #name) {
-                let entity = self.commit.spawn_later().entity();
+                let entity = self.commit.spawn().entity();
                 let accessor = unsafe {
-                    ::lazybox::ecs::entity::Accessor::new_unchecked(entity.id())
+                    ::lazybox::core::Accessor::new_unchecked(entity.id())
                 };
                 #attaches
             }
@@ -87,13 +81,7 @@ fn expand_state_access(ast: &syn::DeriveInput) -> quote::Tokens {
         _ => panic!("expected regular struct")
     };
 
-    let name: syn::Ident = match ast.attrs.iter().find(|&a| a.name() == "name") {
-        None => panic!("expected 'name' attribute"),
-        Some(ref a) => match a.value {
-            syn::MetaItem::NameValue(_, syn::Lit::Str(ref s, _)) => (s as &str).into(),
-            _ => panic!("malformed 'name' attribute")
-        }
-    };
+    let name = find_ident_attribute("name", ast.attrs.iter());
 
     let mut components = HashSet::new();
     let mut read_idents = Vec::new();
@@ -124,13 +112,13 @@ fn expand_state_access(ast: &syn::DeriveInput) -> quote::Tokens {
     let read_guards = read_idents.iter().zip(read_types.iter())
         .fold(quote! {}, |tokens, (&ident, &component)| quote! {
             #tokens
-            #ident: ::lazybox::ecs::module::StorageReadGuard<'a, <<#component as ::lazybox::ecs::module::Component>::Module as ::lazybox::ecs::module::HasComponent<#component>>::Storage>,
+            #ident: ::lazybox::core::StorageReadGuard<'a, <<#component as ::lazybox::core::Component>::Module as ::lazybox::core::HasComponent<#component>>::Storage>,
         });
 
     let guards = write_idents.iter().zip(write_types.iter())
         .fold(read_guards, |tokens, (&ident, &component)| quote! {
             #tokens
-            #ident: ::lazybox::ecs::module::StorageWriteGuard<'a, <<#component as ::lazybox::ecs::module::Component>::Module as ::lazybox::ecs::module::HasComponent<#component>>::Storage>,
+            #ident: ::lazybox::core::StorageWriteGuard<'a, <<#component as ::lazybox::core::Component>::Module as ::lazybox::core::HasComponent<#component>>::Storage>,
         });
 
     let read_idents = &read_idents[..];
@@ -142,21 +130,39 @@ fn expand_state_access(ast: &syn::DeriveInput) -> quote::Tokens {
             #guards
         }
 
-        impl<'a, Cx: ::lazybox::ecs::Context> ::lazybox::ecs::processor::StateAccess<'a, Cx> for #name<'a> {
-            fn from_state(state: &'a ::lazybox::ecs::state::State<Cx>) -> Self {
+        impl<'a, Cx: ::lazybox::core::Context> ::lazybox::core::processor::StateAccess<'a, Cx> for #name<'a> {
+            fn from_state(state: &'a ::lazybox::core::State<Cx>) -> Self {
                 #name {
                     #(#read_idents: state.read::<#read_types>(),)*
                     #(#write_idents: state.write::<#write_types>(),)*
                 }
             }
 
-            fn reads() -> Vec<::lazybox::ecs::module::ComponentType> {
-                vec![#(::lazybox::ecs::module::ComponentType::of::<#read_types>()),*]
+            fn reads() -> Vec<::lazybox::core::ComponentType> {
+                vec![#(::lazybox::core::ComponentType::of::<#read_types>()),*]
             }
 
-            fn writes() -> Vec<::lazybox::ecs::module::ComponentType> {
-                vec![#(::lazybox::ecs::module::ComponentType::of::<#write_types>()),*]
+            fn writes() -> Vec<::lazybox::core::ComponentType> {
+                vec![#(::lazybox::core::ComponentType::of::<#write_types>()),*]
             }
         }
     }
+}
+
+fn find_ident_attribute<'a, A>(name: &str, mut attrs: A) -> &'a syn::Ident
+    where A: Iterator<Item=&'a syn::Attribute>
+{
+    if let Some(ref a) = attrs.find(|&a| a.name() == name) {
+        if let syn::MetaItem::List(_, ref items) = a.value {
+            if items.len() == 1 {
+                if let syn::NestedMetaItem::MetaItem(
+                    syn::MetaItem::Word(ref ident)
+                ) = items[0] {
+                    return ident;
+                }
+            }
+        }
+    };
+
+    panic!("malformed '{}' attribute", name);
 }

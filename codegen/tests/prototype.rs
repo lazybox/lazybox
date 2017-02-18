@@ -7,6 +7,8 @@ extern crate lazybox_codegen;
 
 use std::any::Any;
 use std::fmt;
+use lazybox::core::module::data::DataComponent;
+use lazybox::core::module::data::storages::Packed;
 
 #[derive(Debug, Clone)]
 pub struct Tag {
@@ -19,24 +21,24 @@ pub struct Wrap<T> {
     more: u16
 }
 
-impl lazybox::modules::data::DataComponent for Tag {
-    type Storage = lazybox::modules::data::storages::PackedStorage<Self>;
+impl DataComponent for Tag {
+    type Storage = Packed<Self>;
 }
 
-impl<T> lazybox::modules::data::DataComponent for Wrap<T>
+impl<T> DataComponent for Wrap<T>
     where T: Any + Send + Sync + Clone + fmt::Debug
 {
-    type Storage = lazybox::modules::data::storages::PackedStorage<Self>;
+    type Storage = Packed<Self>;
 }
 
 #[derive(Prototype)]
-#[batch = "TagBatch"]
+#[batch(TagBatch)]
 pub struct TagPrototype {
     tag: Tag
 }
 
 #[derive(Prototype)]
-#[batch = "CompositeBatch"]
+#[batch(CompositeBatch)]
 pub struct CompositePrototype {
     tag: Tag,
     wrap: Wrap<Tag>
