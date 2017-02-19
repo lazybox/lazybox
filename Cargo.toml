@@ -13,8 +13,3 @@ authors = ["Thomas Koehler <basta.t.k+git@gmail.com>",
 
 [dependencies]
 lazybox_core = { path = "core" }
-
-[features]
-unstable = []
-default = ["u16_handle"]
-u16_handle = []
