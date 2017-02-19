@@ -4,6 +4,7 @@ pub use self::value::*;
 use yaml_rust::Yaml;
 use std::{ops, fmt};
 use std::path::Path;
+use yaml_rust::YamlLoader;
 
 pub struct Settings {
     values: ValueMap,
@@ -14,6 +15,13 @@ impl Settings {
         Self::from_yaml(Self::read_yaml(defaults_path.as_ref()))
     }
 
+    pub fn new_with_string(settings: &str) -> Result<Self, Error> {
+        let mut docs = YamlLoader::load_from_str(settings).unwrap();
+        let doc = docs.pop().unwrap_or(Yaml::Null);
+
+        Self::from_yaml(doc)
+    }
+
     pub fn override_with<P: AsRef<Path>>(&mut self, path: P) -> Result<(), Error> {
         self.override_yaml(Self::read_yaml(path.as_ref()))
     }
@@ -21,14 +29,13 @@ impl Settings {
     fn read_yaml(path: &Path) -> Yaml {
         use std::fs::File;
         use std::io::prelude::*;
-        use yaml_rust::YamlLoader;
 
         let mut f = File::open(path).unwrap();
         let mut s = String::new();
         f.read_to_string(&mut s).unwrap();
 
-        let docs = YamlLoader::load_from_str(&s).unwrap();
-        docs.into_iter().next().unwrap_or(Yaml::Null)
+        let mut docs = YamlLoader::load_from_str(&s).unwrap();
+        docs.pop().unwrap_or(Yaml::Null)
     }
 
     pub fn from_yaml(yaml: Yaml) -> Result<Self, Error> {
