@@ -76,10 +76,7 @@ impl<Cx: Context> SchedulerBuilder<Cx> {
         }
     }
 
-    pub fn register<P: ProcessorExt<Cx>>(&mut self,
-                                         processor: P,
-                                         update_type: UpdateType)
-                                         -> &mut Self {
+    pub fn register<P: ProcessorExt<Cx>>(&mut self, processor: P) -> &mut Self {
         {
             let &mut SchedulerBuilder { ref mut processors,
                                         ref mut updates,
@@ -87,6 +84,7 @@ impl<Cx: Context> SchedulerBuilder<Cx> {
             processors.push(Box::new(processor), |index, processor| {
                 let reads = &processor.reads();
                 let writes = &processor.writes();
+                let update_type = processor.update_type();
 
                 match update_type {
                     UpdateType::Frame => {
