@@ -25,8 +25,8 @@ pub trait ProcessorExt<Cx: Context>: Send + Any {
     fn reads(&self) -> ComponentTypes;
     fn update_type(&self) -> UpdateType;
 
-    fn update(&mut self, _state: &State<Cx>, _commit: Commit<Cx>, _context: &Cx, _delta: f32) {}
-    fn fixed_update(&mut self, _state: &State<Cx>, _commit: Commit<Cx>, _context: &Cx) {}
+    fn update(&mut self, &State<Cx>, Commit<Cx>, &Cx::ForProcessors, f32) {}
+    fn fixed_update(&mut self, _: &State<Cx>, _: Commit<Cx>, _: &Cx::ForProcessors) {}
 }
 
 pub trait Processor<'a, Cx: Context>: Send + Any {
@@ -34,8 +34,8 @@ pub trait Processor<'a, Cx: Context>: Send + Any {
 
     fn update_type(&self) -> UpdateType;
 
-    fn update(&mut self, _state: &State<Cx>, _commit: Commit<Cx>, _context: &Cx, _delta: f32) {}
-    fn fixed_update(&mut self, _state: &State<Cx>, _commit: Commit<Cx>, _context: &Cx) {}
+    fn update(&mut self, _: &State<Cx>, _: Commit<Cx>, _: &Cx::ForProcessors, _: f32) {}
+    fn fixed_update(&mut self, _: &State<Cx>, _: Commit<Cx>, _: &Cx::ForProcessors) {}
 }
 
 impl<'a, Cx: Context, P> ProcessorExt<Cx> for P
@@ -51,11 +51,18 @@ impl<'a, Cx: Context, P> ProcessorExt<Cx> for P
         <P as Processor<'a, Cx>>::update_type(self)
     }
 
-    fn update(&mut self, state: &State<Cx>, commit: Commit<Cx>, context: &Cx, delta: f32) {
+    fn update(&mut self,
+              state: &State<Cx>,
+              commit: Commit<Cx>,
+              context: &Cx::ForProcessors,
+              delta: f32) {
         <P as Processor<'a, Cx>>::update(self, state, commit, context, delta);
     }
 
-    fn fixed_update(&mut self, state: &State<Cx>, commit: Commit<Cx>, context: &Cx) {
+    fn fixed_update(&mut self,
+                    state: &State<Cx>,
+                    commit: Commit<Cx>,
+                    context: &Cx::ForProcessors) {
         <P as Processor<'a, Cx>>::fixed_update(self, state, commit, context);
     }
 }
@@ -121,28 +128,35 @@ pub struct Scheduler<Cx: Context> {
 }
 
 impl<Cx: Context> Scheduler<Cx> {
-    pub fn update(&mut self, state: &mut State<Cx>, context: &mut Cx, delta: f32) {
+    pub fn update(&mut self,
+                  state: &mut State<Cx>,
+                  mcx: &mut Cx::ForModules,
+                  pcx: &Cx::ForProcessors,
+                  delta: f32) {
         let mut update = state.update();
 
-        update.commit(context, |state, commit, context| {
+        update.commit(mcx, |state, commit| {
             self.updates.par_for_each_mut(&self.processors,
                                           state,
                                           commit,
-                                          context,
+                                          pcx,
                                           |state, commit, context, processor| {
                                               processor.update(state, commit, context, delta);
                                           });
         });
     }
 
-    pub fn fixed_update(&mut self, state: &mut State<Cx>, context: &mut Cx) {
+    pub fn fixed_update(&mut self,
+                        state: &mut State<Cx>,
+                        mcx: &mut Cx::ForModules,
+                        pcx: &Cx::ForProcessors) {
         let mut update = state.update();
 
-        update.commit(context, |state, commit, context| {
+        update.commit(mcx, |state, commit| {
             self.fixed_updates.par_for_each_mut(&self.processors,
                                                 state,
                                                 commit,
-                                                context,
+                                                pcx,
                                                 |state, commit, context, processor| {
                                                     processor.fixed_update(state, commit, context);
                                                 });

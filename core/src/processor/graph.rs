@@ -98,9 +98,12 @@ impl ActionGraph {
                                             processors: &Processors<Cx>,
                                             state: &State<Cx>,
                                             commit: Commit<Cx>,
-                                            cx: &Cx,
+                                            cx: &Cx::ForProcessors,
                                             f: F)
-        where F: Fn(&State<Cx>, Commit<Cx>, &Cx, &mut ProcessorExt<Cx>) + Sync + Send
+        where F: Fn(&State<Cx>,
+                    Commit<Cx>,
+                    &Cx::ForProcessors,
+                    &mut ProcessorExt<Cx>) + Sync + Send
     {
         let f = &f;
         rayon::scope(|scope| for &head in &self.heads {
@@ -116,9 +119,12 @@ impl ActionGraph {
                                                            node: NodeIndex,
                                                            state: &'a State<Cx>,
                                                            commit: Commit<'a, Cx>,
-                                                           cx: &'a Cx,
+                                                           cx: &'a Cx::ForProcessors,
                                                            f: &'a F)
-        where F: Fn(&'a State<Cx>, Commit<'a, Cx>, &'a Cx, &mut ProcessorExt<Cx>) + Sync + Send
+        where F: Fn(&'a State<Cx>,
+                    Commit<'a, Cx>,
+                    &'a Cx::ForProcessors,
+                    &mut ProcessorExt<Cx>) + Sync + Send
     {
         let slot = &self.execution_dag[node];
         let mut processor = processors.take(slot.processor).unwrap();

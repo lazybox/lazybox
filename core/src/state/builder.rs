@@ -7,7 +7,7 @@ pub struct StateBuilder<Cx: Context> {
     update_queues: UpdateQueues,
     interfaces: Interfaces,
     groups: Groups,
-    modules: Modules<Cx>,
+    modules: Modules<Cx::ForModules>,
 }
 
 impl<Cx: Context> StateBuilder<Cx> {
@@ -25,7 +25,7 @@ impl<Cx: Context> StateBuilder<Cx> {
         self
     }
 
-    pub fn register_module<M: Module<Cx>>(&mut self, module: M) -> &mut Self {
+    pub fn register_module<M: Module<Cx::ForModules>>(&mut self, module: M) -> &mut Self {
         self.modules.insert(Box::new(module));
         self
     }

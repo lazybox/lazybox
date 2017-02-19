@@ -3,10 +3,10 @@ pub mod data;
 use std::any::{Any, TypeId};
 use std::collections::hash_map;
 use fnv::FnvHashMap;
-use {Context, Component, StorageReadGuard, StorageWriteGuard};
+use {Component, StorageReadGuard, StorageWriteGuard};
 use state::CommitArgs;
 
-pub trait Module<Cx: Context>: Any + Send + Sync {
+pub trait Module<Cx>: Any + Send + Sync {
     fn get_type(&self) -> ModuleType {
         ModuleType(TypeId::of::<Self>())
     }
@@ -14,7 +14,7 @@ pub trait Module<Cx: Context>: Any + Send + Sync {
     fn commit(&mut self, args: &CommitArgs, context: &mut Cx);
 }
 
-impl<Cx: Context> Module<Cx> {
+impl<Cx> Module<Cx> {
     #[inline]
     pub fn is<M: Module<Cx>>(&self) -> bool {
         ModuleType::of::<M, Cx>() == self.get_type()
@@ -60,16 +60,16 @@ pub trait HasComponent<C: ?Sized + Component> {
 pub struct ModuleType(TypeId);
 
 impl ModuleType {
-    pub fn of<M: Module<Cx>, Cx: Context>() -> Self {
+    pub fn of<M: Module<Cx>, Cx>() -> Self {
         ModuleType(TypeId::of::<M>())
     }
 }
 
-pub struct Modules<Cx: Context> {
+pub struct Modules<Cx> {
     modules: FnvHashMap<ModuleType, Box<Module<Cx>>>,
 }
 
-impl<Cx: Context> Modules<Cx> {
+impl<Cx> Modules<Cx> {
     pub fn new() -> Self {
         Modules { modules: FnvHashMap::default() }
     }
@@ -99,11 +99,11 @@ impl<Cx: Context> Modules<Cx> {
     }
 }
 
-pub struct Iter<'a, Cx: Context + 'a> {
+pub struct Iter<'a, Cx: 'a> {
     inner: hash_map::Iter<'a, ModuleType, Box<Module<Cx>>>,
 }
 
-impl<'a, Cx: Context + 'a> Iterator for Iter<'a, Cx> {
+impl<'a, Cx: 'a> Iterator for Iter<'a, Cx> {
     type Item = (ModuleType, &'a Module<Cx>);
 
     #[inline]
@@ -112,7 +112,7 @@ impl<'a, Cx: Context + 'a> Iterator for Iter<'a, Cx> {
     }
 }
 
-impl<'a, Cx: Context + 'a> IntoIterator for &'a Modules<Cx> {
+impl<'a, Cx: 'a> IntoIterator for &'a Modules<Cx> {
     type Item = (ModuleType, &'a Module<Cx>);
     type IntoIter = Iter<'a, Cx>;
 
@@ -122,11 +122,11 @@ impl<'a, Cx: Context + 'a> IntoIterator for &'a Modules<Cx> {
 }
 
 
-pub struct IterMut<'a, Cx: Context + 'a> {
+pub struct IterMut<'a, Cx: 'a> {
     inner: hash_map::IterMut<'a, ModuleType, Box<Module<Cx>>>,
 }
 
-impl<'a, Cx: Context + 'a> Iterator for IterMut<'a, Cx> {
+impl<'a, Cx: 'a> Iterator for IterMut<'a, Cx> {
     type Item = (ModuleType, &'a mut Module<Cx>);
 
     #[inline]
@@ -135,7 +135,7 @@ impl<'a, Cx: Context + 'a> Iterator for IterMut<'a, Cx> {
     }
 }
 
-impl<'a, Cx: Context> IntoIterator for &'a mut Modules<Cx> {
+impl<'a, Cx> IntoIterator for &'a mut Modules<Cx> {
     type Item = (ModuleType, &'a mut Module<Cx>);
     type IntoIter = IterMut<'a, Cx>;
 

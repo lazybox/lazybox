@@ -14,11 +14,14 @@ use tag::{Tag, Tags, TagType};
 use group::{Groups, GroupType, GroupToken};
 use self::update_queue::{UpdateQueues, UpdateQueue, UpdateQueueReader};
 
-pub trait Context: Sync {}
+pub trait Context: Sync {
+    type ForModules;
+    type ForProcessors: Sync;
+}
 
 pub struct State<Cx: Context> {
     entities: Entities,
-    modules: Modules<Cx>,
+    modules: Modules<Cx::ForModules>,
     interfaces: Interfaces,
     tags: Tags,
     groups: Groups,
@@ -26,7 +29,7 @@ pub struct State<Cx: Context> {
 }
 
 impl<Cx: Context> State<Cx> {
-    pub fn new(modules: Modules<Cx>,
+    pub fn new(modules: Modules<Cx::ForModules>,
                interfaces: Interfaces,
                groups: Groups,
                update_queues: UpdateQueues)
@@ -68,20 +71,20 @@ impl<Cx: Context> State<Cx> {
 
     #[inline]
     pub fn read<C: Component>(&self) -> StorageReadGuard<<C::Module as HasComponent<C>>::Storage>
-        where C::Module: Module<Cx>
+        where C::Module: Module<Cx::ForModules>
     {
         self.module::<C::Module>().read()
     }
 
     #[inline]
     pub fn write<C: Component>(&self) -> StorageWriteGuard<<C::Module as HasComponent<C>>::Storage>
-        where C::Module: Module<Cx>
+        where C::Module: Module<Cx::ForModules>
     {
         self.module::<C::Module>().write()
     }
 
     #[inline]
-    pub fn module<M: Module<Cx>>(&self) -> &M {
+    pub fn module<M: Module<Cx::ForModules>>(&self) -> &M {
         self.modules
             .get::<M>()
             .expect("the requested module doesn't exists")
@@ -91,7 +94,7 @@ impl<Cx: Context> State<Cx> {
         Update { state: self }
     }
 
-    fn commit(&mut self, cx: &mut Cx) {
+    fn commit(&mut self, cx: &mut Cx::ForModules) {
         let world_removes = self.entities.push_removes();
 
         let &mut State { ref mut update_queues,
@@ -125,12 +128,12 @@ pub struct Update<'a, Cx: Context + 'a> {
 }
 
 impl<'a, Cx: Context + 'a> Update<'a, Cx> {
-    pub fn commit<F>(&mut self, context: &mut Cx, f: F)
-        where F: FnOnce(&State<Cx>, Commit<Cx>, &mut Cx)
+    pub fn commit<F>(&mut self, context: &mut Cx::ForModules, f: F)
+        where F: FnOnce(&State<Cx>, Commit<Cx>)
     {
         {
             let state = &*self.state;
-            f(state, Commit { state: state }, context);
+            f(state, Commit { state: state });
         }
         self.state.commit(context);
     }
