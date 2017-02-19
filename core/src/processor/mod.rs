@@ -3,7 +3,6 @@ mod graph;
 use {Context, ComponentType};
 use state::{State, Commit};
 use std::any::Any;
-use sync::Mutex;
 use self::graph::{ActionGraphBuilder, ActionGraph, Processors};
 
 pub type ComponentTypes = Vec<ComponentType>;
