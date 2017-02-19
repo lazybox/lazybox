@@ -1,0 +1,3 @@
+time:
+ - update_frenquency: 60
+ - fps_frequency: 2.0
