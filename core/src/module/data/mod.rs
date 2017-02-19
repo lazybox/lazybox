@@ -1,7 +1,9 @@
 pub mod storages;
+pub mod builder;
 
 pub use self::storages::Storage;
 pub use self::storages::packed::Packed as PackedStorage;
+pub use self::builder::DataModuleBuilder;
 
 use state::CommitArgs;
 use {Context, Module, HasComponent};
@@ -35,9 +37,7 @@ impl DataModule {
         DataModule { handlers: FnvHashMap::default() }
     }
 
-    pub fn register<D: DataComponent>(&mut self, storage: D::Storage)
-        where D: Component
-    {
+    pub fn register<D: DataComponent>(&mut self, storage: D::Storage) {
         let handler = StorageHandler::new(storage);
         self.handlers.insert(ComponentType::of::<D>(), Box::new(handler));
     }
@@ -57,7 +57,7 @@ impl DataModule {
     }
 }
 
-impl<Cx: Context> Module<Cx> for DataModule {
+impl<Cx> Module<Cx> for DataModule {
     fn commit(&mut self, args: &CommitArgs, _context: &mut Cx) {
         rayon::scope(|scope| for (_, handler) in &mut self.handlers {
             scope.spawn(move |_| handler.commit(args));

@@ -42,3 +42,4 @@ pub use interface::{Interface, InterfaceToken, InterfaceType, Interfaces};
 pub use processor::Processor;
 pub use tag::Tag;
 pub use group::GroupToken;
+pub use module::data::{DataComponent, DataModuleBuilder};
