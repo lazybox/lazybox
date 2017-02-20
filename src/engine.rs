@@ -67,6 +67,6 @@ impl Engine {
 
         let time_step = 1. / update_frequency as f64;
 
-        (FrameClock::start(time_step), FpsCounter::new(fps_frequency))
+        (FrameClock::start(time_step), FpsCounter::new(1. / fps_frequency))
     }
 }
