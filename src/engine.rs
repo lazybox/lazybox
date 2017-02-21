@@ -60,6 +60,8 @@ impl Engine {
 
     fn create_frameclock(settings: &Settings) -> (FrameClock, FpsCounter) {
         let time = &settings["time"];
+        
+        println!("{:?}", time);
         let update_frequency =
             time["update_frequency"].as_i64().expect("update_frequency should be in Hz");
         let fps_frequency =

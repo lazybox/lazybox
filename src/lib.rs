@@ -5,3 +5,5 @@ pub extern crate lazybox_scene2d as scene;
 
 pub mod context;
 pub mod engine;
+
+pub use engine::Engine;
