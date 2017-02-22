@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use lazybox::Engine;
 
 pub struct Runner {
@@ -5,10 +7,8 @@ pub struct Runner {
 }
 
 impl Runner {
-    pub fn new() -> Self {
-        Runner {
-            engine: Engine::new()
-        }
+    pub fn new(config_path: &Path) -> Self {
+        Runner { engine: Engine::new(config_path) }
     }
 
     pub fn run(self) {

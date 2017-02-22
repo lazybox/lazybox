@@ -1,8 +1,8 @@
+use std::path::Path;
 use context::{Context, modules, processors};
 use core::{State, Settings, StateBuilder};
 use core::processor::{Scheduler, SchedulerBuilder};
 use core::time::{FrameClock, FpsCounter};
-
 pub struct Engine {
     mcx: modules::Context,
     state: State<Context>,
@@ -12,15 +12,14 @@ pub struct Engine {
 }
 
 impl Engine {
-    pub fn new() -> Self {
-        let settings = Self::create_settings();
+    pub fn new<P: AsRef<Path>>(config_path: P) -> Self {
+        let settings = Self::create_settings(config_path.as_ref());
         let context = Self::create_context(&settings);
 
         let (frameclock, fps_counter) = Self::create_frameclock(&settings);
 
         let state_builder = StateBuilder::new();
         let scheduler_builder = SchedulerBuilder::new();
-
 
         Engine {
             mcx: context,
@@ -31,8 +30,11 @@ impl Engine {
         }
     }
 
-    fn create_settings() -> Settings {
-        Settings::new_with_string(include_str!("config/default2d.yml")).unwrap()
+    fn create_settings(settings_path: &Path) -> Settings {
+        let mut settings = Settings::new_with_string(include_str!("config/default2d.yml")).unwrap();
+        settings.override_with(settings_path).unwrap();
+
+        settings
     }
 
     fn create_context(settings: &Settings) -> modules::Context {
@@ -60,8 +62,7 @@ impl Engine {
 
     fn create_frameclock(settings: &Settings) -> (FrameClock, FpsCounter) {
         let time = &settings["time"];
-        
-        println!("{:?}", time);
+
         let update_frequency =
             time["update_frequency"].as_i64().expect("update_frequency should be in Hz");
         let fps_frequency =
