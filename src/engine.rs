@@ -1,8 +1,9 @@
 use std::path::Path;
 use context::{Context, modules, processors};
-use core::{State, Settings, StateBuilder};
-use core::processor::{Scheduler, SchedulerBuilder};
+use core::{State, Commit, Settings};
+use core::processor::Scheduler;
 use core::time::{FrameClock, FpsCounter};
+use game::*;
 
 pub struct Engine {
     mcx: modules::Context,
@@ -13,14 +14,20 @@ pub struct Engine {
 }
 
 impl Engine {
-    pub fn new<P: AsRef<Path>>(config_path: P) -> Self {
-        let settings = Self::create_settings(config_path.as_ref());
+    pub fn new<G: Game>(game: G) -> Self {
+        let settings = Self::create_settings(game.config_path());
         let context = Self::create_context(&settings);
 
         let (frameclock, fps_counter) = Self::create_frameclock(&settings);
 
-        let state_builder = StateBuilder::new();
-        let scheduler_builder = SchedulerBuilder::new();
+        let mut state_builder = StateBuilder::new();
+        Self::create_data_module(&game, &mut state_builder);
+        game.modules(&mut state_builder);
+        game.interfaces(&mut state_builder);
+
+
+        let mut scheduler_builder = SchedulerBuilder::new();
+        game.processes(&mut scheduler_builder);
 
         Engine {
             mcx: context,
@@ -29,6 +36,13 @@ impl Engine {
             frameclock: frameclock,
             fps_counter: fps_counter,
         }
+    }
+
+    fn create_data_module<G: Game>(game: &G, state: &mut StateBuilder) {
+        let mut builder = DataModuleBuilder::new(state);
+        game.data_components(&mut builder);
+
+        builder.build();
     }
 
     fn create_settings(settings_path: &Path) -> Settings {
@@ -54,10 +68,7 @@ impl Engine {
                     .fixed_update(&mut self.state, &mut self.mcx, &processors::Context {});
             }
 
-            self.processors.update(&mut self.state,
-                                   &mut self.mcx,
-                                   &processors::Context {},
-                                   dt as f32);
+
         }
     }
 
@@ -72,5 +83,10 @@ impl Engine {
         let time_step = 1. / update_frequency as f64;
 
         (FrameClock::start(time_step), FpsCounter::new(1. / fps_frequency))
+    }
+
+    pub fn commit<F: FnOnce(&State<Context>, Commit<Context>)>(&mut self, f: F) {
+        let mut update = self.state.update();
+        update.commit(&mut self.mcx, f);
     }
 }

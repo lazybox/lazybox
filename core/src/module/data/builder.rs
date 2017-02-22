@@ -15,9 +15,9 @@ impl<'a, Cx: 'a + Context> DataModuleBuilder<'a, Cx> {
         }
     }
 
-    pub fn register_data_component<D: DataComponent>(&mut self, storage: D::Storage) -> &mut Self {
+    pub fn register<D: DataComponent>(&mut self) -> &mut Self {
         self.state_builder.register_component::<D>();
-        self.data_module.register::<D>(storage);
+        self.data_module.register::<D>(D::Storage::default());
         self
     }
 

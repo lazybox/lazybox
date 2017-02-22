@@ -35,10 +35,19 @@ impl Interface {
 
     pub fn update_with(&mut self, monitors: &UpdateMonitors) {
         self.entities.clear();
-        for &component_type in &self.filter.require {
-            let monitor = monitors.monitor(component_type);
+
+        let mut requires = self.filter.require.iter();
+
+        if let Some(&first) = requires.next() {
+            let monitor = monitors.monitor(first);
 
             self.entities.union_with(monitor.entities());
+        }
+
+        for &component_type in requires {
+            let monitor = monitors.monitor(component_type);
+
+            self.entities.intersect_with(monitor.entities());
         }
 
         for &component_type in &self.filter.reject {
@@ -62,7 +71,6 @@ impl Interface {
 }
 
 pub trait InterfaceToken: Any + Send + Sync {
-    fn name() -> &'static str;
     fn filter() -> Filter;
 }
 

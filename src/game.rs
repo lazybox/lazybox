@@ -10,7 +10,8 @@ pub type StateBuilder = core::StateBuilder<Context>;
 pub trait Game {
     fn config_path(&self) -> &Path;
 
-    fn data_components(&self, builder: &mut DataModuleBuilder);
-    fn processes(&self, builder: &mut SchedulerBuilder);
-    fn modules(&self, builder: &mut StateBuilder);
+    fn data_components(&self, _builder: &mut DataModuleBuilder) {}
+    fn processes(&self, _builder: &mut SchedulerBuilder) {}
+    fn interfaces(&self, _builder: &mut StateBuilder) {}
+    fn modules(&self, _builder: &mut StateBuilder) {}
 }

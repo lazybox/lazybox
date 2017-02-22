@@ -13,7 +13,7 @@ use Accessor;
 /// Defines any `DataComponent` storage that can be used.
 ///
 /// If you want to define a special storage for a `DataComponent` you need to implement this trait.
-pub trait Storage: Any + Debug + Send + Sync {
+pub trait Storage: Any + Debug + Send + Sync + Default {
     /// The component that the storage is holding.
     type Component: DataComponent;
 

@@ -9,7 +9,7 @@ use {Entities, Entity, EntityRef, Accessor};
 use {Component, StorageReadGuard, StorageWriteGuard};
 use {Module, Modules, HasComponent};
 use spawn::{SpawnRequest, Prototype};
-use interface::Interfaces;
+use interface::{Interfaces, InterfaceToken, InterfaceType};
 use tag::{Tag, Tags, TagType};
 use group::{Groups, GroupType, GroupToken};
 use self::update_queue::{UpdateQueues, UpdateQueue, UpdateQueueReader};
@@ -67,6 +67,14 @@ impl<Cx: Context> State<Cx> {
     #[inline]
     pub fn group<'a, G: GroupToken>(&self) -> SetIter {
         self.groups.entities_in_group(GroupType::of::<G>())
+    }
+
+    #[inline]
+    pub fn entities<'a, I: InterfaceToken>(&self) -> SetIter {
+        self.interfaces
+            .get(InterfaceType::of::<I>())
+            .expect("Interface not registered")
+            .entities()
     }
 
     #[inline]

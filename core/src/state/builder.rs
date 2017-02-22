@@ -1,6 +1,6 @@
-use {State, Context, Interfaces};
 use state::update_queue::UpdateQueues;
-use {Module, Modules, Component};
+use {Module, Modules, Component, State, Context, Interfaces, Interface, InterfaceType,
+     InterfaceToken};
 use group::{Groups, GroupType, GroupToken};
 
 pub struct StateBuilder<Cx: Context> {
@@ -32,6 +32,14 @@ impl<Cx: Context> StateBuilder<Cx> {
 
     pub fn register_group<G: GroupToken>(&mut self) -> &mut Self {
         self.groups.insert_empty(GroupType::of::<G>());
+        self
+    }
+
+    pub fn register_interface<I: InterfaceToken>(&mut self) -> &mut Self {
+        let interface = Interface::new(I::filter());
+
+        self.interfaces.insert(InterfaceType::of::<I>(), interface);
+
         self
     }
 

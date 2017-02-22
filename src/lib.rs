@@ -6,3 +6,4 @@ pub mod engine;
 pub mod game;
 
 pub use engine::Engine;
+pub use game::*;
