@@ -6,7 +6,7 @@ pub use self::storages::packed::Packed as PackedStorage;
 pub use self::builder::DataModuleBuilder;
 
 use state::CommitArgs;
-use {Context, Module, HasComponent};
+use {Module, HasComponent};
 use component::{Component, Template, ComponentType};
 use {StorageReadGuard, StorageWriteGuard};
 use fnv::FnvHashMap;

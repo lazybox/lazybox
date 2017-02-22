@@ -1,9 +1,0 @@
-[package]
-name = "lazybox_cli"
-version = "0.1.0"
-authors = ["Thomas Koehler <basta.t.k+git@gmail.com>",
-           "Romain Vaillant <rph.vaillant@gmail.com>"]
-
-[dependencies]
-lazybox = { path = "../" }
-clap = "2.20"

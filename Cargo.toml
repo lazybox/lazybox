@@ -3,7 +3,6 @@ members = [
   "core/",
   "codegen/",
   "scene2d/",
-  "cli/"
 ]
 
 [package]
@@ -15,5 +14,3 @@ authors = ["Thomas Koehler <basta.t.k+git@gmail.com>",
 [dependencies]
 lazybox_core = { path = "core" }
 lazybox_scene2d = { path = "scene2d" }
-
-sharedlib = "7.0"
