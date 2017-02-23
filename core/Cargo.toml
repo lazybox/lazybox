@@ -24,5 +24,6 @@ error-chain = "^0.8"
 
 [features]
 unstable = []
-default = ["u16_handle"]
+default = ["u32_handle"]
 u16_handle = []
+u32_handle = []
