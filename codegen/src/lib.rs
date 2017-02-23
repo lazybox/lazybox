@@ -24,12 +24,20 @@ pub fn model(input: TokenStream) -> TokenStream {
     gen.parse().unwrap()
 }
 
+#[proc_macro_derive(DataComponent, attributes(storage))]
+pub fn data_component(input: TokenStream) -> TokenStream {
+    let s = input.to_string();
+    let ast = syn::parse_derive_input(&s).unwrap();
+    let gen = expand_data_component(&ast);
+    gen.parse().unwrap()
+}
+
 fn expand_prototype(ast: &syn::DeriveInput) -> quote::Tokens {
     let name = &ast.ident;
     let fields = match ast.body {
         syn::Body::Struct(syn::VariantData::Struct(ref fields)) => fields,
         syn::Body::Struct(_) |
-        syn::Body::Enum(_) => panic!("can only be used with regular structs")
+        syn::Body::Enum(_) => panic!("can only be used with regular structs"),
     };
 
     let batch_name = find_ident_attribute("batch", ast.attrs.iter());
@@ -37,7 +45,7 @@ fn expand_prototype(ast: &syn::DeriveInput) -> quote::Tokens {
     let field_names: &Vec<_> = &fields.iter().map(|f| &f.ident).collect();
     let component_types: &Vec<_> = &fields.iter().map(|f| &f.ty).collect();
 
-    let attaches = field_names.iter().fold(quote! {}, |tokens, f| {
+    let attaches = field_names.iter().fold(quote!{}, |tokens, f| {
         quote! { #tokens self.#f.attach(accessor, prototype.#f); }
     });
 
@@ -78,10 +86,10 @@ fn expand_prototype(ast: &syn::DeriveInput) -> quote::Tokens {
 fn expand_state_access(ast: &syn::DeriveInput) -> quote::Tokens {
     let fields = match ast.body {
         syn::Body::Struct(syn::VariantData::Struct(ref fields)) => fields,
-        _ => panic!("expected regular struct")
+        _ => panic!("expected regular struct"),
     };
 
-    let name = find_ident_attribute("name", ast.attrs.iter());
+    let name = find_ident_attribute("name", ast.attrs.iter()).expect("expected name attribute");
 
     let mut components = HashSet::new();
     let mut read_idents = Vec::new();
@@ -100,12 +108,12 @@ fn expand_state_access(ast: &syn::DeriveInput) -> quote::Tokens {
             "read" => {
                 read_idents.push(&f.ident);
                 read_types.push(&f.ty);
-            },
+            }
             "write" => {
                 write_idents.push(&f.ident);
                 write_types.push(&f.ty);
             }
-            _ => panic!("expected 'read' or 'write' field attribute")
+            _ => panic!("expected 'read' or 'write' field attribute"),
         }
     }
 
@@ -149,20 +157,35 @@ fn expand_state_access(ast: &syn::DeriveInput) -> quote::Tokens {
     }
 }
 
-fn find_ident_attribute<'a, A>(name: &str, mut attrs: A) -> &'a syn::Ident
-    where A: Iterator<Item=&'a syn::Attribute>
+
+fn expand_data_component(ast: &syn::DeriveInput) -> quote::Tokens {
+    let component_ident = &ast.ident;
+
+    let storage = {
+        match find_ident_attribute("storage", ast.attrs.iter()) {
+            Some(storage_ident) => quote! { #storage_ident<Self> },
+            None => quote! { ::lazybox::core::module::data::PackedStorage<Self> },
+        }
+    };
+
+    quote! {
+        impl ::lazybox::core::module::data::DataComponent for #component_ident {
+            type Storage = #storage;
+        }
+    }
+}
+
+fn find_ident_attribute<'a, A>(name: &str, mut attrs: A) -> Option<&'a syn::Ident>
+    where A: Iterator<Item = &'a syn::Attribute>
 {
     if let Some(ref a) = attrs.find(|&a| a.name() == name) {
         if let syn::MetaItem::List(_, ref items) = a.value {
             if items.len() == 1 {
-                if let syn::NestedMetaItem::MetaItem(
-                    syn::MetaItem::Word(ref ident)
-                ) = items[0] {
-                    return ident;
+                if let syn::NestedMetaItem::MetaItem(syn::MetaItem::Word(ref ident)) = items[0] {
+                    return Some(ident);
                 }
             }
         }
-    };
-
-    panic!("malformed '{}' attribute", name);
+    }
+    None
 }

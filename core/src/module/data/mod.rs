@@ -18,7 +18,7 @@ use std::any::Any;
 use self::storages::{StorageHandler, Handler};
 
 
-pub trait DataComponent: Any + Clone + Debug + Send + Sync {
+pub trait DataComponent: Any + Debug + Send + Sync {
     type Storage: Storage;
 }
 

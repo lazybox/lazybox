@@ -9,7 +9,7 @@ pub trait Component: Any {
     type Template: Template;
 }
 
-pub trait Template: Any + Send + Sync + Debug + Clone {}
+pub trait Template: Any + Send + Sync + Debug {}
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub struct ComponentType(TypeId);

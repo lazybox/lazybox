@@ -6,29 +6,31 @@ extern crate lazybox;
 extern crate lazybox_codegen;
 
 use lazybox::core::module::data::DataComponent;
-use lazybox::core::module::data::storages::Packed;
+use lazybox::core::module::data::PackedStorage;
 
 #[derive(Debug, Clone)]
 pub struct Health {
-    count: u32
+    count: u32,
 }
 
 impl DataComponent for Health {
-    type Storage = Packed<Self>;
+    type Storage = PackedStorage<Self>;
 }
 
 #[derive(Debug, Clone)]
 pub struct Armor {
-    percent: f32
+    percent: f32,
 }
 
 impl DataComponent for Armor {
-    type Storage = Packed<Self>;
+    type Storage = PackedStorage<Self>;
 }
 
 #[derive(StateAccess)]
 #[name(Access)]
 pub struct AccessInfo {
-    #[read] armor: Armor,
-    #[write] health: Health,
+    #[read]
+    armor: Armor,
+    #[write]
+    health: Health,
 }
