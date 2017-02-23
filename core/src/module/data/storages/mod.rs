@@ -1,6 +1,5 @@
 pub mod packed;
-
-pub use self::packed::Packed;
+pub mod sparse;
 
 use std::any::Any;
 use mopa;

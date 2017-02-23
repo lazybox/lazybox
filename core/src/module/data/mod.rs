@@ -3,6 +3,7 @@ pub mod builder;
 
 pub use self::storages::Storage;
 pub use self::storages::packed::Packed as PackedStorage;
+pub use self::storages::sparse::Sparse as SparseStorage;
 pub use self::builder::DataModuleBuilder;
 
 use state::CommitArgs;

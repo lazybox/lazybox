@@ -203,9 +203,9 @@ impl<'a, V: 'a> IntoIterator for &'a mut Packed<V> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use modules::data::DataComponent;
-    use ecs::entity::Accessor;
-    use ecs::policy::Id;
+    use module::data::DataComponent;
+    use entity::Accessor;
+    use policy::Id;
 
     #[derive(Debug, Clone, PartialEq, Eq)]
     struct Dummy(usize);
@@ -301,10 +301,10 @@ mod tests {
         }
     }
 
-    fn insert_for_entity<'a, V: Component>(packed: &mut Packed<V>,
-                                           entity: Id,
-                                           component: V)
-                                           -> Accessor<'a> {
+    fn insert_for_entity<'a, V: DataComponent>(packed: &mut Packed<V>,
+                                               entity: Id,
+                                               component: V)
+                                               -> Accessor<'a> {
         let entity = unsafe { Accessor::new_unchecked(entity) };
         packed.insert(entity, component);
 
