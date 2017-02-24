@@ -16,13 +16,13 @@ impl<'a, Cx: 'a + Context> DataModuleBuilder<'a, Cx> {
     }
 
     pub fn register<D: DataComponent>(&mut self) -> &mut Self {
-        self.state_builder.register_component::<D>();
+        self.state_builder.component::<D>();
         self.data_module.register::<D>(D::Storage::default());
         self
     }
 
     pub fn build(self) -> &'a mut StateBuilder<Cx> {
-        self.state_builder.register_module(self.data_module);
+        self.state_builder.module(self.data_module);
 
         self.state_builder
     }

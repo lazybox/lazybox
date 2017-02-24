@@ -20,22 +20,22 @@ impl<Cx: Context> StateBuilder<Cx> {
         }
     }
 
-    pub fn register_component<C: Component>(&mut self) -> &mut Self {
+    pub fn component<C: Component>(&mut self) -> &mut Self {
         self.update_queues.register::<C>();
         self
     }
 
-    pub fn register_module<M: Module<Cx::ForModules>>(&mut self, module: M) -> &mut Self {
+    pub fn module<M: Module<Cx::ForModules>>(&mut self, module: M) -> &mut Self {
         self.modules.insert(Box::new(module));
         self
     }
 
-    pub fn register_group<G: GroupToken>(&mut self) -> &mut Self {
+    pub fn group<G: GroupToken>(&mut self) -> &mut Self {
         self.groups.insert_empty(GroupType::of::<G>());
         self
     }
 
-    pub fn register_interface<I: InterfaceToken>(&mut self) -> &mut Self {
+    pub fn interface<I: InterfaceToken>(&mut self) -> &mut Self {
         let interface = Interface::new(I::filter());
 
         self.interfaces.insert(InterfaceType::of::<I>(), interface);
